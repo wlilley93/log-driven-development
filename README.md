@@ -73,8 +73,16 @@ LDD is built to prevent all three by construction.
    layer), before deepening any one part. That one real path is an **authenticated** path that crosses its
    trust/tenant boundary (not a no-auth happy path), and "the gates green" includes the continuous `security_scan`
    gate. The skeleton has a security spine from the first slice (see docs/invariants.md, LDD-INV-12).
-4. **Loop** spec and build, closing gaps each pass, until the automated sweep is clean. "Done" means the sweep is
-   clean, not "the tests pass".
+4. **Loop** spec and build, closing gaps each pass, until the close is clean. "Done" is a **two-leg** close
+   (docs/invariants.md, LDD-INV-5): the spec is internally coherent AND a source-coverage sweep finds no
+   load-bearing detail still un-folded from the source. An internal-only sweep is blind to an omission (an
+   omission leaves no contradiction); the source leg is the one that sees it. "Done" means *both* legs are clean,
+   not "the tests pass".
+
+> **Example prompt (the two-leg close).** "Run BOTH legs of the close. Leg A: walk the SOURCE and ask 'what
+> load-bearing procedure lives here that never reached the spec?', looping until a pass finds nothing new (evidence
+> = the source, not the spec). Leg B: check the spec against itself (ids resolve, no contradictions). Done only if
+> both are clean." More recipes in [docs/prompting.md](docs/prompting.md).
 
 ---
 
@@ -86,6 +94,13 @@ rebuild auditable by construction.
 - **Intent ledgers (the harvest).** Plain-text files, one area per file, that capture *what the old code meant*,
   with **provenance** (the exact file and line each rule came from). If a claim is not grounded in real evidence,
   it does not go in the ledger. This is where the requirements that only ever existed as code become written down.
+  A ledger must capture **both altitudes** (LDD-INV-18): the SYSTEM (shapes, enums, state-machines) and the
+  PROCESS (the step-by-step procedure one level below). A structure-only ledger is incomplete by construction.
+
+  > **Example prompt (harvest, both altitudes).** "Harvest Tasky's completion + blocking area. Capture BOTH the
+  > SYSTEM (the `done` / `status` / `archivedAt` shapes that represent completion) AND the PROCESS (exactly how the
+  > auto-reopen-on-blocker cascade runs: order, depth, whether it notifies). Cite `file:line` for every claim;
+  > record what you DROP and why."
 - **The spec.** The distilled, minimal description of the system to build: the primitives, the invariants, the
   things deliberately dropped (each with a reason). The spec is the source of truth; the code is kept in sync
   with it, not the other way around.
@@ -126,6 +141,13 @@ The Council is **ephemeral**: the seats exist only for the question, then dissol
 verdict in the ledger and the **surviving dissent** (recorded, never buried, because it is the standing of any
 future appeal). The non-negotiable discipline: a Council **must end in a build action or a kill**, never in "we
 will look at it later". Its verdict **is the decision** unless someone appeals it.
+
+> **Example prompt (convene a council).** "Convene a council on: 'is the Tasky harvest capturing behaviour, or
+> only structure?' Seat four lenses, run blind to each other: process-critic, closure-gate critic,
+> devil's-advocate (argue it is fine), method-improvement. Each grounds-truth the real tree first (a seat that
+> cannot cite is ignored) and leads with the uncomfortable truth. Then I synthesise, DETERMINE GENUINE FUNCTION
+> (does the fix actually catch the class, by demonstration not assertion?), and END IN BUILD-OR-KILL the same
+> beat, recording the surviving dissent." See [docs/prompting.md](docs/prompting.md) for the appeals-tier prompts.
 
 ### The Appeals Council
 
@@ -355,6 +377,22 @@ method and the council. Adopt the spine (two ledgers), the arc (harvest, distil,
 (ground-truth everything, one writer of shared state, build-first, the continuous closure-gate), and the agent
 shapes (builder plus adversarial-verifier; the council). Any team, human or agent, can run it.
 
+### Prompting it well
+
+LDD is only as good as the briefs that drive it. Three things make any LDD prompt work, and their absence is why
+most fail:
+
+1. **Demand ground-truth, refuse vibes.** Make the agent grep, read, count, and cite `file:line` for every claim.
+2. **Give exact anchors and the exact thing to prove.** Name the files, the invariant to hold, and for a verifier
+   the exact attack to run and the verdict shape to return.
+3. **State the terminal state and make it a hard stop.** "Write to exactly this file", "end in build-or-kill",
+   "stop before the build", "done only if both legs are clean".
+
+The example prompts scattered above (harvest, council, the two-leg close) each encode these. The full set, with a
+recipe per element (harvest both-altitudes, the distil/drop-list adversary, the two-leg close, the council and
+the appeals tiers), copy-pasteable worked examples on Tasky, and the **anti-prompts** that make it run badly, is
+in **[docs/prompting.md](docs/prompting.md)**.
+
 ---
 
 ## Going deeper
@@ -364,6 +402,9 @@ The README is the pitch. When you want to actually run LDD:
 - **[docs/playbook.md](docs/playbook.md)** : start here to RUN it. The prescriptive operating manual: the beat
   loop, the decision rules, how to choose an orchestration shape, the gate checklists, how to brief a subagent
   (with annotated examples), and definition-of-done at the beat, milestone, and project level.
+- **[docs/prompting.md](docs/prompting.md)** : how to PROMPT it well. The invocations that start each element,
+  the brief shape that makes harvest / distil / the two-leg close / the council / the appeals run, copy-pasteable
+  worked example prompts (on Tasky), and the anti-prompts that make it run badly.
 - **[docs/methodology.md](docs/methodology.md)** : the long-form walkthrough of the arc (harvest, distil, walking
   skeleton, loop), the disciplines, and the milestone close, against one running example.
 - **[docs/systems.md](docs/systems.md)** : the comprehensive systems reference. Every distinct system that makes
