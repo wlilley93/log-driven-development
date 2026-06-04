@@ -12,7 +12,7 @@ description: The adversarial deliberation court - a claimant and a defendant ste
 > escalates a three-tier court modelled on UK law.
 
 > **This skill is the practice direction; the rules live in the DPR.** The authoritative *procedure* - how a case
-> runs, in 12 Parts and 38 numbered rules - is the **[Development Procedure Rules, `court/DPR.md`](../../court/DPR.md)**.
+> runs, across 12 Parts - is the **[Development Procedure Rules, `court/DPR.md`](../../court/DPR.md)**.
 > This file is only the *operating* guide: how to run a proceeding as agents. **For any rule, the DPR is
 > controlling** (cited inline as "DPR Part N" / "DPR N.M"). The court also reads and writes
 > **[`SPEC-LAW.md`](../../court/SPEC-LAW.md)** (apex law it writes) and **[`CASE-LAW.md`](../../court/CASE-LAW.md)**

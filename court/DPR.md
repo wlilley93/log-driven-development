@@ -119,7 +119,8 @@ fairly what the other side gets right.
 
 ## Part 6 - Stage 1: the neutral bench
 
-**DPR 6.1 - The bench.** A panel of 3-5 impartial justices, no advocate among them, each handed *both* briefs.
+**DPR 6.1 - The bench.** An **odd-numbered** panel (3 or 5) of impartial justices, no advocate among them, each
+handed *both* briefs (odd, so the bench cannot deadlock on a tie - DPR 6.7).
 
 **DPR 6.2 - A brief is argument, not evidence; the bench is fallible.** Each justice **independently
 ground-truths** every load-bearing claim, **re-running the inline command** behind any figure (DPR 5.3) rather
@@ -137,7 +138,26 @@ citations), **authorities applied**, a **holding**, the **ratio decidendi** (the
 standing for appeal - LDD-INV-16). The orchestrator synthesises the bench into one judgment of the court.
 
 **DPR 6.5 - Build-or-kill, the same beat.** The judgment resolves to a committed change or an explicit kill, and
-is acted on now. A judgment that only defers is the pathology the court exists to catch.
+is acted on now. A judgment that only defers is the pathology the court exists to catch. (A *conditional* refusal -
+refused on this record, with leave reserved to re-apply on a stated, tree-verifiable condition, as in *In re the
+Justice-System Reorganisation* - is a present disposition, the narrowest lawful step, not a defer.)
+
+**DPR 6.6 - The function gate has two instruments (SPEC-LAW-2).** The determination of DPR 6.3 has two stages that
+may not be conflated in either direction: (1) an **autonomous spike** exercising the owned layers without the
+principal, sequenced *first* as the kill-or-confirm gate (its failure is the kill signal); and (2) a **final
+end-to-end run** that needs the principal (a live environment, real data, a human-gated resource), which stays
+gated as the final determination. Discharging the first does not discharge the second. Function is measured at the
+scope the **spec's own definition-of-done** names, never a narrower one a party finds convenient (only a new
+ratified entry, LDD-INV-16, may move the scope), and an owned product-facing surface may not be reclassified as a
+consumed commodity to drop it from the claim. "The pieces exist" / "the design is sound" / "it composes by design"
+meet the *design-sufficiency* bar only - necessary, never sufficient: a seat asserting function with no spike,
+test, or demonstrated path behind it is ignored on that point, and a court may not ratify a hypothesis.
+
+**DPR 6.7 - Deadlock disposes of nothing (In re the Court-Split).** A bench that reaches no majority for any
+disposition (an even split, despite DPR 6.1) has **not** disposed of the case: a deadlock does not "stand" and
+does not default to affirm. A first-instance deadlock re-seats one fresh bench; an **Appeals deadlock escalates**
+to the Supreme Court on the point of law dividing the bench, where the point settled controls and the merits
+disposition then follows from it on the existing record (the apex rules on law, not the design - DPR 7.1).
 
 ---
 
@@ -180,6 +200,15 @@ count, a command's output, a test run (LDD-INV-1). An advocate's assertion is no
 
 **DPR 9.3 - Vacate on collapsed fact.** A holding resting on a fact later shown false is **vacated and re-decided
 on re-grounded truth, never patched** (SPEC-LAW-1(c)).
+
+**DPR 9.4 - The principal override of record (SPEC-LAW-1).** A principal's preference, policy, or risk-acceptance
+enters a proceeding only as a **principal override of record**: an append-only superseding entry (LDD-INV-16). It
+confers *standing* to bring or appeal (DPR 2.2) but is **excluded as evidence on the merits** - weighed only as a
+recorded policy election, never as ground-truth (LDD-INV-1) - and may not on its own flip a fail-closed security
+or trust-boundary gate. A security or trust-boundary question has exactly **two lawful dispositions**: a present,
+fail-closed, verifiable control built in the tree, or a kill. "Allowed, conditional on a future control" - one
+resting on a contract, policy, promise, or signature outside the tree - is a deferral disguised as a control, and
+is barred.
 
 ---
 
@@ -225,6 +254,16 @@ precedent already settles). A dismissed petition produces no spec law.
 step** and does not add structure. Spec law is clarified by *coverage of the points of law that matter, not by
 volume*; the rate of new references tapers as the registers mature.
 
+**DPR 11.4 - The test for a second standing unit (SPEC-LAW-3).** A proposed split, second installable/consumption
+unit, or added standing surface is lawful only if its proposer demonstrates **all three** gates (the burden is on
+the proposer): (1) **single-source integrity** - one copy and one version of each shared register at the root,
+referenced never vendored, with a fail-closed check on register-revision skew; (2) **demonstrated need on
+ground-truth** - a real, in-tree consumer measured against verified figures, never asserted, speculative, future,
+or rested on a later-falsified premise (*cheapness is not need*); and (3) **severability** - no live bidirectional
+dependency (mutual referral, self-invocation, a convene-time read). Fail any one and the unit is barred; the
+default (DPR 11.3) is consolidation. A drift-foreclosing check is *necessary* for any permitted view but never by
+itself *authorises* a second governing surface - that authorisation is a question of law, not of engineering.
+
 ---
 
 ## Part 12 - Recording and immutability
@@ -236,3 +275,12 @@ opinion, ratio, authorities, and self-dissent, never collapsed to only a synthes
 **DPR 12.2 - Append-only (LDD-INV-16).** The registers are append-only. A precedent is never edited or deleted in
 place; a later court supersedes it by a new entry that cites the one it narrows. The court rises and dissolves;
 the *judgment* persists.
+
+**DPR 12.3 - The DPR self-amends from rulings.** Not every ruling enters the DPR. A *substantive* point of law
+stays in [`SPEC-LAW.md`](SPEC-LAW.md) (the court *applies* it). But where a ruling, or a demonstrated practice,
+bears on **how a case runs**, its procedural essence is distilled into the DPR as a numbered rule that **cites the
+ruling it came from** (so DPR 6.6 cites SPEC-LAW-2, DPR 9.4 cites SPEC-LAW-1, DPR 11.4 cites SPEC-LAW-3, DPR 6.7
+cites *In re the Court-Split*). The fold-in is gated like any addition (DPR 11.3): demonstrated, gap-filling,
+never ceremony. This is the harvest-distil arc the method applies to legacy code, applied to the court's own
+rulings - it keeps the DPR a living procedural code synced to what the court has actually decided, with provenance
+back to each ruling.
