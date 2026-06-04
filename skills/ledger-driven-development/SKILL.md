@@ -80,7 +80,7 @@ quick-reference card), backed by [docs/methodology.md](../../docs/methodology.md
 
 ## Rules you do not break
 These are the method invariants. The full register, with the failure each prevents and where it is enforced, is
-[docs/invariants.md](../../docs/invariants.md) (LDD-INV-1..17); that register is the authoritative set, the
+[docs/invariants.md](../../docs/invariants.md) (LDD-INV-1..18); that register is the authoritative set, the
 bullets below are the quick-reference.
 - **Ground-truth, no vibes.** Cite `file:line` or command output, or you do not know it.
 - **One-writer rule.** Only the orchestrator writes the ledgers, the index, and the task list.

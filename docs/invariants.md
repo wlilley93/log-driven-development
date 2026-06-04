@@ -88,8 +88,8 @@ because no gate ever looked back at the source.
 **Enforced at.** `skills/ledger-driven-development/SKILL.md:85` (rule), `:42-43`, `:111`, `:171-172`;
 `docs/methodology.md:129-132` ("Done" = zero-gap sweep, the headline rule); `docs/playbook.md:48-52,245-275`;
 `docs/systems.md:188-189,262-264`; `tools/closure-gate/closure_gate.py:7-8,30-32`;
-`tools/closure-gate/README.md:9-11`; anti-pattern #2 `docs/anti-patterns.md:50-69`; smell
-`docs/anti-patterns.md:377`.
+`tools/closure-gate/README.md:9-11`; anti-pattern #2 `docs/anti-patterns.md:50-69` and (the source-coverage leg)
+anti-pattern #18 `docs/anti-patterns.md:407-437`; smell `docs/anti-patterns.md:377,493`.
 
 ## LDD-INV-6: Commit per beat with explicit paths
 
@@ -212,8 +212,9 @@ and the inverse failure: a coverage hole (dropped procedure), a wrong-but-intern
 skipped-file secret passing unchallenged because distil was the one major step with no adversary.
 
 **Enforced at.** `skills/ledger-driven-development/SKILL.md:106-107`; `docs/methodology.md:79-99`;
-`docs/systems.md:65-68`; `templates/intent-ledger.md:49-58` (the DROP-with-reason section); anti-pattern #12
-`docs/anti-patterns.md:264-281`; smell `docs/anti-patterns.md:387`.
+`docs/systems.md:65-68`; `templates/intent-ledger.md:49-58` (the DROP-with-reason section); the distil-adversary
+brief `docs/playbook.md:315-345`; anti-pattern #12 `docs/anti-patterns.md:264-281` and (the drop-list/fidelity
+adversary) anti-pattern #19 `docs/anti-patterns.md:441-467`; smell `docs/anti-patterns.md:387,494`.
 
 ## LDD-INV-14: A milestone is not done until all five close phases run, in order
 
@@ -297,10 +298,12 @@ field with structure (enums, state-machine names, taxonomy) while the actual dom
 altitude down in the source, is never opened, so the spec captures the SYSTEM and silently withholds the PROCESS
 and the closure gate cannot see it (because nothing it checks is below the structure altitude).
 
-**Enforced at.** `skills/ledger-driven-development/SKILL.md` (the intent-ledger spine, alongside LDD-INV-15's two
-named registers); `templates/intent-ledger.md` (the required `## The process / procedure` section); the harvest
-how-to in `docs/artifacts.md`; and the source-coverage leg of LDD-INV-5 (an empty PROCESS altitude is exactly what
-the source->spec sweep re-detects). Origin: the Clara-estate council verdict on harvest deficiency
+**Enforced at.** `skills/ledger-driven-development/SKILL.md:102-107` (the intent-ledger spine, alongside
+LDD-INV-15's two named registers); `templates/intent-ledger.md:36-53` (the required `## The process / procedure`
+section); `docs/methodology.md:65-77,135-138`; `docs/systems.md:37-41,67-74`; the harvest brief
+`docs/playbook.md:294-309`; anti-pattern #17 `docs/anti-patterns.md:377-403`; smell `docs/anti-patterns.md:492`;
+and the source-coverage leg of LDD-INV-5 (an empty PROCESS altitude is exactly what the source->spec sweep
+re-detects). Origin: the Clara-estate council verdict on harvest deficiency
 (`_qa/_COUNCIL-harvest-deficiency.md`, BUILD-2), determined-by-ground-truth (an empty PROCESS section would have
 blocked the knowledge-corpus ledger's green grade at write time).
 

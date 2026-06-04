@@ -62,15 +62,39 @@ meant* (the rules, the edge cases, the data shapes, the security mechanisms). Th
 claim does not go in the ledger. Harvest is a reading-and-citing job, not a designing job; you are not deciding
 what *should* be true yet, only recording what *is* true in the old code.
 
+**Harvest at two altitudes, not one.** Every area has a SYSTEM altitude and a PROCESS altitude, and a ledger that
+fills only the first has not finished the area. The SYSTEM altitude is the structure: the shapes, the enums, the
+state machines, the capabilities, the taxonomy, the things you can read off the type definitions and the schema.
+The PROCESS altitude lives one read deeper, in the handlers and the long functions and the comments: the
+step-by-step procedure, the rule or algorithm, the deadline arithmetic, the eligibility gate, the scoring rubric,
+the contents of a generated document or pack, the way variant A differs from variant B. It is what a human or an
+operator actually *does*, and it is exactly the layer a quick sampling read skims past, because the structure is
+visible at the surface and the procedure is buried below it. So an intent ledger declares both altitudes for its
+area and fills both. A ledger whose PROCESS section is empty is incomplete *by construction*, no matter how
+thorough its SYSTEM section looks, and it must not be rolled up as well-grounded: an answer like "the domain rule
+is `entity -> {SPV, TSL, OPCO}`" has captured the enum, not the procedure of incorporating an SPV. The structure
+is one altitude; the procedure that drives the structure is the one the harvest most often misses, and missing it
+is the systemic under-capture this whole step is written to prevent.
+
 For Tasky, harvest produces a `task-model.md` ledger that lays out all three completion mechanisms with their
-citations, notes exactly where they contradict, and captures the auto-reopen rule with the exact handler line it
-lives on (`src/events/onTaskReopen.ts:12`). The security smell (share links, no expiry, no revocation) is noted in
-the ledger's DROP-list section too, with its provenance, flagged as a defect whose fix is a separate fork rather
-than a behaviour to preserve.
+citations (the SYSTEM altitude), notes exactly where they contradict, and captures the auto-reopen rule one
+altitude down, as a procedure (the exact recursion over `blockedBy`, the order it walks, the cycle guard), with
+the exact handler line it lives on (`src/events/onTaskReopen.ts:12`). The security smell (share links, no expiry,
+no revocation) is noted in the ledger's DROP-list section too, with its provenance, flagged as a defect whose fix
+is a separate fork rather than a behaviour to preserve.
+
+**Before you call a surface empty, look harder for the source.** Two practical traps swallow real intent during
+harvest, and both look like "there is nothing here." First, an empty-looking directory is often a *placeholder for
+archived content*: the real material is in a zip, a tarball, a backup directory, a compressed export. Before you
+write "unsourced" or "lost" for a surface, check for archived, compressed, and backup copies and open them.
+Second, the same code or doc usually exists in *more than one place*: a vendored copy, a doc mirror, an archive,
+an older checkout. Enumerate all the copies, because a harvest that reads one copy (or a security scrub that
+scrubs one copy) silently misses the others. Both are cheap checks that prevent a confident, wrong "nothing here."
 
 **Exit criterion.** Every meaningful behaviour and rule in the legacy is either captured in an intent ledger with
-provenance, or explicitly noted as "looked at, nothing load-bearing here." A reader who never saw the old code
-could reconstruct what it did from the ledgers alone.
+provenance *at both altitudes* (the structure and the procedure that drives it), or explicitly noted as "looked
+at, nothing load-bearing here." A reader who never saw the old code could reconstruct not just what shape it had
+but what it *did*, step by step, from the ledgers alone.
 
 See [docs/artifacts.md, "Intent ledger"](./artifacts.md#intent-ledger) for the exact construction, the template
 at [`templates/intent-ledger.md`](../templates/intent-ledger.md), and the worked file at
@@ -94,9 +118,24 @@ The data structure *is* the product. Most of distillation is getting the core ty
 everything else is a view over them. A dropped thing is never dropped silently: it is recorded with its reason,
 so a future reader sees that it was a choice, not an oversight.
 
-**Exit criterion.** A spec exists that (a) covers every behaviour the ledgers marked as load-bearing, (b) lists
-every deliberately dropped thing with a reason, and (c) is small. If the spec is as big as the legacy, you have
-transcribed, not distilled.
+**Distil is the one step that must carry its own adversary.** Everywhere else in LDD a builder is paired with an
+independent skeptic; distil needs the same pairing, because the drop-list is where a coverage hole hides most
+comfortably. The license to drop has *two* meanings, and conflating them is how a missed procedure gets
+rationalised as good distillation. Dropping **redundancy** (verbatim duplicates, a second mechanism that says the
+same thing as the first) is legitimate distil. Dropping **un-read procedure** (a step sequence, a rule, an
+algorithm, a deadline, an eligibility gate, a document's contents whose only home was a source nobody opened) is a
+*coverage hole wearing distil's banner*. So before "harvest done," a **drop-list adversary** re-opens the cited
+source and, for each drop, rules it legitimate-redundancy or negligently-missed-procedure. The same adversary does
+two more jobs the rest of the run assumes someone did: it **spot-checks retained claims against their `path:line`
+for fidelity**, because a spec can be perfectly self-consistent and uniformly *wrong* (every claim agrees with
+every other claim and none of them matches the source); and it forces **complete, not sampled, security
+coverage** on every external-reach, money, and auth surface, because sampling is exactly what skips the one file
+holding a live secret. The drop-list, in other words, is no longer write-only: it is read back and adjudicated.
+
+**Exit criterion.** A spec exists that (a) covers every behaviour the ledgers marked as load-bearing, at both
+altitudes (the structure *and* the procedure), (b) lists every deliberately dropped thing with a reason, with that
+list re-opened and each drop ruled redundancy-not-procedure by the adversary, and (c) is small. If the spec is as
+big as the legacy, you have transcribed, not distilled; if the drop-list is empty, you transcribed too.
 
 See [docs/artifacts.md, "The spec"](./artifacts.md#the-spec), [`templates/spec-skeleton.md`](../templates/spec-skeleton.md),
 and [`examples/spec.md`](../examples/spec.md).
@@ -129,6 +168,22 @@ the `blockedBy` edges first-class), one coherent unit at a time.
 **Exit criterion (and the headline rule of LDD).** **"Done" means the closure sweep finds zero gaps, not "the
 tests pass."** Tests prove the code does what the tests say; the sweep proves the code covers what the *spec*
 says and that the structural budgets hold. A green test suite over a half-built spec is not done.
+
+But "the sweep is clean" carries a subtlety that is easy to miss and expensive to learn: **the sweep has two
+legs, and only one of them can see an omission.** The first leg is *spec against itself* - internal coherence: the
+id-graph resolves, no two documents contradict, every claim is provenanced, the traceability holds. This is
+necessary, and it is the one most people mean by "closure sweep." But it audits the spec against the spec, and an
+omission *leaves no contradiction*. A whole layer of the source can sit un-folded, the procedure altitude can be
+entirely missing, and the internal-coherence leg will report a clean, consistent, beautifully cross-referenced
+spec, because nothing it checks lives below the structure it can see. Self-consistency is blind to "what was never
+written down" by construction. The second leg is the only one that can catch it: *source against spec* - a
+loop-until-dry re-walk of every harvest source asking, of each one, "what load-bearing detail lives here that
+never reached the spec?" Its evidence base is the **source ranges and the ledger drop-lists, not the spec** - you
+cannot find an omission by reading the document that omitted it; you have to go back to the source. So "done" is
+*both* legs clean, on record: internal coherence AND source coverage. A freeze with no source-coverage sweep
+recorded is not done, however clean the internal leg came back. (The coverage bar is "every load-bearing
+*procedure* reached the spec," not "every source byte" - distil still governs, and the source-coverage loop must
+not be allowed to drag the spec back toward transcription.)
 
 ---
 
@@ -400,4 +455,5 @@ A concrete checklist. Run it against your own tangled, vibe-coded project the wa
 
 You do not need the plugin to do any of this; the method stands on its own. The plugin just makes the shapes the
 default. Either way, the rule that matters most is the simplest one: **provenance or it does not go in, and "done"
-means the sweep is clean.**
+means BOTH legs of the closure sweep are clean - internal coherence AND a source -> spec coverage sweep on record
+(LDD-INV-5), never internal coherence alone and never "the tests pass".**

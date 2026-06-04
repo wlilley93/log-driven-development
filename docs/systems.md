@@ -34,7 +34,11 @@ shows it was already tried and rejected. The RESUME pointer prevents the **cold-
 mid-run does not have to reconstruct state by archaeology.
 
 **How it operates in practice.** During harvest, one writer per intent file records what the legacy *does* (not
-what it should do) with provenance; a claim that cannot cite is a vibe and does not go in. Every beat, the
+what it should do) with provenance, at both altitudes (LDD-INV-18): the SYSTEM (shapes, enums, state-machines,
+capabilities) and the PROCESS one altitude down (the step-by-step procedure, the rules, the deadline arithmetic,
+the eligibility gates, the scoring rubrics, the document/pack contents, the per-variant differences). An intent
+file with a filled SYSTEM altitude but an empty PROCESS section has captured the enum, not the procedure, and is
+incomplete by construction. A claim that cannot cite is a vibe and does not go in. Every beat, the
 orchestrator appends one journal entry (the what, the how, and every decision with its reason and the alternatives
 weighed), appends a one-line INDEX pointer, and rewrites the RESUME pointer to the new you-are-here plus the one
 next move. A reversed decision is never edited away: a new entry supersedes the old and says so
@@ -60,12 +64,25 @@ machine-checkable definition of "done".
 **How it operates in practice.**
 
 - **Harvest.** Read the legacy as the requirements document it secretly is; extract its meaning into intent
-  ledgers with provenance. *Exit criterion:* every meaningful behaviour is captured with provenance or explicitly
-  noted as "looked at, nothing load-bearing here"; a reader who never saw the old code could reconstruct it.
+  ledgers with provenance, at BOTH altitudes (LDD-INV-18): the SYSTEM (shapes, enums, state-machines,
+  capabilities) AND the PROCESS one altitude down (the step-by-step procedure, the rules, the deadline arithmetic,
+  the eligibility gates, the scoring rubric, the document/pack contents, the per-variant differences - what a human
+  actually does). The procedure usually lives one read deeper than the structure, which is exactly why a sampling
+  harvest misses it; a ledger whose PROCESS section is empty is incomplete by construction and must not be rolled
+  up as well-grounded. *Exit criterion:* every meaningful behaviour is captured at both altitudes with provenance,
+  or explicitly noted as "looked at, nothing load-bearing here"; a reader who never saw the old code could
+  reconstruct both the system and the procedure that drives it.
 - **Distil.** Write the smallest complete spec: the minimal primitives that solve the domain, with the sprawl
-  dropped on purpose and each drop recorded with its reason. The data structure *is* the product. *Exit
-  criterion:* the spec covers every load-bearing behaviour, lists every dropped thing with a reason, and is small
-  (if it is as big as the legacy, you transcribed, you did not distil).
+  dropped on purpose and each drop recorded with its reason. The data structure *is* the product. Distil is the one
+  major step that carries its own adversary (LDD-INV-13): before "harvest done", a **drop-list adversary** re-opens
+  the cited source and, for each drop, rules it legitimate-REDUNDANCY (verbatim or duplicate material, a clean
+  distil) vs negligently-missed-PROCEDURE (a step, rule, algorithm, deadline, or pack-content whose only home was
+  source never opened, a coverage hole wearing distil's banner); spot-checks RETAINED claims against their
+  `path:line` for source-fidelity (a self-consistent spec can be uniformly wrong); and forces security-COMPLETE,
+  not sampled, coverage on every external-reach / money / auth surface (sampling can skip the one file with a live
+  secret). *Exit criterion:* the spec covers every load-bearing behaviour, lists every dropped thing with a reason
+  the adversary has ruled legitimate, and is small (if it is as big as the legacy, you transcribed, you did not
+  distil).
 - **Walking skeleton.** Build the thinnest end-to-end slice that actually runs: one real path through every layer
   (storage, domain, API, surface), before deepening any one part. *Exit criterion:* one real request runs end to
   end from a clean checkout with the gates green. The one real path is an authenticated path that crosses its
@@ -75,7 +92,9 @@ machine-checkable definition of "done".
   closure-gate stood up before the skeleton.)
 - **Loop to zero gaps.** Each pass, build the next slice on the skeleton, run the closure sweep against the spec,
   close the gaps (amending the spec when building proves a line wrong), journal the beat. *Exit criterion (the
-  headline rule):* "done" means the closure sweep finds zero gaps, not "the tests pass".
+  headline rule):* "done" means the closure sweep finds zero gaps on BOTH legs, not "the tests pass" - the internal
+  coherence leg (spec against itself) AND the source -> spec coverage leg (every harvest source re-walked for
+  un-folded load-bearing detail), since the internal leg alone is blind to an omission (LDD-INV-5).
 
 **Feeds / depends on.** Harvest depends on the **multi-author + coherence** shape (system 3) when the legacy is
 large. The loop depends on the **closure-gate** (system 6) as its gap detector and on **loop-until-dry** (system 3)
@@ -190,7 +209,17 @@ it is the brake that keeps an autonomous engine biased toward shipping rather th
 the tree is clean and complete: a max-function-length limit that denies, a cross-module **duplication ratchet**
 held by *folding* duplication and never by raising the number, formatter and linter as hard gates, and
 red-until-built tests for any spec surface declared but not yet covered. Its definition of done is the headline
-rule: **"done" means the closure sweep is clean, not "the tests pass".**
+rule, and that rule has **two legs**: **"done" means the closure sweep is clean, not "the tests pass"** - and the
+sweep is clean only when BOTH legs are on record (LDD-INV-5). Leg (a) is the **internal-coherence** sweep, spec
+against itself: every id resolves, no two docs contradict, every claim is provenanced, traceability holds. Leg (b)
+is the **source -> spec coverage** sweep, spec against source: a loop-until-dry re-walk of every harvest source
+asking "what load-bearing detail lives here that never reached the spec?", evidenced by the source ranges plus the
+ledger drop-lists, not by the spec. The two legs catch different failures, and the asymmetry is the point: leg (a)
+audits the spec against itself and is **structurally blind to an omission** (a missing thing leaves no
+contradiction to trip on), so leg (b) is the only one that can see un-folded detail. A done verdict carrying only
+the internal leg is not done. (The coverage bar is "every load-bearing PROCEDURE reached the spec", not "every
+source byte": the duplication-drop license of LDD-INV-13 still governs, so leg (b) does not drag the spec toward
+transcription.)
 
 **The failure it prevents.** Quality drift: agents (and humans) accreting duplication and sprawl until the rebuild
 *is* the mess being escaped. The duplication ratchet is specifically what stops Tasky's rebuild from re-growing a
@@ -322,13 +351,19 @@ earned a promotion: a short standalone record of one load-bearing, hard-to-rever
 decision, consequences), pulled out where the big calls are easy to find and cite by ID. The **spec** is the
 distilled minimal source of truth (primitives, invariants, deliberately-dropped-with-reason): the code is kept in
 sync with the spec, not the other way around. The **harmonize step** keeps the spec, the code, the invariants, and
-the backlog mutually consistent. The **closure sweep** is the mechanical gap detector that proves the build covers
-the spec.
+the backlog mutually consistent. The **closure sweep** is the mechanical gap detector, and it runs as **two
+legs**: an internal-coherence leg (spec against itself: ids resolve, no contradiction, provenance, traceability)
+and a source -> spec coverage leg (every harvest source re-walked for load-bearing detail that never reached the
+spec). The first proves the spec is self-consistent; the second proves the build and the spec together cover the
+source.
 
 **The failure it prevents.** The big decisions getting lost in a dense chronological journal (ADRs are the citable
 index of the load-bearing ones); the design fragmenting so the spec, the code, and the backlog quietly disagree
 (harmonize catches the drift); and a half-built spec being mistaken for "done" because the tests are green (the
-closure sweep checks coverage against the spec, not against the tests).
+closure sweep checks coverage against the spec, not against the tests). And the subtler failure the two-legged
+sweep exists to close: an internally-consistent spec graded "complete" while a whole layer of the source sits
+un-folded and unseen, because the internal leg cannot see an omission and only the source-coverage leg looks back
+at the source.
 
 **How it operates in practice.** A journal decision that is load-bearing graduates to an ADR (collapsing Tasky's
 three completion paths is the canonical one); a council verdict that needs a durable home becomes an ADR too. ADRs
@@ -336,7 +371,10 @@ are append-only as a set: you supersede an ADR with a new ADR, you never edit th
 first drafted at distil and then amended continuously through the loop: when building proves a spec line wrong, you
 fix the spec (it is the source of truth) and the journal records why. The harmonize step is run when surfaces have
 moved, reconciling spec, code, invariants, and backlog into one consistent picture. The closure sweep runs each
-loop pass and at milestone close, comparing build to spec and reporting the gaps.
+loop pass and at milestone close, running both legs: it compares build to spec and reports the internal gaps, then
+re-walks every harvest source (loop-until-dry, against the source ranges and the ledger drop-lists) and reports
+any load-bearing detail that never reached the spec. A FREEZE or done verdict with no source-coverage leg on
+record is not done.
 
 **Feeds / depends on.** ADRs are graduated from the **journal** (system 1) and from **council** verdicts (system
 4), and a Supreme ruling can constrain the spec as spec law. The spec is distilled from the **intent ledgers**

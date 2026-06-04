@@ -60,7 +60,10 @@ input. "Looks done" and "is done" feel identical from the outside until someone 
 worker's claim.** A subagent saying "done" is an input. The orchestrator re-runs build, test, lint, and re-proves
 the load-bearing invariant itself, from a clean checkout. And every milestone closes through an **independent
 adversarial verifier** that re-runs from clean and tries to break the new surface: in practice the verifier earns
-its keep by catching real defects, including security holes, that the builder talked itself out of seeing.
+its keep by catching real defects, including security holes, that the builder talked itself out of seeing. Note
+that this closure sweep now has *two* legs, not one: re-running and re-proving covers the build, but for a harvest
+"done" the verdict also needs the source-coverage leg in #18 (a re-walk of the sources, not just the spec) before
+it is honestly closed.
 
 **How to catch it.** "Done" without a re-run from clean is the tell. Before accepting any "complete," ask: did
 *I*, the orchestrator, build and test this from a clean tree, and re-prove the named invariant? If the only
@@ -274,7 +277,10 @@ timid default is to keep it all.
 **The rule that prevents it.** Distil the **smallest complete spec**: the minimal set of primitives that solves the
 domain, with the sprawl **dropped on purpose** and **each drop recorded with its reason**. The data structure is
 the product; get the core types and invariants right and everything else is a view over them. A dropped thing is
-never dropped silently, it is recorded so a future reader sees a choice, not an oversight.
+never dropped silently, it is recorded so a future reader sees a choice, not an oversight. The bar here is
+**redundancy**, not procedure: dropping a duplicated mechanism is the work, but dropping a step sequence or rule
+you never opened is a coverage hole wearing distillation's clothes. That distinction is what #19's drop-list
+adversary exists to police, so this rule reads alongside it, not against it.
 
 **How to catch it.** Compare the spec's size to the legacy's. If it is as big as the legacy, you transcribed, you
 did not distil. The other tell is an empty drop-list: a genuine distillation of a vibe-coded system always drops
@@ -368,6 +374,100 @@ call: stop and ask the principal rather than recording a guess as a decision.
 
 ---
 
+## 17. System captured, process withheld (the enum that pretends to be the procedure)
+
+**The failure.** A harvest ledger names every shape, enum, and state-machine in its area and reports the structure
+as fully grounded. But the thing a human or operator actually *does* never landed: the step sequence, the rules,
+the deadline arithmetic, the eligibility gates, the scoring rubric, the contents of the pack. The ledger says "the
+domain rule is ADGM => {SPV, TSL, OPCO}" and calls it captured, when all it captured was the enum. The procedure
+of, say, *incorporating an SPV* (the steps, the gates, the documents, the per-variant differences) is nowhere in
+the record, and the spec built on top inherits a confident-looking taxonomy with a hollow centre.
+
+**Why it happens.** The structure is the layer a sampling harvest reaches first, because it is the layer the source
+advertises: type names, table headers, a state-machine diagram, an enum. The procedure lives **one read deeper**,
+inside the prose and the code paths, which is exactly why a skim that fills every structural field still misses it.
+Filling the SYSTEM altitude *feels* like completeness, and an empty PROCESS section looks like an area that simply
+had no procedure rather than one nobody opened.
+
+**The rule that prevents it.** **Harvest at both altitudes: SYSTEM and PROCESS.** Every ledger must fill the SYSTEM
+altitude (shapes, enums, state-machines, capabilities) *and* the PROCESS altitude one step down (the procedure, the
+rules, the arithmetic, the gates, the rubric, the pack contents, the per-variant differences). A ledger with an
+empty PROCESS section is **incomplete by construction** and must not be rolled up as well-grounded, no matter how
+complete its SYSTEM altitude looks. This does not license transcription: the bar is that the load-bearing
+*procedure* reached the spec, and #12's redundancy rule still drops the duplicated parts of it afterward.
+
+**How to catch it.** Open any ledger and read its process section. If it lists enums, type names, and a
+state-machine but never says what a human actually does step by step, the procedure was never harvested. The
+sharpest test: pick one entry in the area's central enum and ask "where is the procedure that produces *this*
+value?" If the only answer is the enum value itself, the system was captured and the process was withheld. (Maps
+to LDD-INV-18.)
+
+---
+
+## 18. The spec graded its own homework (the coherence sweep blind to the gap)
+
+**The failure.** A FREEZE-READY verdict goes up: every id resolves, no two documents contradict, every claim is
+provenanced, traceability holds end to end. The spec is internally immaculate. And a whole layer of the source (the
+step-by-step domain procedure, an entire harvest source nobody re-walked) sits un-folded, invisible to all of it.
+The sweep audited the spec **against itself** and passed, because an omission leaves no contradiction to trip on.
+The system was graded complete by the one examiner structurally incapable of seeing what is missing: the spec.
+
+**Why it happens.** Internal-coherence checks are satisfying and tractable: they have a fixed surface (the spec)
+and a clear pass/fail. A source-coverage check is open-ended and slower, so the pull is to treat "the spec is
+self-consistent" as if it meant "the spec is complete." But self-consistency is blind to omission by construction.
+A document that simply never mentions a topic contradicts nothing.
+
+**The rule that prevents it.** **"Done" has two closure legs, not one.** Internal coherence (the id-graph,
+no-contradiction, provenance, traceability) is necessary but cannot see an omission. "Done" additionally requires a
+**source -> spec coverage** sweep: a **loop-until-dry** re-walk of *every harvest source* asking "what load-bearing
+detail lives here that never reached the spec?", evidenced by the **source ranges plus the ledger drop-lists**, not
+by the spec. A FREEZE/done verdict with no source-coverage sweep on record is not done. The bar stays "every
+load-bearing procedure reached the spec," not "every byte" (#12 still governs), so the coverage loop never drags
+the spec toward transcription.
+
+**Two practical lessons for that re-walk.** Before you declare a surface unsourced, empty, or lost, check for
+**archived, compressed, or backup copies** (zips, tarballs, backup directories): an "empty" directory is often a
+placeholder for content that was archived, not content that never existed. And enumerate **all copies** of a
+source: the same code or docs frequently live in several trees (vendored copies, doc mirrors, archives), so a
+coverage walk (or a security scrub) that touches one copy and stops has not actually covered the source.
+
+**How to catch it.** Read the verdict for evidence of *two* sweeps. If the only artefact is an internal-coherence
+pass (ids resolve, no contradictions) with nothing that re-opens the sources, the spec graded its own homework, and
+a whole source layer may be sitting un-folded behind a green verdict. The tell on the record: a FREEZE with no
+source-range citations and no drop-list re-walk behind it. (Maps to the two-leg LDD-INV-5.)
+
+---
+
+## 19. The write-only drop-list (distillation with no adversary)
+
+**The failure.** The drop-list fills up: dozens of things "dropped as redundant," each with a tidy reason, and
+nobody ever re-opens the source to check whether the reason holds. Mixed into the legitimate redundancy is a
+**negligently-missed procedure**: a step sequence or rule whose only home was a source nobody read, rationalised as
+a drop. Meanwhile the **retained** claims are never spot-checked against their `file:line`, so a spec that is
+perfectly self-consistent can be uniformly *wrong*. And the security scan sampled rather than swept, so the one
+file holding a live secret was the file it skipped.
+
+**Why it happens.** Distillation is the one major harvest step that, by default, carries no built-in skeptic. The
+build has a builder and an adversarial verifier; the council has dissent; but "what to drop" is usually a single
+agent's judgement, written down and never re-litigated. Dropping feels safe once it has a reason attached, and a
+reason that reads plausibly is rarely re-opened.
+
+**The rule that prevents it.** **Distil needs an adversary,** the decision-step analogue of builder plus
+adversarial-verifier. Before "harvest done," a **drop-list adversary** re-opens the cited source and, for each
+drop, rules it **legitimate-redundancy vs negligently-missed-procedure**; **spot-checks retained claims** against
+their `path:line` for source-fidelity (a self-consistent spec can be uniformly wrong); and forces
+**security-complete, not security-sampled** coverage on every external-reach, money, and auth surface, because
+sampling can skip the one file with a live secret. The drop-list is no longer write-only.
+
+**How to catch it.** Ask who re-opened the source after the drops were written. If the answer is "no one, the
+reasons were enough," the drop-list was write-only and any missed procedure, wrong-but-consistent claim, or skipped
+secret is still in there. The sharpest checks: pick a random retained claim and verify it actually says what its
+cited line says; pick a random "dropped as redundant" and confirm it really is a duplicate and not an only-copy
+procedure; confirm the security pass was complete (every reach/money/auth file), not a sample. (Maps to the
+drop-list/fidelity adversary of LDD-INV-13.)
+
+---
+
 ## The smell test (scan this to self-check)
 
 A fast checklist an agent can run against its own work, mid-beat or at close. Each line is a smell; if it is true,
@@ -389,3 +489,6 @@ stop and apply the rule above.
 - A journal entry with **"and also"** in it. (That was two beats; pick one next move.)
 - An appeal opened on **"I'd have done it differently"**. (No standing, no appeal.)
 - A **policy/owner question** being settled by an agent. (Ask the principal, do not guess.)
+- A ledger with a full **SYSTEM altitude but an empty PROCESS section**. (The procedure was never harvested.)
+- A FREEZE verdict with **only an internal-coherence sweep**, no source -> spec re-walk. (The spec graded itself.)
+- A drop-list **nobody re-opened the source against**. (Write-only; redundancy-vs-missed-procedure never ruled.)

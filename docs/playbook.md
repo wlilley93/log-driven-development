@@ -48,8 +48,9 @@ a rename you can fully see) you may do inline; everything with judgement in it g
 **5. GROUND-TRUTH THE RESULT FROM CLEAN.**
 *Do:* you (the orchestrator) build, test, lint, and **re-prove the load-bearing invariant yourself**, from a clean
 state. A subagent saying "done" is an **input**, never the verdict.
-*Prevents:* a worker self-report passing as truth. "Done" is *your* judgement after the closure sweep is clean, not
-a claim you inherited.
+*Prevents:* a worker self-report passing as truth. "Done" is *your* judgement after BOTH legs of the closure sweep
+are clean (internal coherence AND a source -> spec coverage sweep on record, see [section 6](#6-definition-of-done-three-levels)),
+not a claim you inherited.
 
 **6. FIX ANYTHING WRONG before committing.**
 *Do:* if the result is wrong, fix it (spawn a fix beat or correct it) before you commit. **If it is a SECURITY
@@ -183,8 +184,28 @@ and the actual result), not "looks fine".
 > Which tool owns each phase and at which trigger is not restated here: see the two-tier(+) ownership matrix in
 > [systems.md](./systems.md) (system 7), the single source of truth (LDD-INV-9).
 
-> **What "done" means at the gate.** "Done" means **you ground-truthed it and the closure sweep is clean.** It never
-> means "the tests pass" alone, and it never means a worker said so.
+### 4c. The project-close gate (the FREEZE checklist, both legs required)
+
+At project FREEZE the five-phase milestone close is not enough: it audits the spec against itself. Before you stamp
+FREEZE/done you must also have the **source -> spec coverage sweep on record**. This item is mandatory and checkable:
+
+- [ ] **A source-coverage sweep is ON RECORD.** A loop-until-dry re-walk of **every** harvest source (run as the
+      loop-until-dry shape, K consecutive empty rounds) asked, source by source, "what load-bearing PROCEDURE lives
+      here that never reached the spec?" Its evidence is the **source ranges plus the ledger drop-lists**, not the
+      spec. Leg (a)'s internal-coherence audit cannot satisfy this item: an omission leaves no contradiction, so a
+      clean coherence sweep is blind to it. **A FREEZE verdict with no source-coverage sweep recorded is not done**,
+      no matter how clean leg (a) is.
+
+> **What "done" means at the gate.** "Done" means **you ground-truthed it and BOTH legs of the closure sweep are
+> clean.** Leg (a), **internal coherence**: the spec audited against itself (ids resolve, no cross-doc contradiction,
+> every claim provenanced, traceability holds). Leg (b), **source -> spec coverage**: a re-walk of every harvest
+> source asking "what load-bearing detail lives here that never reached the spec?", whose evidence is the source
+> ranges plus the ledger drop-lists, **not** the spec. Leg (a) audits the spec against itself and is structurally
+> blind to an omission (an omission leaves no contradiction), so leg (b) is the only one that catches a whole
+> procedure that was never folded in. A done verdict with **no source-coverage sweep on record** is not done. It
+> never means "the tests pass" alone, it never means internal coherence alone, and it never means a worker said so.
+> (The coverage bar is "every load-bearing PROCEDURE reached the spec", not "every source byte": distil still
+> governs, do not let the coverage loop drag the spec toward transcription.)
 
 ---
 
@@ -255,6 +276,74 @@ Why it works: the verifier has no room to wave it through. Each attack is concre
 per-attack, and the verifier re-runs from clean rather than trusting the builder. This is the shape that catches the
 defect the builder talked itself out of seeing.
 
+### Annotated example: a harvest brief
+
+The harvest is run as multi-author + coherence (see [section 3](#3-choosing-an-orchestration-shape)). A harvest brief
+must demand BOTH altitudes and force the practical source checks, or the harvester fills the structure and silently
+withholds the procedure.
+
+```
+ROLE: Harvester. Build the intent ledger for the <area> surface from the legacy.
+
+SOURCES (enumerate ALL copies first): list every tree this area lives in - the live source, any
+  vendored copy, doc mirror, and ARCHIVED / COMPRESSED / BACKUP copy (zips, tarballs, backup dirs).
+  An "empty" directory is usually a placeholder for archived content: before you call a surface
+  unsourced/empty/lost, look inside the archives and back up your claim with a path. A scrub that
+  touches one copy and misses the others is not a harvest.
+
+HARVEST AT BOTH ALTITUDES (fill BOTH sections, neither may be left empty):
+  - SYSTEM: the shapes, enums, state-machines, capabilities, taxonomy - the structure.
+  - PROCESS: the step-by-step procedure one altitude DOWN - the rules, the deadline arithmetic,
+    the eligibility gates, the scoring rubrics, the document/pack contents, the per-variant
+    differences: what a human or operator actually DOES. The procedure usually lives one read
+    deeper than the structure, which is exactly why a sampling pass misses it. Capturing
+    "the rule is ADGM => {SPV,TSL,OPCO}" is the enum, NOT the procedure of incorporating an SPV.
+
+PROVENANCE: every claim cites file:line. Carry the risk-surface field (auth / money / crypto /
+  multi-tenant-isolation / external-reach).
+
+RETURN (free text): the ledger with BOTH altitudes filled and a DROP-list with a reason per drop.
+  An EMPTY PROCESS section means the ledger is incomplete by construction: say so, do not roll it
+  up as well-grounded.
+DO NOT journal, touch shared state, or commit. I will ground-truth and record.
+```
+
+Why it works: the harvester cannot answer "the enum" and stop (the PROCESS section must be filled), cannot quietly
+skip an archived copy (the SOURCES line forces the archive/all-copies check before any "empty/lost" claim), and must
+return a drop-list with reasons so the distil adversary below has something to re-open.
+
+### Annotated example: a distil adversary brief (run BEFORE "harvest done")
+
+Distil is the one major step that must carry its own adversary, the decision-step analogue of builder +
+adversarial-verifier. Before you ever stamp "harvest done", spawn a drop-list adversary. A self-consistent spec can be
+uniformly wrong, and a drop-list that is only ever written is where a missed procedure or a skipped secret hides.
+
+```
+ROLE: Drop-list adversary. Re-open the cited source and challenge the distil. You are not here to confirm it.
+
+GROUND IN: the actual source ranges (file:line) cited by the ledgers and the spec, NOT the spec's own prose.
+
+DO ALL THREE:
+  1. EVERY DROP: re-open the cited source and rule each drop legitimate-REDUNDANCY (verbatim or
+     duplicate material, a fine distil) vs negligently-missed-PROCEDURE (a step sequence, rule,
+     algorithm, deadline, eligibility gate, or document/pack content whose only home was source
+     never opened - a coverage hole wearing distil's banner). The drop-list is no longer write-only.
+  2. RETAINED claims (spot-check a sample): check each against its path:line for source-fidelity.
+     A self-consistent spec can be uniformly WRONG; the only test is the byte it claims to quote.
+  3. SECURITY = COMPLETE, not sampled: walk EVERY external-reach / money / auth surface, not a
+     sample (sampling can skip the one file holding a live secret).
+
+VERDICT SHAPE (free text): per drop, REDUNDANCY or MISSED-PROCEDURE with a file:line; per sampled
+  retained claim, FAITHFUL or WRONG with the source byte; per security surface, the file walked and
+  the finding. Any MISSED-PROCEDURE or WRONG or skipped-secret BLOCKS "harvest done".
+DO NOT journal, touch shared state, or commit. RETURN the verdict; I decide whether distil is done.
+```
+
+Why it works: dropping redundancy is distil, dropping un-read procedure is a coverage hole, and only re-opening the
+source tells them apart. The retained-claim spot-check catches the uniformly-wrong spec, and the complete (not
+sampled) security walk catches the one file with the secret. Without this step, distil would be the only major move
+with no adversary.
+
 ---
 
 ## 6. Definition of done (three levels)
@@ -282,16 +371,24 @@ defect the builder talked itself out of seeing.
       without this).
 - [ ] The sign-off record exists and records all five phases and their evidence.
 
-**The project is done when:**
+**The project is done when (BOTH closure legs are clean, not one):**
 
-- [ ] The **closure sweep finds zero gaps** against the spec (not "the tests pass"): every spec surface is built,
-      every declared-but-unbuilt red test is now green, the duplication ratchet holds, and the structural budgets
-      are met.
+- [ ] **Leg (a), internal coherence:** the spec audited against itself finds zero gaps (not "the tests pass"): every
+      spec surface is built, every declared-but-unbuilt red test is now green, the duplication ratchet holds, the
+      structural budgets are met, ids resolve, no cross-doc contradiction, traceability holds.
+- [ ] **Leg (b), source -> spec coverage:** a loop-until-dry re-walk of **every harvest source** asking "what
+      load-bearing detail lives here that never reached the spec?" found nothing new for K consecutive rounds. Its
+      evidence on record is the **source ranges plus the ledger drop-lists**, not the spec (leg (a) cannot see an
+      omission, because an omission leaves no contradiction). The coverage bar is "every load-bearing PROCEDURE
+      reached the spec", not "every source byte". **A FREEZE/done verdict with no source-coverage sweep on record is
+      not done.**
 - [ ] Every load-bearing decision is traceable: the journal records why the system is shaped this way, and the
       load-bearing ones graduated to ADRs.
 - [ ] Every harvested load-bearing behaviour is either built or explicitly dropped-with-a-reason in the spec.
 
-> The headline rule, one line: **"done" means the orchestrator ground-truthed it and the closure sweep is clean.**
+> The headline rule, one line: **"done" means the orchestrator ground-truthed it and BOTH closure legs are clean -
+> internal coherence AND a source -> spec coverage sweep on record.** Internal coherence alone is blind to an
+> omission; only the source-coverage leg sees the procedure that was never folded in.
 
 ---
 
@@ -339,7 +436,12 @@ SUBAGENTS: tell them: don't journal, don't touch shared state, don't commit; RET
            give exact anchors + the invariant to prove (+ for a verifier: the exact attack + verdict shape).
            wave-throttle; free-text returns over rigid schemas.
 
-DONE = orchestrator ground-truthed it AND the closure sweep is clean.  Never "tests pass". Never "a worker said so".
+DONE = orchestrator ground-truthed it AND BOTH closure legs clean:
+       (a) internal coherence (ids resolve, no contradiction, provenance, traceability)
+       (b) source->spec coverage sweep ON RECORD (loop-until-dry re-walk of every harvest source:
+           "what load-bearing detail here never reached the spec?"; evidence = source ranges + drop-lists, NOT spec)
+       Leg (a) is blind to an omission; only (b) sees it. No source-coverage sweep on record = NOT done.
+       Bar = every load-bearing PROCEDURE reached the spec (not every byte). Never "tests pass". Never "a worker said so".
 ```
 
 ---
