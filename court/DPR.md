@@ -257,13 +257,14 @@ volume*; the rate of new references tapers as the registers mature.
 **DPR 11.4 - The test for a second standing unit (SPEC-LAW-3).** Whether a proposed split, second
 installable/consumption unit, or added standing surface is lawful is governed by the conjunctive three-gate test
 of **SPEC-LAW-3(c)** (*Reference re Consolidation*: single-source integrity; demonstrated need on ground-truth;
-severability), which the court **applies as authority under DPR 9.2** - the bench does not restate it here.
-Procedurally: the **burden is on the proposer** to demonstrate every gate on ground-truth (DPR 9.1); a passing
-mechanical or drift-foreclosing check is *necessary* but never by itself *authorises* a second governing surface,
-so authorisation is decided as a **question of law** (DPR 9.2), not of engineering - a green check does not stand
-in for a judicial holding. Fail any gate and the default disposition is the narrowest lawful step: consolidation
-(DPR 11.3). *(Amended per* In re DPR 11.4*: the restated substantive test was struck as a duplication of its
-owner, SPEC-LAW-3, leaving the procedural residue and a citation.)*
+severability), which the court **applies as authority under DPR 9.2**; the bench does not restate the standard
+here. **Procedure only:** the proposer bears the burden and pleads first, on the DPR 9.1 ground-truth standard
+(assertion is not evidence); the question is decided as a **point of law** (DPR 9.2), so a passing mechanical or
+drift-foreclosing check does not stand in for a judicial holding; where a gate fails, the default disposition is
+the narrowest lawful step, consolidation (DPR 11.3). *(Amended per* In re DPR 11.4 *- first instance, then on
+appeal: the substantive standard, including the necessary-not-sufficient / authorisation-is-a-question-of-law
+clause of SPEC-LAW-3(c), is struck and owned only by SPEC-LAW-3; the DPR keeps only the procedure for running the
+question.)*
 
 ---
 

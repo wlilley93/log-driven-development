@@ -93,9 +93,10 @@ into a dedicated `justice/` folder once a real consumer is demonstrated.
 
 ---
 
-## CASE-4: *In re DPR 11.4* (first instance)
+## CASE-4: *In re DPR 11.4* (first instance, then on appeal)
 
-**Court.** First instance (unanimous, 3-0). **Date.** 2026-06-04. **Status.** Stands.
+**Court.** First instance (unanimous, 3-0), then Court of Appeal (unanimous, 3-0). **Date.** 2026-06-04.
+**Status.** Varied on appeal: the Court of Appeal's OVERTURN-CROSSREF controls (DPR 10.3).
 
 **Question.** Should DPR 11.4 (which had *restated* SPEC-LAW-3's conjunctive second-unit test) be removed from the
 DPR as substantive law, not procedure?
@@ -123,3 +124,22 @@ number is itself questionable.
 
 **Note.** The first reported case about the court's own rulebook (not the repo's packaging), and the first
 exercise of DPR 12.3 in anger: the self-amendment boundary catching a mis-categorised rule and correcting it.
+
+### On appeal (Court of Appeal, unanimous 3-0: OVERTURN-CROSSREF)
+
+**Held.** The first-instance KEEP-AS-CITATION-ONLY is **overturned in part**. The appeal succeeded on its central
+ground: the retained "authorisation is a question of law, not engineering" line was **verbatim SPEC-LAW-3(c)** -
+substantive, not procedure - and "a single sentence cannot be half-substantive", so it is struck and owned only
+by SPEC-LAW-3. The court stopped short of the appellant's primary plea (full removal): a thin **procedural** shell
+genuinely survives - the burden pleads first on the DPR 9.1 ground-truth standard, the question is decided as a
+point of law (DPR 9.2), and a passing mechanical check is not a judicial holding.
+
+**Ratio.** DPR 12.3's procedure/substance boundary is applied **clause by clause, not rule by rule**: a numbered
+DPR rule may carry the *procedural essence* of a ruling (who bears the burden, on what evidentiary standard, how
+the bench runs and may not dispose of the question), but may **not** reproduce the ruling's *substantive
+standard-sentence*, which has one owner (SPEC-LAW-3) and is cited, never copied. DPR 11.4 was amended accordingly.
+
+**Recorded dissent (standing for a further appeal on a point of law).** One justice would have gone to
+OVERTURN-REMOVE: once the standard-sentence is struck, the residue is thin and DPR 9.1/9.2 nearly subsume it, so a
+per-precedent rule may be surplus. Whether a per-precedent procedural signpost is ever lawful, or is always
+subsumed by the generic DPR 9.1/9.2, is the point of invariant law a Supreme reference would settle.
