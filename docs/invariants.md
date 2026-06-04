@@ -69,11 +69,21 @@ RETURN content blocks, a coherence agent emits an integration checklist, and the
 ## LDD-INV-5: "Done" is the orchestrator's judgement (and the clean sweep, not "tests pass")
 
 **Rule.** "Done" is the orchestrator's call after ground-truthing from a clean checkout, and at project level it
-means the closure sweep finds zero gaps against the spec, never "the tests pass" alone and never a worker's
-self-report. This is the headline rule of the arc.
+means the closure sweep finds zero gaps, never "the tests pass" alone and never a worker's self-report. The
+closure sweep has TWO legs and "done" requires BOTH on record: (a) spec -> internal coherence (the id-graph
+resolves, no cross-doc contradiction, every claim is provenanced, traceability holds) AND (b) source -> spec
+coverage: a re-walk of every harvest source asking "what load-bearing detail lives here that never reached the
+spec?", run as a LOOP-UNTIL-DRY whose evidence base is the source ranges plus the ledger drop-lists, NOT the
+spec. An internal-coherence sweep audits the spec against itself and is structurally blind to an omission (an
+omission leaves no contradiction); the source-coverage leg is the only one that can see it. A FREEZE/done
+verdict with no source-coverage sweep on record is not done. (The coverage bar is "every load-bearing PROCEDURE
+reached the spec", not "every source byte" - LDD-INV-13 still governs; do not let the coverage loop drag the
+spec toward transcription.)
 
 **Prevents.** A milestone marked done because a worker said so, or because the tests pass while spec surfaces remain
-unbuilt.
+unbuilt; and the subtler failure this register was itself amended for: an internally-consistent spec graded
+"complete" while a whole layer of the source (e.g. the step-by-step domain procedure) sits un-folded and unseen,
+because no gate ever looked back at the source.
 
 **Enforced at.** `skills/ledger-driven-development/SKILL.md:85` (rule), `:42-43`, `:111`, `:171-172`;
 `docs/methodology.md:129-132` ("Done" = zero-gap sweep, the headline rule); `docs/playbook.md:48-52,245-275`;
@@ -187,7 +197,19 @@ anti-pattern #11 `docs/anti-patterns.md:243-261`; smell `docs/anti-patterns.md:3
 dropped and each drop recorded with its reason. An empty drop-list is the tell that you transcribed instead of
 distilling; if the spec is as big as the legacy, you transcribed.
 
-**Prevents.** Re-importing the sprawl under a new name; a rebuild that is the legacy with a different file layout.
+The license to drop has TWO permissions that must not be conflated: dropping REDUNDANCY (verbatim or duplicate
+material - legitimate distil) versus dropping UN-READ PROCEDURE (a step sequence, rule, algorithm, deadline,
+eligibility gate, or document/pack content whose only home was source never opened - a coverage hole rationalized
+as distil). The drop-list is therefore not write-only: distil is not done until a DROP-LIST ADVERSARY (the
+decision-step analogue of builder + adversarial-verifier) re-opens the cited source and, for each drop, rules it
+legitimate-redundancy vs negligently-missed-procedure; spot-checks a sample of RETAINED claims against their
+`path:line` for source-fidelity (a self-consistent spec can be uniformly wrong); and forces security-COMPLETE,
+not security-sampled, coverage on every external-reach / money / auth surface (sampling can skip the one file
+holding a live secret).
+
+**Prevents.** Re-importing the sprawl under a new name; a rebuild that is the legacy with a different file layout;
+and the inverse failure: a coverage hole (dropped procedure), a wrong-but-internally-consistent claim, or a
+skipped-file secret passing unchallenged because distil was the one major step with no adversary.
 
 **Enforced at.** `skills/ledger-driven-development/SKILL.md:106-107`; `docs/methodology.md:79-99`;
 `docs/systems.md:65-68`; `templates/intent-ledger.md:49-58` (the DROP-with-reason section); anti-pattern #12
@@ -257,6 +279,30 @@ silently re-fragmenting a consolidated concern (LDD-INV-9) with no precedent to 
 (Open gap from the harvest, ldd-court G1: no `SPEC-LAW.md` register file exists yet, so a Supreme ruling about the
 METHOD itself, including a ruling about this register, has no defined home. Flagged for the build step, not closed
 here.)
+
+## LDD-INV-18: Harvest at both altitudes (SYSTEM and PROCESS)
+
+**Rule.** Every intent ledger must declare and fill BOTH altitudes for its area: SYSTEM (the shapes, enums,
+state-machines, capabilities, the structure) AND PROCESS (the step-by-step procedure, the rule/algorithm, the
+deadline arithmetic, the eligibility gates, the scoring rubric, the document/pack contents, the per-variant
+difference - the things a human or operator actually does, one altitude below the structure). A ledger whose
+PROCESS section is empty is incomplete BY CONSTRUCTION and MUST NOT be rolled up as "well-grounded", no matter how
+complete its SYSTEM altitude is. This draws the line LDD-INV-13 left undrawn: INV-18 says the procedure layer must
+be harvested at all; INV-13 says redundancy within it may then be dropped. The two together remove the
+"structural sampling counts as done" escape hatch (a ledger that answers "the domain rule is ADGM => {SPV,TSL,OPCO}"
+has captured the enum, not the procedure of incorporating an SPV).
+
+**Prevents.** The systemic under-capture this register was amended to close: a harvest that fills every ledger
+field with structure (enums, state-machine names, taxonomy) while the actual domain procedure, which lives one
+altitude down in the source, is never opened, so the spec captures the SYSTEM and silently withholds the PROCESS
+and the closure gate cannot see it (because nothing it checks is below the structure altitude).
+
+**Enforced at.** `skills/ledger-driven-development/SKILL.md` (the intent-ledger spine, alongside LDD-INV-15's two
+named registers); `templates/intent-ledger.md` (the required `## The process / procedure` section); the harvest
+how-to in `docs/artifacts.md`; and the source-coverage leg of LDD-INV-5 (an empty PROCESS altitude is exactly what
+the source->spec sweep re-detects). Origin: the Clara-estate council verdict on harvest deficiency
+(`_qa/_COUNCIL-harvest-deficiency.md`, BUILD-2), determined-by-ground-truth (an empty PROCESS section would have
+blocked the knowledge-corpus ledger's green grade at write time).
 
 ---
 

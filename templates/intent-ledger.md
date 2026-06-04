@@ -33,6 +33,25 @@ The domain logic, edge cases, and behaviour people actually rely on. One rule pe
   `status`; the export trusts `archivedAt`. They drift. This is the single most important thing to resolve
   in the spec. `(src/views/list.tsx:130)` `(src/api/tasks.ts:204)` `(src/export/csv.ts:60)`
 
+## The process / procedure
+
+REQUIRED (LDD-INV-18). The step-by-step procedure one altitude BELOW the structure: what a human or operator
+actually does, in order, with the rules/arithmetic/gates/contents that govern each step. The precious-rules and
+data-shapes sections above capture the SYSTEM (the enums, shapes, state-machine names); this section captures the
+PROCESS (how the domain is actually driven). A ledger whose only home for the real procedure is source you did not
+open is not done: an empty PROCESS section is incomplete by construction and must not be rolled up as
+"well-grounded". If your area is genuinely structure-only (a pure data model with no procedure), say so
+explicitly and why - do not leave this blank.
+
+- <the procedure, as ordered steps + the rule/algorithm/deadline/gate/contents at each> `(path/file.ts:line)`
+- Example (Tasky): The "archive a completed project" procedure: (1) every task must be `done` or the action is
+  refused `(src/projects/archive.ts:40)`; (2) on archive, child tasks are stamped `archivedAt = now` depth-first
+  `(src/projects/archive.ts:55)`; (3) a 30-day undo window is recorded, after which a nightly job hard-deletes
+  `(src/jobs/purge.ts:22)`. The 30-day rule and the depth-first order are the precious procedure, not visible from
+  the `Project` shape alone.
+- Example (anti-pattern): writing only "Projects have an `archived` status `(src/models/project.ts:14)`" here is a
+  SYSTEM claim masquerading as PROCESS; it names the enum and withholds the procedure. INV-18 fails it.
+
 ## The data shapes
 
 The shapes the old code actually persists and passes around (not the shape you wish it had). Note the messy bits.

@@ -99,6 +99,12 @@ bullets below are the quick-reference.
    (the duplication, god-files, and over-long functions with their measured baseline), so neither concern survives
    only as un-cited prose. Each intent ledger also carries a **risk-surface** field (does this area touch auth /
    money / crypto / multi-tenant-isolation / external-reach). See LDD-INV-15.
+   Every ledger must be harvested at BOTH altitudes (LDD-INV-18): SYSTEM (the shapes, enums, state-machines,
+   capabilities) AND PROCESS (the step-by-step procedure one altitude down: the rules, deadline arithmetic,
+   eligibility gates, scoring rubrics, document/pack contents, per-variant differences - what a human actually
+   does). A ledger that fills only the SYSTEM altitude has captured the enum, not the procedure; its empty
+   PROCESS section makes it incomplete by construction and it must not be rolled up as well-grounded. The
+   structure is one altitude; the procedure that drives it is the one the harvest most often misses.
 2. **The metacognition journal** (`metacognition/*`) - *why every decision was taken.* One entry per beat:
    what was done, the tools/agents used, and **every decision with its reason** (what was chosen, the
    alternatives, and why). Newest appended; an `INDEX.md` one-liner points to each. If a decision is later
@@ -113,13 +119,24 @@ system mean here?" without archaeology. That is the payoff - the method *is* the
 - **Harvest** the legacy into intent ledgers (wave-throttled agents; free-text returns + self-written files).
 - **Distil** a minimal **substrate spec**: the smallest complete set of primitives that solves the domain,
   with the sprawl deliberately *dropped* (and dropped-with-reason recorded). The data structure *is* the product.
+  Distil is the only major step that must carry its own adversary (LDD-INV-13): before "harvest done", a
+  drop-list adversary re-opens the cited source and rules each drop legitimate-redundancy vs negligently-missed
+  procedure, spot-checks retained claims against their `path:line` for source-fidelity (a self-consistent spec
+  can be uniformly wrong), and forces security-COMPLETE (not sampled) coverage on every external-reach / money /
+  auth surface. Dropping redundancy is distil; dropping un-read procedure is a coverage hole wearing distil's
+  banner.
 - **Walking skeleton**: the thinnest end-to-end slice that actually runs (one real path through every layer),
   not a layer-by-layer build. Prove the spine before deepening any limb. The harvested security invariants
   (`_harvest/security-invariants.md`) graduate here into **red-until-built closure-gate tests**: each control is a
   failing test until its control is built, so the spine carries a security floor from the start (LDD-INV-12,
   LDD-INV-15).
-- **Loop** spec⇄build, closing gaps each pass, until an automated **closure sweep** reports zero gaps against
-  the spec. "Done" is *the sweep is clean*, not "the tests pass."
+- **Loop** spec⇄build, closing gaps each pass, until the **closure sweep** is clean. "Done" requires BOTH legs of
+  the sweep on record (LDD-INV-5): spec -> internal coherence (id-graph resolves, no contradiction, traceability
+  holds) AND source -> spec coverage (a loop-until-dry re-walk of every harvest source asking "what load-bearing
+  detail lives here that never reached the spec?", evidenced by the source ranges + the ledger drop-lists, NOT the
+  spec). The internal leg is blind to an omission (an omission leaves no contradiction); only the source leg sees
+  it. "Done" is *both sweeps are clean*, not "the tests pass" and not internal coherence alone. (The coverage bar
+  is "every load-bearing PROCEDURE reached the spec", not "every source byte": LDD-INV-13 still governs.)
 
 ## The standing disciplines (these are what make it work)
 1. **Ground-truth everything - no vibes.** Every claim, every finding, every "it's done" cites real evidence

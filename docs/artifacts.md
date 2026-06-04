@@ -65,7 +65,13 @@ rule, because nobody remembers it is there. The ledger is what makes that rule s
 2. **What goes in:** for each rule/behaviour/shape, a short statement of *what the old code does* (not what it
    should do), the **provenance** (file path + line or symbol), and a note on anything contradictory, defective,
    or surprising. Mark known defects explicitly (Tasky's no-expiry, no-revocation share link is recorded as a
-   *defect whose fix is a separate fork*, not a behaviour to preserve).
+   *defect whose fix is a separate fork*, not a behaviour to preserve). Cover BOTH altitudes (LDD-INV-18): the
+   SYSTEM (shapes, enums, state-machines) AND the PROCESS one altitude down (the ordered steps, deadline
+   arithmetic, eligibility gates, scoring rubrics, document/pack contents, per-variant differences). A ledger
+   that names the enum but never opens the source that holds the procedure has captured the system and withheld
+   the process; its empty `## The process / procedure` section makes it incomplete by construction and it must
+   not be rolled up as well-grounded. The procedure usually lives one read deeper than the structure, which is
+   exactly why a sampling harvest misses it.
 3. **The provenance / citation rule:** every claim cites real evidence. `completion logic lives in three places:
    src/models/task.ts:18 (done bool), src/models/task.ts:21 (status enum), src/models/task.ts:24 (archivedAt)`.
    No citation, no entry.
