@@ -79,17 +79,30 @@ LDD is built to prevent all three by construction.
    omission leaves no contradiction); the source leg is the one that sees it. "Done" means *both* legs are clean,
    not "the tests pass".
 
-> **What you actually say:** *"You told me the spec is finished, but did you actually check it against the real
-> codebase, or just that it reads consistently?"*
+> **What you actually say:** *"You said the spec is finished, but did you check it against the actual code, or
+> just that it reads consistently?"*
 >
-> That question draws the distinction the whole "done" gate turns on. Checking the spec reads consistently is one
-> leg, ids resolve, nothing contradicts itself, the cross-references line up. It feels like done, and it is the
-> leg most people stop at. But it is **blind to an omission**: if a whole behaviour in the code never made it
-> into the spec, there is nothing for an internal check to trip on, no contradiction, no dangling reference, just
-> a silent hole. The only way to catch that is the *other* leg: walk the source and ask "what is in here that
-> never reached the spec?" Your sentence ("check it against the real codebase") is what triggers that second leg.
-> "Done" means both legs are clean, and asking for the second one by name is the single highest-leverage habit in
-> the whole method. More plain-English prompts, per element, in [docs/prompting.md](docs/prompting.md).
+> That question draws the distinction the whole "done" gate turns on. There are two different checks, and they
+> catch different failures:
+>
+> - **Leg 1, the spec against itself** (internal coherence): the ids resolve, nothing contradicts itself, the
+>   cross-references line up, the terms are used consistently. This is the leg that feels like done, and it is the
+>   one most people stop at.
+> - **Leg 2, the spec against the source** (coverage): walk the actual code and ask "what is in here that never
+>   reached the spec?"
+>
+> Here is why leg 1 is not enough, made concrete. Suppose the harvest of Tasky quietly missed the auto-reopen
+> rule, a task silently reopens when a task blocking it reopens. The spec can still be flawlessly
+> self-consistent: there is no contradiction, no dangling reference, nothing for an internal check to trip on,
+> because the rule is not *wrong* in the spec, it is simply *absent*. An omission leaves no trace for leg 1 to
+> find. The only thing that catches it is leg 2: reading `src/tasks/reopen.ts`, seeing the cascade, and noticing
+> the spec never mentions it. That is the single most common way a spec looks finished and is not, and it is
+> exactly the failure that a self-consistent-but-incomplete spec hides.
+>
+> Your one sentence ("check it against the actual code") is what triggers leg 2. "Done" means *both* legs are
+> clean, and asking for the second one by name is the highest-leverage habit in the whole method, because the
+> first leg cannot tell you it is missing. More plain-English prompts, per element, in
+> [docs/prompting.md](docs/prompting.md).
 
 ---
 
@@ -104,19 +117,19 @@ rebuild auditable by construction.
   A ledger must capture **both altitudes** (LDD-INV-18): the SYSTEM (shapes, enums, state-machines) and the
   PROCESS (the step-by-step procedure one level below). A structure-only ledger is incomplete by construction.
 
-  > **What you actually say** (plain English, no jargon): *"I inherited this task tracker and nobody knows how
-  > 'completion' really works, there seem to be a few competing versions of it. Before we touch anything, figure
-  > out what the code actually does and write it down, with where you found each rule."*
+  > **What you actually say** (plain English, no jargon): *"I've inherited this task tracker and no one knows how
+  > 'done' really works, there look to be a few competing versions of it. Before we change anything, read the code
+  > and write down what it actually does, with the line you found each rule on."*
   >
-  > Three small phrases in that sentence quietly set the whole discipline. "Figure out what the code actually
-  > does" is the difference between a harvest and a guess: the agent reads the real files, not its memory of how
-  > task trackers usually work. "Where you found each rule" forces provenance, every claim lands with a
-  > `file:line` so a later reader can check it, and an ungrounded claim is simply not written. And "how completion
-  > really works" pushes for the *procedure*, not just the shapes: the method captures both the three competing
-  > `done` / `status` / `archivedAt` fields (the system) AND the actual rule for how a task flips between them (the
-  > process), because a ledger that has the enums but not the behaviour is the most common way a harvest looks
-  > finished while missing the point. You did not have to know any of those rules existed; describing the mess and
-  > asking for the truth, with sources, was enough.
+  > Three phrases in that sentence quietly set the whole discipline. "Read the code and write down what it
+  > actually does" is the line between a harvest and a guess: the agent reads the real files, not its memory of
+  > how task trackers usually work. "The line you found each rule on" forces provenance, so every claim lands with
+  > a `file:line` a later reader can check, and an ungrounded claim is simply not written. And "how 'done' really
+  > works" pushes for the *behaviour*, not just the shapes: the method captures both the three competing `done` /
+  > `status` / `archivedAt` fields (the system) and the actual rule for how a task moves between them (the
+  > process). That last point matters because a ledger with the enums but not the behaviour is the most common way
+  > a harvest looks finished while missing the point. You did not have to know any of those rules existed;
+  > describing the mess and asking for the truth, with sources, was enough.
 - **The spec.** The distilled, minimal description of the system to build: the primitives, the invariants, the
   things deliberately dropped (each with a reason). The spec is the source of truth; the code is kept in sync
   with it, not the other way around.
@@ -158,9 +171,9 @@ verdict in the ledger and the **surviving dissent** (recorded, never buried, bec
 future appeal). The non-negotiable discipline: a Council **must end in a build action or a kill**, never in "we
 will look at it later". Its verdict **is the decision** unless someone appeals it.
 
-> **What you actually say** (no jargon, you never describe the panel): *"We keep arguing about whether Tasky's
-> share links should expire. Get a few independent, honest reads on the real code and just make the call, don't
-> book another meeting."*
+> **What you actually say** (no jargon, you never describe the panel): *"We keep going round on whether share
+> links should expire. Get a few honest, independent reads on the real code and make the call, I don't want
+> another meeting."*
 >
 > What that one sentence buys you, that a chat does not: the method seats a handful of critics with *distinct*
 > lenses (a security read, a simplicity read, a pre-mortem), runs them **blind to each other** so they cannot
@@ -181,8 +194,8 @@ independent seats who must **engage the Council's actual reasoning**, not re-arg
 Council's full record (every seat's verdict, the synthesis, the dissent, the inputs and outputs). It can
 **uphold or overturn**. Its decision stands unless taken to the Supreme Council.
 
-> **What you actually say** (same share-link fork, escalated): *"I'm not convinced, the worry about breaking
-> existing links got brushed aside."*
+> **What you actually say** (same share-link fork, escalated): *"I'm not convinced, the risk to existing links
+> got waved away."*
 >
 > The key thing here is what counts as a *reason* to reopen. "I would have decided it differently" is not enough,
 > and the method will say so; an appeal needs **standing**: the principal disagrees, a recorded dissent was left
@@ -211,9 +224,9 @@ narrowing the precedent on a point of law, can refine it. The court hierarchy it
 framework within which spec law is made, and it gives the rare contested decision a principled, bounded path to a
 final answer, without a standing committee that accretes politics.
 
-> **What you actually say** (same fork, now at the apex): *"Hold on, the appeal let the expiry requirement slide
-> because someone promised an ops process would revoke links by hand. That is not how we are supposed to decide a
-> security call. Rule on the rule, not this one link."*
+> **What you actually say** (same fork, now at the apex): *"Wait, the appeal let the expiry requirement slide on
+> a promise that someone would revoke links by hand later. That is not how a security call should be decided.
+> Rule on the principle, not this one link."*
 >
 > Notice the question changed. The lower courts argued the *merits* (should links expire?). The Supreme Council
 > is not asked that. It is asked a **point of law**: *was a security holding allowed to be relaxed by a promise
