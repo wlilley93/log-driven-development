@@ -89,6 +89,12 @@ climbs.
 **DPR 4.3 - Early exit on disposition.** The proceeding terminates the moment a tier disposes of the case and no
 party has standing to escalate. A case is never carried higher than the dispute requires.
 
+**DPR 4.4 - Caption.** A case has no party-v-party title: it is a *matter*, and the adversarialism is internal
+(the advocates), not in the caption. Caption it as real courts caption non-adversarial proceedings. Merits tiers:
+***In re <subject>*** (e.g. *In re the Court-Split*), which heads the ledger verdict and an appeal carries
+forward. A point of law referred to the apex: ***Reference re <point of law>*** (e.g. *Reference re
+Consolidation*), which becomes the precedent's name in [`SPEC-LAW.md`](SPEC-LAW.md).
+
 ---
 
 ## Part 5 - Stage 0: the steelman (the ripeness filter)
