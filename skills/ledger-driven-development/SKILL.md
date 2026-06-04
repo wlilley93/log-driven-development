@@ -60,6 +60,27 @@ quick-reference card), backed by [docs/methodology.md](../../docs/methodology.md
 | A principal-owner policy or domain call (not a technical one) | ASK the principal. Do not guess on their behalf. |
 | A security issue | Fix immediately. This overrides every schedule. |
 
+### Self-referral to the council (convene WITHOUT being asked)
+Do not wait to be told to convene. "A genuine hard fork" is made mechanical by these triggers: if ANY fires, you
+self-convene a council that same beat (it still ends in build-or-kill, never a stall), exactly as the closure-gate
+makes "done" mechanical. The triggers are deliberately NARROW so the deliberation budget is not blown on building
+that should just happen (a reversible choice still gets one sentence).
+- **Invariant / spec-law collision.** A decision would relax, contradict, or carve an exception to an LDD-INV or a
+  `council/SPEC-LAW.md` precedent. (This is the merits/law boundary itself; it may not be a solo call.)
+- **Unprovable genuine function.** A load-bearing claim's Determination of Genuine Function cannot be
+  affirmatively made (no spike, test, or demonstrated end-to-end path). Convene; resolve to spike-first or kill,
+  never ratify a hypothesis (SPEC-LAW-2).
+- **Decision thrash.** The same decision has been reversed across two or more beats. Repeated flip-flop is the
+  signal one perspective keeps rationalising; the panel breaks it.
+- **Builder/verifier deadlock.** After a build round plus a clean re-run, the adversarial verifier and the builder
+  still disagree on whether a load-bearing invariant holds. Escalate the correctness question, do not pick a side.
+- **Irreversible boundary relaxation.** A change crosses a trust / tenant / money boundary, is hard to reverse,
+  AND has real cost on both sides. (The textbook hard fork; make it checkable so it is never missed.)
+- **Whole-program fork.** A choice that reshapes a sequence, a milestone plan, or the spec's own scope (not a
+  local edit).
+The principal can always override a self-convened verdict (a principal override of record, append-only; SPEC-LAW-1):
+your autonomy is to CONVENE, never to overrule the principal.
+
 ### Orchestration shape selection
 - **Build one thing and be sure it is correct** -> BUILDER + ADVERSARIAL VERIFIER: one produces, an independent
   skeptic tries to BREAK it (grounding in the real tree, re-running the load-bearing checks). In practice the
