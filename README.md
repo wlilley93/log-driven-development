@@ -158,6 +158,48 @@ final answer, without a standing committee that accretes politics.
 
 ---
 
+## A worked example: from a contested fork to spec law
+
+Most decisions never touch a court: a reversible choice gets one decisive sentence and is built. The courts are
+for the rare decision that is high-stakes, hard to reverse, and contested. Here is the path one such decision
+takes, end to end. (Illustrative; substitute your own fork.)
+
+**The fork.** Midway through a rebuild a team must decide whether to relax a constraint the spec marked
+load-bearing - say, letting a component cross a trust boundary that was previously closed. It is hard to reverse
+and people disagree. Time for a court.
+
+1. **The Council (first instance) - argue the merits.** Convene a single fan-out of a few independent, named
+   seats, each with a distinct lens (project-health, a devil's-advocate pre-mortem, a security lens, the advocate
+   of the rejected alternative). Each seat **ground-truths against the real tree first** - a seat that cannot cite
+   evidence is ignored - and leads with the blunt truth. They run blind to each other, so they cannot converge
+   into groupthink. You synthesise their verdicts into one decision that **ends in a build action or a kill**
+   (never "we'll look at it later"), and you record the strongest **surviving dissent**, because that dissent is
+   the standing of any future appeal. The verdict is the decision unless appealed.
+
+2. **The Appeals Council - re-weigh the merits, with standing.** Later the verdict is challenged, but not on
+   taste. Appeal needs a real basis: the principal disagrees, a load-bearing dissent was left unresolved, or
+   **new ground-truth contradicts something the Council relied on**. Fresh seats get the full Council record and
+   must engage its actual reasoning, not re-argue blind. They **uphold or overturn**. This is still a court of
+   merits: the question is still "what is the right design?"
+
+3. **The Supreme Council - rule on law, not merits.** The appellate decision is itself challenged, now on a
+   different ground: not "was this the best design?" but **"was the method's own discipline correctly applied in
+   reaching it?"** - e.g. did a stakeholder's preference get treated as evidence; was a constraint relaxed on a
+   control that does not yet exist; was a holding modified in place after its supporting fact collapsed. The
+   Supreme Council hears **only these points of law**; it does not re-decide the design. Because it rules on law,
+   its ruling can stand as precedent.
+
+4. **Spec law.** The Supreme ruling is written into [`council/SPEC-LAW.md`](council/SPEC-LAW.md) as a numbered,
+   immutable precedent. From then on it **binds every future court on every project that runs the methodology**: a
+   first-instance Council cannot overturn it, and a decision that collides with it is refused at the spec layer.
+   It reaches every project through the plugin (install/update), and the community grows the register by pull
+   request. Only a later Supreme Council, narrowing it on a point of law, can refine it.
+
+The arc is bounded and principled: most things are simply built; the rare contested fork gets a trial, an appeal,
+and - only on a point of law - a final ruling that makes the method permanently sharper.
+
+---
+
 ## Self-improving by construction
 
 LDD does not only govern a project; it refines its own discipline through use. Most decisions are made and built.
