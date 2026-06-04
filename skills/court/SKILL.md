@@ -11,6 +11,16 @@ description: The adversarial deliberation court - a claimant and a defendant ste
 > the panel (the ledger keeps the verdict). The decision-making analogue of the builder + adversarial-verifier
 > loop. A decision under challenge escalates a **three-tier court hierarchy modelled on UK law**.
 
+> **The registers, and the method/justice boundary.** The authoritative *procedure* (how a case runs - the
+> proceeding, the parties, pleadings, bundles, the tiers, precedent) is the **[Development Procedure Rules,
+> `court/DPR.md`](../../court/DPR.md)**; this skill is the *practice direction* that runs proceedings under those
+> rules. The court reads and writes three registers, all under `court/`: **[`DPR.md`](../../court/DPR.md)**
+> (procedure), **[`SPEC-LAW.md`](../../court/SPEC-LAW.md)** (apex substantive law - what the Supreme Court
+> writes), and **[`CASE-LAW.md`](../../court/CASE-LAW.md)** (the law reports - merits precedent, by court). These
+> are **JUSTICE** facts. They are distinct from the **METHOD** floor the court *applies*, the
+> **[LDD-INV register, `docs/invariants.md`](../../docs/invariants.md)**. The court *applies* `docs/invariants.md`;
+> it *writes* `court/*`.
+
 ## When to use
 - A **high-stakes, hard-to-reverse fork** where a single perspective would rationalise (architecture,
   build-vs-consume, sequencing a whole program).
