@@ -95,13 +95,21 @@ design?"; it asks "**was the invariant spec + the method correctly *applied* in 
 Supreme ruling can stand as **precedent**: it settles a point of *law* (how the invariants + method bind a
 *class* of decisions), not a one-off design taste.
 
+> **The invariant spec the Supreme Council applies is the method's own register:**
+> [`docs/invariants.md`](../../docs/invariants.md) (LDD-INV-1..N). That register is the *law* the Supreme
+> Council reasons from (was LDD-INV-2 one-writer kept? was LDD-INV-9 one-owner-per-concern honoured?), plus
+> the project's own distilled invariants. A project layers its domain invariants on top; the LDD-INV register
+> is the floor every LDD run is bound by.
+
 **Standing (don't appeal for free).** Appeal only on a real basis: the principal disagrees; an unresolved
 load-bearing dissent; new ground-truth that falsifies a relied-upon point. The Supreme Council is reserved for
 **points of invariant law**: "I'd have designed it differently" is not Supreme-Council standing; "the court
 misapplied the trust-boundary invariant / violated the one-writer rule" is.
 
 ## Spec law (Supreme Council precedent)
-A Supreme Council ruling is recorded as an immutable, numbered precedent (a `SPEC-LAW.md` register) and **binds
+A Supreme Council ruling is recorded as an immutable, numbered precedent in a **`SPEC-LAW.md` register the
+project creates on its first ruling** (distinct from [`docs/invariants.md`](../../docs/invariants.md): that is
+the standing LDD-INV register the court *applies*; `SPEC-LAW.md` is the precedent it *writes*). A ruling **binds
 every future court**: a first-instance Council **cannot** overturn it, and a decision that collides with a
 spec-law precedent is denied at the spec layer (the same fail-closed shape a trust boundary uses to deny an
 unmapped capability). Spec law is cited by ID in later decisions as *controlling*. Only a later Supreme Council,

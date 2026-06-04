@@ -79,6 +79,9 @@ quick-reference card), backed by [docs/methodology.md](../../docs/methodology.md
   concurrency.
 
 ## Rules you do not break
+These are the method invariants. The full register, with the failure each prevents and where it is enforced, is
+[docs/invariants.md](../../docs/invariants.md) (LDD-INV-1..17); that register is the authoritative set, the
+bullets below are the quick-reference.
 - **Ground-truth, no vibes.** Cite `file:line` or command output, or you do not know it.
 - **One-writer rule.** Only the orchestrator writes the ledgers, the index, and the task list.
 - **File-partition.** Parallel authors own distinct files; never two agents on one file.
@@ -91,6 +94,11 @@ quick-reference card), backed by [docs/methodology.md](../../docs/methodology.md
 1. **Intent ledgers** (`_harvest/*`) - *what the old code meant.* Before building, harvest the precious logic
    out of the legacy: the domain rules, the edge cases, the security mechanisms, the data shapes - each captured
    as a free-text ledger with provenance (where in the old code it came from). Provenance or it doesn't go in.
+   The harvest produces two first-class named registers alongside the domain ledgers: `_harvest/security-invariants.md`
+   (the security mechanisms, smells, and trust boundaries the legacy relied on) and `_harvest/structural-debt.md`
+   (the duplication, god-files, and over-long functions with their measured baseline), so neither concern survives
+   only as un-cited prose. Each intent ledger also carries a **risk-surface** field (does this area touch auth /
+   money / crypto / multi-tenant-isolation / external-reach). See LDD-INV-15.
 2. **The metacognition journal** (`metacognition/*`) - *why every decision was taken.* One entry per beat:
    what was done, the tools/agents used, and **every decision with its reason** (what was chosen, the
    alternatives, and why). Newest appended; an `INDEX.md` one-liner points to each. If a decision is later
@@ -106,7 +114,10 @@ system mean here?" without archaeology. That is the payoff - the method *is* the
 - **Distil** a minimal **substrate spec**: the smallest complete set of primitives that solves the domain,
   with the sprawl deliberately *dropped* (and dropped-with-reason recorded). The data structure *is* the product.
 - **Walking skeleton**: the thinnest end-to-end slice that actually runs (one real path through every layer),
-  not a layer-by-layer build. Prove the spine before deepening any limb.
+  not a layer-by-layer build. Prove the spine before deepening any limb. The harvested security invariants
+  (`_harvest/security-invariants.md`) graduate here into **red-until-built closure-gate tests**: each control is a
+  failing test until its control is built, so the spine carries a security floor from the start (LDD-INV-12,
+  LDD-INV-15).
 - **Loop** spec⇄build, closing gaps each pass, until an automated **closure sweep** reports zero gaps against
   the spec. "Done" is *the sweep is clean*, not "the tests pass."
 
@@ -150,16 +161,24 @@ Reach for an orchestration shape over inline edits for any substantive task. Def
 **BUILD → STRUCTURE → SECURITY → VERIFY → PLAN.**
 1. **BUILD**: implement the milestone's scope; formatter/linter/tests green.
 2. **STRUCTURE**: a mandatory structural *scan* of the new surface (does the duplication ratchet hold? any
-   over-long function / God-object / leaked abstraction?). **Escalate** to a full refactor pass only on flagged
-   debt - the *continuous* closure-gate is the primary structural enforcement, so this is a scan, not a ritual.
-3. **SECURITY**: supply-chain checks every milestone (cheap); the **heavy** security audit is **risk-targeted**:
-   mandatory on a high-risk surface (auth, money, crypto, multi-tenancy/isolation, any externally-reachable
-   entry point) + periodically - not bureaucratically run on a trivial surface the verifier already attacked.
-4. **VERIFY**: an **independent adversarial verifier** (the primary security + correctness net, every
-   milestone): re-run from clean, attack the milestone's invariants, try to break the new surface.
+   over-long function / God-object / leaked abstraction?), run by the continuous closure-gate (the duplication
+   ratchet) + `vibeclean`. **Escalate** to the full refactoring suite (`skills/refactoring/`) only on a tripped
+   debt counter - the *continuous* closure-gate is the primary structural enforcement, so this is a scan, not a ritual.
+3. **SECURITY**: `vibescan --fast` runs every commit as the continuous one-security-owner (it subsumes the
+   supply-chain check). The **heavy** pass is **risk-triggered**: the full `vibescan .` sweep plus the security-suite
+   methodology (`skills/security/`, with `vibeaudit` as its scanner engine, not a parallel auditor), mandatory on a
+   high-risk surface (auth, money, crypto, multi-tenancy/isolation, any externally-reachable entry point) +
+   periodically - never bureaucratically run on a trivial surface the verifier already attacked.
+4. **VERIFY**: `vibetest` (test quality, weak assertions, coverage gaps) plus an **independent adversarial verifier**
+   (the primary security + correctness net, every milestone): re-run from clean, attack the milestone's invariants,
+   try to break the new surface.
 5. **PLAN**: **mandatory.** The milestone does NOT close, and the next build does NOT start, until the next
    steps are planned: the next milestone's scope/sequence/risks + the single next move. A high-stakes/uncertain
    next fork → a planning agent or a council. Never a vague "we'll see."
+
+Which tool owns which concern, and at which cadence (the continuous per-commit tier vs the risk-triggered heavy
+pass), is not restated here: see the two-tier(+) ownership matrix in [docs/systems.md](../../docs/systems.md)
+(system 7).
 
 ## Per-beat cadence (every time a coherent unit lands)
 (a) write the metacognition entry + index pointer; (b) update the relevant tracker/task list; (c) **commit with

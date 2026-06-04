@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.viberapid/
+*.egg-info/
+dist/
+build/
+.eggs/

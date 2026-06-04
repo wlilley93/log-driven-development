@@ -23,18 +23,29 @@ HOW: copy this file (e.g. signoffs/M3-completion-rebuild.md), delete this commen
 ## STRUCTURE
 
 <Structural scan of the new surface. Does the duplication ratchet hold? Any over-long function, God-object,
-leaked abstraction? Escalate to a full refactor only on flagged debt.>
-- Evidence: `<cmd>` -> <result>
+leaked abstraction? Escalate to a full refactor only on flagged debt. The owner at this phase is the
+closure-gate (continuous) plus `vibeclean` as its structure edge; see the two-tier(+) ownership matrix in
+docs/systems.md (system 7).>
+- Evidence (record the ACTUAL command + its ACTUAL result, never "looks fine", LDD-INV-5):
+  `<cmd, e.g. python3 tools/closure-gate/closure_gate.py --config ./tools/closure-gate/closure-gate.toml --paths .>`
+  -> <result, e.g. closure-gate: clean (8 gates); vibeclean structure_scan: 0 regressions>
 - Flagged debt: <none, or what and the plan>
-- Example (Tasky): duplication ratchet held; the three old completion read-paths are gone (one reader now).
+- Example (Tasky): `closure-gate ... --paths .` -> clean, 8 gates; duplication ratchet held; the three old
+  completion read-paths are gone (one reader now).
 
 ## SECURITY
 
-<Cheap supply-chain checks every milestone. The deep audit is risk-targeted: run it where risk lives.>
-- Supply-chain: `<cmd, e.g. npm audit>` -> <result>
-- Risk-targeted audit run? <yes/no + why> on <surface>
-- Example (Tasky): this milestone did not touch auth or sharing, so no deep audit. The share-link-expiry
-  smell (_harvest/sharing.md) is tracked for the sharing milestone, see Deferred.
+<The continuous fast scan runs every milestone (it ran on every commit); the deep audit is risk-triggered:
+run it where risk lives. The owners and triggers are fixed by the two-tier(+) ownership matrix in
+docs/systems.md (system 7): `vibescan --fast` continuous, `vibescan .` + the security-suite methodology
+(skills/security/, with `vibeaudit` as its engine) when risk-triggered.>
+- Continuous fast scan (record the ACTUAL command + its ACTUAL result, LDD-INV-5):
+  `<cmd, e.g. vibescan --fast .>` -> <result, e.g. 0 new findings>
+- Risk-triggered deep audit run? <yes/no + why> on <surface, per the intent ledger's Risk surface field>.
+  If yes, record the command + result: `<cmd, e.g. vibescan .>` -> <result>
+- Example (Tasky): `vibescan --fast .` -> 0 new findings. This milestone did not touch auth or sharing
+  (Risk surface: none), so no deep audit. The share-link-expiry smell (_harvest/sharing.md) is tracked for
+  the sharing milestone, see Deferred.
 
 ## VERIFY
 

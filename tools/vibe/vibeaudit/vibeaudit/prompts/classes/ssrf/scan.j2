@@ -1,0 +1,108 @@
+{# vibeaudit prompt v1.0 — ssrf #}
+You are analyzing code for **Server-Side Request Forgery (SSRF)** vulnerabilities.
+
+## What Is SSRF?
+
+SSRF occurs when an application makes HTTP requests to URLs that are partially or fully controlled by user input, without validating or restricting the target. An attacker can force the server to make requests to internal services (metadata endpoints, databases, admin panels), cloud provider APIs (e.g., `169.254.169.254`), or arbitrary external hosts.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **User-controlled URLs in fetch/request calls**: `fetch(req.body.url)`, `axios.get(params.webhook_url)`, `requests.get(user_url)`
+2. **Partial URL injection**: User controls the host, path, or query of a constructed URL (e.g., `fetch(\`https://${req.query.host}/api\`)`)
+3. **Redirect following**: Requests that follow redirects can bypass allowlists if the initial URL is allowed but redirects to an internal target
+4. **DNS rebinding**: URL validated at check time resolves to a safe IP, but at request time resolves to an internal IP
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Node.js `fetch()`, `axios`, `got`, `node-fetch`: Check if the URL argument includes any user-controlled value
+- Webhook URL registration: Storing user-provided URLs for later server-side fetching is an SSRF vector
+- Safe pattern: Allowlist of domains/IPs, or validate and resolve the URL before fetching
+{% elif framework == "django" %}
+- `requests.get(url)` where `url` comes from `request.data` or `request.GET`
+- Django `URLValidator` only checks format, NOT whether the destination is safe
+{% elif framework == "flask" %}
+- `urllib.request.urlopen(user_url)` or `requests.get(user_url)` without allowlist
+{% elif framework == "rails" %}
+- `Net::HTTP.get(URI(params[:url]))` or `HTTParty.get(params[:callback_url])`
+- `open-uri`: `URI.open(user_input)` can access local files and internal URLs
+{% endif %}
+
+## True Positive Examples
+
+1. Direct fetch with user-controlled URL:
+   ```typescript
+   const { url } = await request.json();
+   const response = await fetch(url);
+   return NextResponse.json(await response.json());
+   ```
+   Attacker sends `url: "http://169.254.169.254/latest/meta-data/"` to read cloud metadata.
+
+2. Webhook registration without URL validation:
+   ```python
+   webhook_url = request.data['callback_url']
+   requests.post(webhook_url, json={"event": "completed"})
+   ```
+
+3. URL constructed with user-controlled host:
+   ```javascript
+   const apiUrl = `http://${req.query.service}.internal.corp/api/data`;
+   const data = await axios.get(apiUrl);
+   ```
+   Attacker sets `service=169.254.169.254/latest/meta-data/#` to escape the path.
+
+## False Positive Examples
+
+1. URL is hardcoded or comes from environment/config only:
+   ```typescript
+   const response = await fetch(process.env.WEBHOOK_SERVICE_URL + '/notify');
+   ```
+   NOT vulnerable — no user input in the URL.
+
+2. URL is validated against an explicit allowlist of domains:
+   ```typescript
+   const allowed = ['api.hubspot.com', 'api.stripe.com'];
+   if (!allowed.includes(new URL(url).hostname)) throw new Error('Blocked');
+   ```
+   NOT vulnerable.
+
+## Calibration
+
+- If the URL is entirely from configuration (env vars, database config set by admins), it is NOT SSRF.
+- Webhook URLs stored during integration setup by admin users are LOWER risk than URLs from unauthenticated input.
+- URL validation using regex alone is often bypassable — prefer `new URL()` parsing + allowlist.
+- SSRF to cloud metadata (`169.254.169.254`) is CRITICAL. SSRF to arbitrary external hosts is HIGH. SSRF limited to specific paths is MEDIUM.
+- If the application runs in a cloud environment (AWS, GCP, Azure), metadata endpoint SSRF is especially dangerous.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-918",
+  "owasp_category": "A10:2021 Server-Side Request Forgery",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning tracing user input to the outbound request",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

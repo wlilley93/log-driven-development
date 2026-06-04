@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+#
+# Example git pre-commit hook that runs the LDD closure-gate on every commit.
+#
+# Install (from your repo root):
+#   cp tools/closure-gate/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+# Or, if you use a hook manager (pre-commit, husky, lefthook), call closure_gate.py
+# from there instead. CI should run the SAME command so "green locally" cannot diverge
+# from "green from a clean checkout".
+#
+# Point GATE_DIR at wherever you vendored tools/closure-gate, and CONFIG at your
+# project's closure-gate.toml. PATHS is the source root(s) the portable checks scan.
+
+set -euo pipefail
+
+GATE_DIR="${LDD_GATE_DIR:-tools/closure-gate}"
+CONFIG="${LDD_GATE_CONFIG:-${GATE_DIR}/closure-gate.toml}"
+PATHS="${LDD_GATE_PATHS:-.}"
+
+# A pre-commit hook should be fast. The full TEST suite usually belongs in CI, so it is
+# skipped locally by default (CI re-runs it). The security scan is NOT skipped: secret +
+# dependency-CVE detection must run on every commit, because a leaked credential skipped
+# "to go faster" becomes permanent git history (LDD-INV-7, fix security the moment found).
+# Override with LDD_GATE_SKIP, but never put security_scan in it. Leave it empty to run the
+# whole sweep locally.
+SKIP="${LDD_GATE_SKIP:-tests}"
+
+exec python3 "${GATE_DIR}/closure_gate.py" \
+  --config "${CONFIG}" \
+  --paths "${PATHS}" \
+  --cwd "." \
+  --skip "${SKIP}"

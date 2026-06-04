@@ -1,0 +1,104 @@
+{# vibeaudit prompt v1.0 — mass_assignment #}
+You are analyzing code for **Mass Assignment** vulnerabilities.
+
+## What Is Mass Assignment?
+
+Mass assignment occurs when an application takes user-supplied input (request body, query params, form data) and passes it directly into an ORM create or update call without filtering which fields the user is allowed to set. An attacker can inject extra fields (e.g., `role: "admin"`, `isVerified: true`) to escalate privileges or corrupt data.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. Request body spread directly into ORM operations: `prisma.user.create({ data: req.body })`, `Model.create(req.body)`, `instance.update(**request.data)`
+2. Object spread/destructuring from untrusted input without allowlisting: `{ ...body }` passed to a database call
+3. Frameworks that auto-bind request params to model attributes (e.g., Rails `params.permit` missing, Django `ModelForm` without `fields`)
+4. Partial updates where `req.body` is merged into an existing record without field filtering
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Prisma: Safe pattern is explicit field picking: `{ data: { name: body.name, email: body.email } }`
+- Zod validation that strips unknown keys (`z.object({...}).strict()` or `.strip()`) mitigates this
+- Watch for `{ data: body }` or `{ data: { ...body } }` without prior validation
+{% elif framework == "django" %}
+- Django: `ModelForm` with explicit `fields` list is safe; `fields = '__all__'` or `exclude` is dangerous
+- DRF: `ModelSerializer` with explicit `fields` is safe; check that `read_only_fields` covers sensitive attrs
+{% elif framework == "rails" %}
+- Rails: `params.require(:user).permit(:name, :email)` is safe; `params.permit!` or `.to_unsafe_h` is vulnerable
+- Strong Parameters must explicitly allowlist each attribute
+{% elif framework == "flask" %}
+- Flask-SQLAlchemy: `Model(**request.json)` or `db.session.merge(Model(**data))` without filtering is vulnerable
+- Marshmallow schemas with `load_only`/`dump_only` fields mitigate this
+{% endif %}
+
+## True Positive Examples
+
+1. Direct spread of request body into Prisma create:
+   ```typescript
+   const body = await request.json();
+   const user = await prisma.user.create({ data: body });
+   ```
+   An attacker sends `{ "name": "Alice", "role": "ADMIN" }` and escalates to admin.
+
+2. Django model updated from unfiltered POST data:
+   ```python
+   User.objects.filter(pk=user_id).update(**request.POST.dict())
+   ```
+
+3. Express with Mongoose using unfiltered body:
+   ```javascript
+   const user = await User.findByIdAndUpdate(id, req.body, { new: true });
+   ```
+
+## False Positive Examples
+
+1. Request body validated through Zod schema that only allows specific fields:
+   ```typescript
+   const parsed = schema.parse(body);  // strips unknown keys
+   await prisma.user.update({ data: parsed });
+   ```
+   NOT vulnerable.
+
+2. Explicit field picking from the body:
+   ```typescript
+   await prisma.user.create({ data: { name: body.name, email: body.email } });
+   ```
+   NOT vulnerable.
+
+## Calibration
+
+- If a Zod schema with `.strict()` or default stripping validates the body BEFORE the ORM call, it is NOT mass assignment.
+- If the code destructures only specific fields from the body (`const { name, email } = body`), it is NOT vulnerable.
+- If the model has no sensitive fields (e.g., a simple config table), severity should be LOW even if the pattern matches.
+- Pay attention to whether `role`, `isAdmin`, `organizationId`, `verified`, `permissions`, or similar privilege fields could be injected.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-915",
+  "owasp_category": "A08:2021 Software and Data Integrity Failures",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning through the data flow from input to ORM",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

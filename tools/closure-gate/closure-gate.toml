@@ -1,0 +1,84 @@
+# closure-gate.toml - the machine-readable companion to closure-gate.config.md
+#
+# This is the config the runnable closure-gate tools read. The human-readable contract
+# (what each gate means and why) lives in your project's closure-gate.config.md
+# (template: ../../templates/closure-gate.config.md). Keep the two in sync.
+#
+# The single load-bearing rule: the duplication budget below is a number you only ever
+# HOLD or LOWER by folding duplication. You NEVER raise it to make a commit pass.
+#
+# Fill [commands] with YOUR stack's real commands. Leave a command blank to skip that
+# gate (it is reported as skipped, never silently absent). The two portable checks
+# ([function] and [duplication]) need no external tools.
+
+[commands]
+# Each runs via the shell from --cwd. Empty string = skip. Examples for several stacks
+# are commented; uncomment and adapt ONE set to your project.
+#
+# security_scan and structure_scan are the CONTINUOUS-tier members the LDD process council
+# added (verdict in the project ledger): the cheap edge of the security and refactoring
+# suites, run per-commit, so "fix security the moment found" (LDD-INV-7) finally has
+# something that FINDS. security_scan is the ONE security owner at this tier (LDD-INV-9): it
+# subsumes the old separate supply_chain/dep-CVE gate, because vibescan covers secrets +
+# dependency CVEs + a fast SAST pass in one. structure_scan is the richer slop/duplication
+# scanner the per-commit ratchet shells out to. The HEAVY passes (vibeaudit deep, the
+# security-suite methodology, a full refactor round) stay at milestone-close on a risk
+# trigger; see ../../docs/systems.md for the single two-tier(+) ownership matrix.
+
+# --- JS/TS (npm) ---
+# format_check   = "prettier --check ."
+# lint           = "eslint . --max-warnings=0"
+# typecheck      = "tsc --noEmit"
+# test           = "npm test"
+# security_scan  = "vibescan --fast ."     # secrets + dep-CVE + fast SAST (the one security owner)
+# structure_scan = "vibeclean --changed ." # AI-slop / god-file / duplication scanner
+
+# --- Rust (cargo) ---
+# format_check   = "cargo fmt --check"
+# lint           = "cargo clippy -- -D warnings"
+# typecheck      = ""                      # the compiler is the type-check; covered by test/build
+# test           = "cargo test"
+# security_scan  = "vibescan --fast ."
+# structure_scan = "vibeclean --changed ."
+
+# --- Python ---
+# format_check   = "ruff format --check ."
+# lint           = "ruff check ."
+# typecheck      = "mypy ."
+# test           = "pytest -q"
+# security_scan  = "vibescan --fast ."
+# structure_scan = "vibeclean --changed ."
+
+# --- Go ---
+# format_check   = "test -z \"$(gofmt -l .)\""
+# lint           = "golangci-lint run"
+# typecheck      = "go vet ./..."
+# test           = "go test ./..."
+# security_scan  = "vibescan --fast ."
+# structure_scan = "vibeclean --changed ."
+
+# Defaults: the stack commands are blank until you wire your stack, BUT the two continuous
+# suite gates default ON to vibescan/vibeclean (vendored with LDD under ../vibe). If those
+# tools are not installed, the orchestrator reports the gate as a LOUD skip with an install
+# hint (never a silent absence, never a hard block on a missing tool, LDD-INV-1). Set the
+# stack commands on day one of the rebuild; never blank security_scan to "go faster".
+format_check = ""
+lint = ""
+typecheck = ""
+test = ""
+security_scan = "vibescan --fast ."
+structure_scan = "vibeclean --changed ."
+
+[function]
+# Max function body length (significant lines: blanks and whole-line comments excluded).
+# A long function hides duplication and God-objects. Tighten over time, never loosen.
+max_lines = 40
+
+[duplication]
+# Cross-module duplication budget as a percentage of scanned significant lines.
+#   - HOLD or LOWER this number by folding duplication into one shared function.
+#   - NEVER raise it to make a commit pass (raising it concedes the sprawl).
+# Seed it once on the walking skeleton with: duplication_ratchet.py --update-budget
+# min_lines is the smallest run of identical significant lines that counts as a clone.
+budget_percent = 0.8000
+min_lines = 5

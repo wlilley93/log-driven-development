@@ -15,6 +15,37 @@ cleanly: without re-importing the sprawl, and without losing the behaviour you'd
 
 ---
 
+## Install: point an agent at this repo
+
+This repo is **the whole operating model in one place**: the method, the deliberation court, the refactoring
+suite, the security suite, the coded quality-and-security gates (the `vibe*` tools), and the continuous
+closure-gate. You do not have to assemble anything. **Point a coding agent at this repository and give it the
+instruction below**, and it will install everything and be ready to run LDD.
+
+> **Agent: to install LDD from this repo, do exactly this.**
+> 1. **Register the skills and commands.** If this is Claude Code, install the plugin:
+>    `/plugin marketplace add wlilley93/ledger-driven-development` then
+>    `/plugin install ledger-driven-development@ledger-driven-development`. Otherwise, copy every `skills/*/`
+>    directory into `~/.claude/skills/` and every `commands/*.md` into `~/.claude/commands/` (or your agent's
+>    equivalent skill/command locations).
+> 2. **Wire the continuous closure-gate.** From the target project, install the pre-commit hook:
+>    `cp tools/closure-gate/pre-commit <project>/.git/hooks/pre-commit && chmod +x <project>/.git/hooks/pre-commit`,
+>    and copy `tools/closure-gate/closure-gate.toml` into the project, tuning the budgets to the project.
+> 3. **Install the coded gates (the `vibe*` tools).** `pip install vibescan vibeaudit vibetest vibeclean`
+>    (published packages), or run them from the vendored copies under `tools/vibe/` with `pip install -e`. Then
+>    `vibescan install` once, to fetch the open-source scanners it orchestrates. Once installed, the closure-gate
+>    runs `security_scan` (`vibescan --fast`) and `structure_scan` (`vibeclean`) on by default: the cheap edge of
+>    the security and refactoring suites at the continuous per-commit tier. The heavy passes (the full SAST sweep,
+>    the deep security methodology, a full refactor round) stay risk-triggered under one owner each (see the
+>    two-tier(+) ownership matrix in docs/systems.md, system 7).
+> 4. **Read `skills/ledger-driven-development/SKILL.md` end to end** (it is the prescriptive operating
+>    procedure), then begin: orient on the target project, harvest, and run the beat loop.
+>
+> Once installed, the human just runs `/ldd <what to build or harvest>` (or, with the plugin, simply describes a
+> brownfield rebuild and the skill activates). Everything the method references lives in this one repo.
+
+---
+
 ## The problem it solves
 
 When you try to clean up or rebuild a vibe-coded project with AI agents, three things usually go wrong:
@@ -39,7 +70,9 @@ LDD is built to prevent all three by construction.
 2. **Distil** the smallest complete **spec**: the minimal set of primitives that solves the domain. Drop the
    sprawl on purpose (and record *why* you dropped it). The data structure *is* the product.
 3. **Walking skeleton**: build the thinnest end-to-end slice that actually runs (one real path through every
-   layer), before deepening any one part.
+   layer), before deepening any one part. That one real path is an **authenticated** path that crosses its
+   trust/tenant boundary (not a no-auth happy path), and "the gates green" includes the continuous `security_scan`
+   gate. The skeleton has a security spine from the first slice (see docs/invariants.md, LDD-INV-12).
 4. **Loop** spec and build, closing gaps each pass, until the automated sweep is clean. "Done" means the sweep is
    clean, not "the tests pass".
 
@@ -165,13 +198,65 @@ A milestone isn't "done" until all five run:
 
 **BUILD, STRUCTURE, SECURITY, VERIFY, PLAN**
 
-- **STRUCTURE**: a quick structural scan; escalate to a full refactor only if it flags real debt (the continuous
-  closure-gate already does the heavy lifting).
-- **SECURITY**: cheap supply-chain checks every time; the deep security audit is **risk-targeted** (run it where
-  risk actually lives: auth, money, crypto, multi-tenancy, anything externally reachable).
-- **VERIFY**: an independent adversarial verifier re-runs from clean and tries to break it.
+- **STRUCTURE**: the continuous closure-gate plus `vibeclean` already do the per-commit heavy lifting; escalate to
+  a full refactor round (`skills/refactoring/`) only on a tripped debt counter, never routinely.
+- **SECURITY**: `vibescan --fast` runs continuously per-commit (the one security owner at that tier); the full
+  `vibescan .` sweep runs at push/CI and milestone-close; the deep security methodology (`skills/security/`, with
+  `vibeaudit` as its scanner engine) is **risk-triggered** where risk actually lives (auth, money, crypto,
+  multi-tenancy, anything externally reachable).
+- **VERIFY**: `vibetest` checks test quality alongside an independent adversarial verifier that re-runs from clean
+  and tries to break it.
 - **PLAN**: **mandatory.** The next build does **not** start until the next steps are planned. No drifting into
   an unplanned next milestone.
+
+Which tool owns which concern, and at which cadence, is fixed by the two-tier(+) ownership matrix in
+docs/systems.md (system 7). Every phase above cites that one table rather than redefining ownership.
+
+---
+
+## The toolkit
+
+The method does not enforce itself by hand. LDD ships four cooperating pieces of machinery, and the rule is
+**one owner per concern** (the consolidation invariant, docs/invariants.md, LDD-INV-9): each concern has exactly
+one tool that owns it, and every other surface cites that owner rather than re-deciding it. The single source of
+truth for who owns what, and at which cadence, is the two-tier(+) ownership matrix in docs/systems.md (system 7);
+this section describes the pieces, the matrix says who owns which gate.
+
+- **The closure-gate** (`tools/closure-gate/`). The continuous, per-commit gate (the cadence Tier 1). One script,
+  `closure_gate.py`, runs eight gates on every commit: formatter, linter, type-check, function-length,
+  duplication-ratchet, tests, `security_scan`, and `structure_scan`. It is the floor that keeps the beat loop
+  honest: a commit that fails it does not land. The function-length number lives here once (the `[function]
+  max_lines` threshold in `closure-gate.toml`) and every other surface cites that one number rather than naming
+  its own. The same `closure_gate.py` runs in CI (`.github/workflows/closure-gate.yml`) from a clean checkout, so
+  "green locally" cannot drift from "green from clean".
+
+- **The vibe* coded gates** (`tools/vibe/`). The closure-gate does not reimplement scanning: it dispatches into
+  the `vibe*` tools for the two richest gates. `security_scan` is `vibescan --fast` (secrets, dependency CVEs,
+  fast SAST: the one security owner at the continuous tier, which subsumes the old separate supply-chain check),
+  and `structure_scan` is `vibeclean` (duplication and structural smells). The remaining vibe tools run at their
+  own triggers: the full `vibescan .` sweep at push/CI, `vibeaudit` as the scanner engine of the deep security
+  methodology, `vibetest` for test quality at VERIFY, and `viberapid` / `vibedeploy` referenced for performance
+  and ship-safety as needed. The tools are vendored here so the gate works out of the box; if one is missing the
+  gate loud-skips (warns, never silently passes, never falsely denies).
+
+- **The security suite** (`skills/security/`). The single authoritative home of deep security reasoning:
+  exploitability, cross-subsystem chains, the threat model, the full audit methodology, the adapters and the
+  release-gate and incident playbooks. It is the **owner** of Tier-2 security; `vibescan`/`vibeaudit` are its
+  scanner engines, not a parallel auditor. It is **risk-triggered**, not routine: mandatory wherever real risk
+  lives (auth, money, crypto, multi-tenant isolation, any externally-reachable surface), plus periodic. The
+  walking skeleton carries its harvested security invariants as red-until-built tests from the first slice.
+
+- **The refactoring suite** (`skills/refactoring/`, helpers in `tools/refactoring/`). Behaviour-preserving
+  cleanup: the structural sweep, the refactor rounds, the verify-refactor gate. It owns Tier-2 structure, and it
+  is **risk-triggered the same way**: escalate from the per-commit `structure_scan` to a full refactor round only
+  on a tripped debt counter (functions over the closure-gate floor, god-files, duplication that would otherwise
+  ratchet up), never as a routine pass.
+
+The shape is deliberate, and it is a **hard anti-bloat rule**: only the cheap edge of each suite lives in the
+continuous tier (the per-commit `security_scan` and `structure_scan`), and every heavy pass (the full SAST sweep,
+the deep security methodology, a full refactor round) stays risk-triggered under exactly one owner. The continuous
+gate stays fast; the expensive judgement runs only where the risk actually is. See the two-tier(+) ownership
+matrix in docs/systems.md (system 7) for the per-gate owner and cadence.
 
 ---
 
@@ -223,6 +308,8 @@ The README is the pitch. When you want to actually run LDD:
   prevents, how to constitute it step by step, and the mistakes people actually make.
 - **[docs/anti-patterns.md](docs/anti-patterns.md)** : the ways the method breaks in practice, each paired with
   the one rule that prevents it, ending in a smell-test checklist.
+- **[docs/invariants.md](docs/invariants.md)** : the LDD-INV method invariant register. Each invariant, the
+  failure it prevents, and where it is enforced (the single owner every other doc cites).
 - **[templates/](templates/)** : copy-paste skeletons for every artefact (intent ledger, metacognition entry,
   ADR, spec, milestone sign-off, council verdict, closure-gate config).
 - **[examples/](examples/)** : one continuous worked run of LDD on a single fictional project (Tasky), from
@@ -237,6 +324,11 @@ The README is the pitch. When you want to actually run LDD:
 .claude-plugin/marketplace.json                   makes this repo installable in one step
 skills/ledger-driven-development/SKILL.md          the full method
 skills/council/SKILL.md                            the council and the appeals hierarchy
+skills/refactoring/                                the STRUCTURE-phase suite (structural sweep, refactor rounds)
+skills/security/                                   the single authoritative security suite (deep methodology, adapters, playbooks)
+skills/code-review/                                human-grade correctness-and-security review skill
+skills/simplify/                                   human-grade quality-and-reuse cleanup skill
+skills/deep-research/                              the cited multi-source research harness
 commands/ldd.md                                    the /ldd slash command
 commands/council.md                                the /council slash command
 docs/playbook.md                                   the prescriptive operating manual: exactly what to do
@@ -244,6 +336,11 @@ docs/methodology.md                                the long-form walkthrough of 
 docs/systems.md                                    the systems reference: every part, and how they interlock
 docs/anti-patterns.md                              how the method breaks, and the rule that prevents each
 docs/artifacts.md                                  artefact-by-artefact how-to (what, why, how to constitute)
+docs/invariants.md                                 the LDD-INV register: each method invariant, its failure, where enforced
+tools/closure-gate/                                the continuous per-commit gate (closure_gate.py + config + pre-commit)
+tools/refactoring/                                 refactoring-suite helpers (surface extraction, suite verifier)
+tools/vibe/                                        the coded gates (vibescan, vibeaudit, vibetest, vibeclean, viberapid, vibedeploy)
+.github/workflows/closure-gate.yml                 the CI half of the gate: the same closure_gate.py from a clean checkout
 templates/                                         blank skeletons for every artefact
 examples/                                          one continuous worked run on a fictional project (Tasky)
 ```

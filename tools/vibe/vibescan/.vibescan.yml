@@ -1,0 +1,36 @@
+# vibescan self-scan configuration
+fail_on: HIGH
+
+tools:
+  semgrep:
+    exclude_paths:
+      - tests/
+      - .pytest_cache/
+  bandit:
+    exclude_dirs:
+      - tests
+      - .pytest_cache
+    skip:
+      - B101  # assert usage (test code)
+      - B108  # tmp_path is a pytest fixture, not insecure temp usage
+      - B105  # hardcoded passwords in test fixtures, not real credentials
+      - B404  # subprocess import — required for tool runner architecture
+      - B603  # subprocess call — all runners invoke external tools by design
+      - B607  # partial path in subprocess — tool paths resolved via _tool_exists()
+
+licence:
+  allowlist:
+    - MIT
+    - Apache-2.0
+    - BSD-2-Clause
+    - BSD-3-Clause
+    - ISC
+    - 0BSD
+    - Unlicense
+    - CC0-1.0
+    - MPL-2.0
+    - PSF-2.0
+    - UNKNOWN  # pip-licenses metadata gap (e.g. peewee is MIT but reports UNKNOWN)
+
+ignore_rules:
+  - "semgrep:python.lang.security.audit.logging.logger-credential-leak.python-logger-credential-disclosure"

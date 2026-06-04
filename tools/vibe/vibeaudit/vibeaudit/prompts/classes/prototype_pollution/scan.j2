@@ -1,0 +1,124 @@
+{# vibeaudit prompt v1.0 — prototype_pollution #}
+You are analyzing code for **Prototype Pollution** vulnerabilities.
+
+## What Is Prototype Pollution?
+
+Prototype pollution occurs when an attacker can inject properties into JavaScript's `Object.prototype` (or other built-in prototypes) through deep merge, recursive assignment, or property setting operations that process user-controlled keys. Once the prototype is polluted, all objects in the application inherit the injected properties, potentially enabling privilege escalation, denial of service, or remote code execution via property injection into security-sensitive checks.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **Deep merge with user-controlled objects**: `_.merge(config, req.body)`, `deepMerge(defaults, userInput)`, custom recursive merge functions
+2. **Recursive property assignment**: Loops that set `obj[key] = value` where `key` comes from user input (can set `__proto__`, `constructor`, `prototype`)
+3. **Object.assign with nested user input**: While `Object.assign` itself is shallow and generally safe, custom deep clone/merge utilities are not
+4. **Property path setting**: Functions like `lodash.set(obj, path, value)` where `path` comes from user input (e.g., `set(config, '__proto__.isAdmin', true)`)
+5. **JSON.parse of user input followed by deep merge**: `JSON.parse` creates objects with `__proto__`, which pollutes when deep-merged
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Express `body-parser` strips `__proto__` from JSON by default (since v1.20.0 / qs v6.10.3). Verify version
+- lodash `_.merge`, `_.defaultsDeep`, `_.set`, `_.setWith` are all vulnerable to prototype pollution via `__proto__` key
+- `lodash >= 4.17.12` has some mitigations but `_.merge` can still be exploited via `constructor.prototype`
+- Native `structuredClone()` is safe — does not copy prototype chain
+{% elif framework == "django" or framework == "flask" %}
+- Python does not have prototype pollution in the JavaScript sense — this vulnerability class is NOT applicable to Python
+- However, similar issues exist with `dict` mutation on shared config objects via `**kwargs` unpacking
+{% elif framework == "rails" %}
+- Ruby does not have prototype pollution — this class is NOT applicable to pure Ruby code
+{% endif %}
+
+## True Positive Examples
+
+1. Deep merge of user input into application config:
+   ```typescript
+   import _ from 'lodash';
+   const userPrefs = await request.json();
+   _.merge(appConfig, userPrefs);
+   ```
+   Attacker sends `{"__proto__": {"isAdmin": true}}` — all objects now have `isAdmin === true`.
+
+2. Custom recursive merge without prototype guard:
+   ```javascript
+   function merge(target, source) {
+     for (const key of Object.keys(source)) {
+       if (typeof source[key] === 'object') {
+         target[key] = target[key] || {};
+         merge(target[key], source[key]);
+       } else {
+         target[key] = source[key];
+       }
+     }
+   }
+   merge(defaults, req.body);
+   ```
+   No check for `__proto__` or `constructor` keys.
+
+3. lodash.set with user-controlled path:
+   ```javascript
+   const { path, value } = req.body;
+   _.set(settings, path, value);
+   ```
+   Attacker sends `path=__proto__.polluted` to pollute all objects.
+
+## False Positive Examples
+
+1. Input validated and prototype keys explicitly blocked:
+   ```typescript
+   const BLOCKED_KEYS = ['__proto__', 'constructor', 'prototype'];
+   function safeMerge(target, source) {
+     for (const key of Object.keys(source)) {
+       if (BLOCKED_KEYS.includes(key)) continue;
+       target[key] = source[key];
+     }
+   }
+   ```
+   NOT vulnerable.
+
+2. Using `Object.create(null)` as the target (no prototype chain):
+   ```javascript
+   const config = Object.create(null);
+   Object.assign(config, req.body);
+   ```
+   NOT vulnerable — null-prototype objects cannot pollute `Object.prototype`.
+
+## Calibration
+
+- This vulnerability is JavaScript/TypeScript specific. If the code is Python or Ruby, it is NOT applicable (respond not vulnerable).
+- Shallow `Object.assign` with user input is generally NOT prototype pollution (it does not recurse into `__proto__`).
+- Deep merge from lodash (`_.merge`, `_.defaultsDeep`) with user input is almost always a true positive.
+- If the merged object is used for security decisions (role checks, feature flags), severity is CRITICAL.
+- If the merged object is only used for display preferences or non-security config, severity is MEDIUM.
+- Modern Express (body-parser >= 1.20.0) strips `__proto__` from JSON request bodies — verify the version.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-1321",
+  "owasp_category": "A08:2021 Software and Data Integrity Failures",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning about the merge/assignment operation and user input flow",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

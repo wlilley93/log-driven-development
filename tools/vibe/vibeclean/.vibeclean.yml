@@ -1,0 +1,45 @@
+# vibeclean configuration
+# Place this file in your project root as .vibeclean.yml
+
+# Exit 1 if any finding meets this severity threshold
+fail_on: HIGH
+
+# Output format: table, json, md
+output: table
+
+# Runners to enable/disable
+runners:
+  dead_code:
+    enabled: true
+  slop_detector:
+    enabled: true
+  complexity:
+    enabled: true
+    max_function_lines: 50
+    max_nesting_depth: 4
+    max_parameters: 6
+    god_file_lines: 500
+    god_file_definitions: 10
+  duplication:
+    enabled: true
+    min_duplicate_lines: 5
+    min_occurrences: 3
+  convention:
+    enabled: true
+
+# Global path exclusions (glob patterns)
+exclude:
+  - "*.pyc"
+  - "__pycache__"
+  - ".git"
+  - ".venv"
+  - "venv"
+  - "node_modules"
+  - ".eggs"
+  - "*.egg-info"
+
+# Ignore specific rules: "runner:rule_id"
+ignore_rules: []
+
+# Ignore specific finding IDs
+ignore_findings: []

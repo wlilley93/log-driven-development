@@ -1,0 +1,109 @@
+{# vibeaudit prompt v1.0 — broken_access_control #}
+You are analyzing code for **Broken Access Control** vulnerabilities — specifically missing or insufficient role-based authorization checks.
+
+## What Is Broken Access Control?
+
+Broken access control occurs when an authenticated user can perform actions beyond their intended permissions. Unlike authentication bypass (no auth at all), this is about authorization: the user IS logged in, but the application fails to verify they have the required role or permission for the operation. A regular user can perform admin actions, or a VIEWER can delete records.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **Missing role checks on privileged operations**: Delete endpoints, user management, settings changes, approval workflows without verifying ADMIN/OWNER role
+2. **Horizontal privilege escalation**: User A can modify User B's resources within the same organization because only org-level scoping is checked, not individual ownership
+3. **Vertical privilege escalation**: MEMBER or VIEWER performing ADMIN-only operations (e.g., managing users, changing org settings, approving submissions)
+4. **Role check after the operation** instead of before (the damage is already done)
+5. **Inconsistent enforcement**: GET is protected but PUT/DELETE on the same resource is not
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- `getActiveOrganizationId()` returns `{ orgId, role }` — the `role` field must be checked for privileged ops
+- Pattern: `if (!['ADMIN', 'OWNER'].includes(auth.role)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })`
+- Middleware-level role checks (e.g., `withRole('ADMIN')`) are valid if applied to the route
+{% elif framework == "django" %}
+- DRF: `permission_classes` should include role-based permissions, not just `IsAuthenticated`
+- Django: Check for `@user_passes_test` or manual `request.user.role` checks
+{% elif framework == "rails" %}
+- Rails: Check for `authorize!` (Pundit) or `can?` (CanCanCan) on controller actions
+- `before_action` callbacks should enforce role requirements
+{% endif %}
+
+## True Positive Examples
+
+1. Delete endpoint with auth but no role check:
+   ```typescript
+   export async function DELETE(req: NextRequest, { params }) {
+     const auth = await getActiveOrganizationId();
+     if (!auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+     await prisma.user.delete({ where: { id: params.id, organizationId: auth.orgId } });
+     return NextResponse.json({ success: true });
+   }
+   ```
+   Any MEMBER or VIEWER can delete other users — should require ADMIN/OWNER.
+
+2. Settings update without role restriction:
+   ```python
+   @login_required
+   def update_org_settings(request):
+       org = get_object_or_404(Organization, pk=request.user.org_id)
+       org.settings = request.POST['settings']
+       org.save()
+   ```
+
+3. Approval endpoint accessible to all authenticated users:
+   ```typescript
+   await prisma.submission.update({ where: { id }, data: { status: 'APPROVED' } });
+   ```
+   No check that the caller has ADMIN or OWNER role for approval actions.
+
+## False Positive Examples
+
+1. Role check is present and correct:
+   ```typescript
+   if (!['ADMIN', 'OWNER'].includes(auth.role)) {
+     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+   }
+   ```
+   NOT vulnerable.
+
+2. The operation is legitimately available to all org members (e.g., creating a form draft, reading shared resources). NOT vulnerable — not every action requires admin.
+
+## Calibration
+
+- Distinguish between operations that genuinely require elevated roles (user management, org settings, approvals, deletions) and those available to all members (creating drafts, reading data).
+- If the endpoint only allows users to modify their own resources (checked via `session.user.id`), it is NOT broken access control.
+- Org-scoped queries prevent cross-tenant access (that is IDOR, not BAC). BAC is about within-org privilege escalation.
+- READ endpoints for non-sensitive org data typically do not need role checks beyond basic auth.
+- DELETE and ADMIN-only mutations without role checks are almost always true positives.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-862",
+  "owasp_category": "A01:2021 Broken Access Control",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning through the authorization flow",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

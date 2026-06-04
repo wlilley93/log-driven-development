@@ -1,0 +1,101 @@
+{# vibeaudit prompt v1.0 — auth_bypass #}
+You are analyzing code for **Authentication Bypass** vulnerabilities.
+
+## What Is Authentication Bypass?
+
+Authentication bypass occurs when a route handler or API endpoint performs privileged operations (data mutation, user management, resource access) without verifying that the caller is an authenticated user. An attacker can call the endpoint directly without logging in, gaining unauthorized access.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. Route handlers that accept requests without calling any authentication function (e.g., no `getSession()`, `getServerSession()`, `getActiveOrganizationId()`, `requireAuth()`, `@login_required`)
+2. Endpoints that perform create, update, delete, or read-sensitive operations without an auth guard
+3. Middleware or decorator that is supposed to protect the route but is missing or misconfigured
+4. Conditional auth checks where one branch skips authentication entirely
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Next.js App Router: Protected routes should call `getServerSession()` or `getActiveOrganizationId()` early and return 401 if absent
+- Express: Check for auth middleware in the route chain (e.g., `router.use(authMiddleware)` or per-route `app.get('/path', auth, handler)`)
+- API routes under `app/api/` that mutate data MUST have auth — exception: public endpoints like `/api/health`, `/api/auth/*`, `/api/c/[token]/*` (client portal)
+{% elif framework == "django" %}
+- Django: Check for `@login_required`, `IsAuthenticated` permission class, or `request.user.is_authenticated`
+- DRF: ViewSets should have `permission_classes = [IsAuthenticated]` or project-wide default
+{% elif framework == "rails" %}
+- Rails: Check for `before_action :authenticate_user!` or similar Devise/custom auth filter
+- Controllers inheriting from `ApplicationController` may have auth in the parent — verify
+{% elif framework == "flask" %}
+- Flask: Check for `@login_required` decorator, or manual `current_user.is_authenticated` check
+- Flask-JWT-Extended: `@jwt_required()` decorator should be present on protected routes
+{% endif %}
+
+## True Positive Examples
+
+1. A Next.js API route that deletes a resource without any auth check:
+   ```typescript
+   export async function DELETE(req: NextRequest, { params }) {
+     await prisma.form.delete({ where: { id: params.id } });
+     return NextResponse.json({ success: true });
+   }
+   ```
+
+2. An Express route that returns user data with no middleware:
+   ```javascript
+   app.get('/api/users/:id/profile', async (req, res) => {
+     const user = await User.findById(req.params.id);
+     res.json(user);
+   });
+   ```
+
+3. A Django view missing the login_required decorator on a POST handler:
+   ```python
+   def transfer_funds(request):
+       amount = request.POST['amount']
+       Account.objects.transfer(request.POST['from'], request.POST['to'], amount)
+       return JsonResponse({"ok": True})
+   ```
+
+## False Positive Examples
+
+1. An endpoint that is intentionally public (health check, login, registration, public share links, webhook receivers). NOT vulnerable.
+2. Auth is enforced in layout-level middleware or a parent route wrapper rather than inside the handler itself. NOT vulnerable — but note as medium `false_positive_likelihood`.
+
+## Calibration
+
+- If the route is under an authenticated route group (e.g., `(app)/` in Next.js with layout-level auth), it may be protected upstream. Flag with `false_positive_likelihood: "high"` if you cannot confirm.
+- Webhook endpoints that validate signatures (e.g., HMAC verification) are authenticated by their own mechanism — NOT a bypass.
+- Routes that only read non-sensitive public data (e.g., published content) may be intentionally unauthenticated.
+- POST/PUT/DELETE endpoints without auth are almost always true positives.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-306",
+  "owasp_category": "A07:2021 Identification and Authentication Failures",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning through the authentication flow",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

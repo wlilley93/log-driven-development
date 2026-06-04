@@ -1,0 +1,116 @@
+{# vibeaudit prompt v1.0 — timing_attacks #}
+You are analyzing code for **Timing Attack** vulnerabilities.
+
+## What Is a Timing Attack?
+
+A timing attack exploits measurable differences in the time an application takes to process different inputs. When comparing secrets (API keys, tokens, HMAC signatures, password reset tokens) using standard string comparison (`===`, `==`, `strcmp`), the comparison short-circuits at the first differing byte. An attacker can measure response times to infer the secret one character at a time. Constant-time comparison eliminates this side channel.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **Direct string comparison of secrets**: `if (token === req.query.token)`, `if hmac_digest == user_signature`, `if api_key == params[:key]`
+2. **Comparison of HMAC/hash digests**: HMAC verification using `===` instead of `crypto.timingSafeEqual`
+3. **Early return on partial match**: Custom comparison loops that break on first mismatch
+4. **Password reset token comparison**: Token from URL compared with stored token using standard equality
+5. **Webhook signature verification**: HMAC signature from request header compared with computed signature using `===`
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Node.js: Use `crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b))` for secret comparison
+- Note: `timingSafeEqual` requires both buffers to be the same length — check length first (length check leaks length, not content)
+- Common pattern: HMAC webhook signatures, CSRF token comparison, API key validation
+{% elif framework == "django" %}
+- Django: Use `hmac.compare_digest(a, b)` (Python 3.3+) or `django.utils.crypto.constant_time_compare(a, b)`
+- Django's built-in CSRF and session handling already use constant-time comparison
+{% elif framework == "flask" %}
+- Flask: Use `hmac.compare_digest()` or `werkzeug.security.safe_str_cmp()` (deprecated in newer versions, use hmac)
+{% elif framework == "rails" %}
+- Rails: Use `ActiveSupport::SecurityUtils.secure_compare(a, b)` or `Rack::Utils.secure_compare`
+- `==` on strings in Ruby is NOT constant-time
+{% endif %}
+
+## True Positive Examples
+
+1. Direct equality comparison of API token:
+   ```typescript
+   const storedToken = await prisma.apiKey.findUnique({ where: { id } });
+   if (storedToken.secret === req.headers['x-api-key']) {
+     // authorized
+   }
+   ```
+   Attacker can time requests to brute-force the API key character by character.
+
+2. HMAC signature verification with `===`:
+   ```typescript
+   const expected = crypto.createHmac('sha256', secret).update(body).digest('hex');
+   if (expected === req.headers['x-webhook-signature']) {
+     processWebhook(body);
+   }
+   ```
+   Short-circuit comparison leaks the HMAC digest incrementally.
+
+3. Password reset token comparison:
+   ```python
+   stored_token = user.reset_token
+   if stored_token == request.GET['token']:
+       allow_password_reset()
+   ```
+
+## False Positive Examples
+
+1. Using crypto.timingSafeEqual:
+   ```typescript
+   const expected = crypto.createHmac('sha256', secret).update(body).digest();
+   const provided = Buffer.from(req.headers['x-signature'], 'hex');
+   if (expected.length === provided.length && crypto.timingSafeEqual(expected, provided)) {
+     processWebhook(body);
+   }
+   ```
+   NOT vulnerable.
+
+2. Comparison of non-secret values (user IDs, status strings, enum values):
+   ```typescript
+   if (user.role === 'ADMIN') { ... }
+   ```
+   NOT vulnerable — role values are not secret.
+
+## Calibration
+
+- ONLY flag timing attacks on **secret values**: API keys, tokens, HMAC signatures, password hashes, CSRF tokens, session IDs. Comparison of non-secret values (roles, statuses, IDs, emails) is NOT a timing vulnerability.
+- Severity depends on what is being compared: API keys and session tokens are HIGH. HMAC webhook signatures are MEDIUM. One-time tokens with short expiry are LOW.
+- If the token has a very short validity window (< 5 minutes) or limited retry count, practical exploitation is much harder — use MEDIUM instead of HIGH.
+- Database-stored hashed passwords compared via bcrypt.compare() are inherently constant-time — NOT vulnerable.
+- bcrypt, scrypt, and argon2 comparison functions are already constant-time. Only flag raw hash/token string comparisons.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-208",
+  "owasp_category": "A02:2021 Cryptographic Failures",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning about what values are compared and whether the comparison is constant-time",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

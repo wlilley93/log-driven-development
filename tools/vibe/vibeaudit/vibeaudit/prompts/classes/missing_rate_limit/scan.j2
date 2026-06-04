@@ -1,0 +1,124 @@
+{# vibeaudit prompt v1.0 — missing_rate_limit #}
+You are analyzing code for **Missing Rate Limiting** vulnerabilities.
+
+## What Is Missing Rate Limiting?
+
+Missing rate limiting occurs when public-facing or sensitive endpoints lack throttling controls, allowing attackers to make unlimited requests. This enables brute-force attacks (password guessing, token enumeration), credential stuffing, API abuse, resource exhaustion (DoS), and scraping. Rate limiting is a critical defense-in-depth control for authentication, registration, password reset, and data-intensive endpoints.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **Authentication endpoints without rate limiting**: Login, register, password reset, OTP verification — prime targets for brute force
+2. **Public form submission endpoints**: Endpoints accepting submissions from unauthenticated users without throttling
+3. **API endpoints performing expensive operations**: Search, export, AI/LLM calls, file processing without per-user or per-IP limits
+4. **Token/code validation endpoints**: Email verification, invite acceptance, API key validation — enumerable without limits
+5. **Absence of rate limiting middleware**: No `rateLimit()`, `express-rate-limit`, `@Throttle()`, or equivalent in the request pipeline
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Express: `express-rate-limit` middleware should be applied to sensitive routes
+- Next.js: Rate limiting typically implemented in middleware, `proxy.ts`, or within route handlers using a limiter library
+- Check for `rateLimit()`, `rateLimiter.check()`, `Ratelimit` from `@upstash/ratelimit`, or custom IP-based counters
+- Global rate limiting (e.g., in `proxy.ts`) may protect all routes — verify it applies to the endpoint in question
+{% elif framework == "django" %}
+- DRF: `DEFAULT_THROTTLE_CLASSES` and `DEFAULT_THROTTLE_RATES` in settings, or per-view `throttle_classes`
+- Django: `django-ratelimit` decorator `@ratelimit(key='ip', rate='5/m')`
+{% elif framework == "flask" %}
+- Flask-Limiter: `@limiter.limit("5 per minute")` decorator or app-wide default limits
+{% elif framework == "rails" %}
+- Rack::Attack: Check for `Rack::Attack.throttle` configuration in initializers
+{% endif %}
+
+## True Positive Examples
+
+1. Login endpoint with no rate limiting:
+   ```typescript
+   export async function POST(request: NextRequest) {
+     const { email, password } = await request.json();
+     const user = await prisma.user.findUnique({ where: { email } });
+     if (!user || !await bcrypt.compare(password, user.passwordHash)) {
+       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+     }
+     return NextResponse.json({ token: generateJWT(user) });
+   }
+   ```
+   No rate limit — attacker can try millions of passwords.
+
+2. Public form submission without throttling:
+   ```typescript
+   export async function POST(request: NextRequest) {
+     const body = await request.json();
+     await prisma.submission.create({ data: body });
+     return NextResponse.json({ success: true });
+   }
+   ```
+   Attacker can flood the database with spam submissions.
+
+3. Password reset request without rate limiting:
+   ```python
+   def request_reset(request):
+       email = request.POST['email']
+       token = generate_reset_token()
+       send_reset_email(email, token)
+       return JsonResponse({"sent": True})
+   ```
+   Attacker can trigger unlimited password reset emails (email bombing).
+
+## False Positive Examples
+
+1. Rate limiting applied in middleware or proxy layer:
+   ```typescript
+   // proxy.ts applies global rate limit: 60 writes/min per IP
+   // This route is behind that proxy
+   export async function POST(request: NextRequest) { ... }
+   ```
+   NOT vulnerable — rate limiting is upstream.
+
+2. Endpoint requires authentication (session-based rate limiting effective):
+   ```typescript
+   const auth = await getActiveOrganizationId();
+   if (!auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+   ```
+   Authenticated endpoints have a natural rate limit via the auth requirement — lower risk. Still flag if the operation is expensive.
+
+## Calibration
+
+- Login, registration, and password reset endpoints without rate limiting are HIGH severity — direct brute-force risk.
+- Public (unauthenticated) submission endpoints without rate limiting are MEDIUM — spam/abuse risk.
+- Authenticated endpoints without rate limiting are LOW — the auth requirement provides some protection, but expensive operations (AI calls, exports) should still be throttled.
+- If rate limiting exists in a global middleware, proxy, or WAF that covers the endpoint, it is NOT vulnerable. Flag with `false_positive_likelihood: "high"` if you suspect but cannot confirm upstream protection.
+- Endpoints that only serve static data or read-only public content have LOW risk without rate limiting.
+- Check for both application-level rate limiting (code) and infrastructure-level (comments mentioning Cloudflare, AWS WAF, nginx).
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-770",
+  "owasp_category": "A04:2021 Insecure Design",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning about the endpoint's exposure and rate limiting controls",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

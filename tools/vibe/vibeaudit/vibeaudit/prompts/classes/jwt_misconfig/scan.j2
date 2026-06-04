@@ -1,0 +1,101 @@
+{# vibeaudit prompt v1.0 — jwt_misconfig #}
+You are analyzing code for **JWT Misconfiguration** vulnerabilities.
+
+## What Is JWT Misconfiguration?
+
+JWT misconfiguration occurs when JSON Web Tokens are signed with weak secrets, use insecure algorithms (including `none`), lack expiration claims, or have their verification improperly implemented. An attacker can forge tokens, escalate privileges, or maintain indefinite access.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **Hardcoded signing secrets**: `jwt.sign(payload, 'secret')` or `jwt.sign(payload, 'my-secret-key')` — trivially guessable
+2. **Algorithm `none` accepted**: Verification that does not enforce a specific algorithm, allowing unsigned tokens
+3. **Missing expiration**: Tokens signed without `expiresIn` or `exp` claim — tokens valid forever
+4. **Weak algorithms**: Using `HS256` with a short or guessable key (less than 256 bits), or not enforcing algorithm on verification
+5. **Algorithm confusion**: RSA public key used with HMAC verification (`algorithms: ['HS256']` when the secret is an RSA public key)
+6. **Missing `issuer`/`audience` validation**: Tokens from other services accepted without checking `iss`/`aud`
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- NextAuth: JWT config should specify `maxAge` and use `NEXTAUTH_SECRET` from env (not hardcoded)
+- `jsonwebtoken` library: `jwt.verify(token, secret, { algorithms: ['HS256'] })` — the `algorithms` array MUST be specified
+- Express `express-jwt`: Ensure `algorithms` option is set and `secret` is from environment
+{% elif framework == "django" %}
+- Django REST Framework SimpleJWT: Check `SIGNING_KEY`, `ALGORITHM`, `ACCESS_TOKEN_LIFETIME` in settings
+- PyJWT: `jwt.decode(token, key, algorithms=["HS256"])` — `algorithms` parameter is required since PyJWT 2.x
+{% elif framework == "flask" %}
+- Flask-JWT-Extended: Check `JWT_SECRET_KEY`, `JWT_ALGORITHM`, `JWT_ACCESS_TOKEN_EXPIRES` in config
+{% elif framework == "rails" %}
+- `ruby-jwt`: `JWT.decode(token, secret, true, { algorithm: 'HS256' })` — verify must be `true` and algorithm specified
+{% endif %}
+
+## True Positive Examples
+
+1. Hardcoded JWT secret:
+   ```typescript
+   const token = jwt.sign({ userId: user.id }, 'super-secret-key', { expiresIn: '7d' });
+   ```
+   The secret is in source code — anyone with repo access can forge tokens.
+
+2. Missing algorithm enforcement on verification:
+   ```javascript
+   const decoded = jwt.verify(token, publicKey);
+   ```
+   Without `{ algorithms: ['RS256'] }`, an attacker can switch to `HS256` and sign with the public key.
+
+3. No expiration set:
+   ```python
+   token = jwt.encode({"user_id": user.id}, SECRET_KEY, algorithm="HS256")
+   ```
+   No `exp` claim — token is valid forever, even after password change or account deletion.
+
+## False Positive Examples
+
+1. Secret loaded from environment variable and algorithm enforced:
+   ```typescript
+   const token = jwt.sign(payload, process.env.JWT_SECRET!, { algorithm: 'HS256', expiresIn: '1h' });
+   ```
+   NOT vulnerable.
+
+2. JWT configuration in test files using hardcoded secrets for testing purposes. NOT vulnerable — test code does not run in production.
+
+## Calibration
+
+- Hardcoded secrets in test files or example documentation are NOT vulnerabilities — check the file path context.
+- If `NEXTAUTH_SECRET` is referenced from `process.env` and NextAuth handles JWT internally, it is likely safe.
+- Missing `exp` on short-lived tokens (e.g., email verification with separate DB-tracked expiry) is LOW severity.
+- Hardcoded secrets in production code are always CRITICAL — immediate token forgery.
+- Algorithm confusion attacks require specific conditions (asymmetric key setup) — verify before flagging.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-347",
+  "owasp_category": "A02:2021 Cryptographic Failures",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning through the JWT configuration",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

@@ -216,7 +216,10 @@ on the latter is the failure this prevents.
 Make "is it clean? is it complete?" an *executable mechanism that runs on every commit*, not a periodic ritual:
 a max-function-length lint that denies, a cross-module **duplication ratchet** (a budget you hold by *folding*
 duplication, never by raising the number), formatter and linter as hard gates, and red-until-built tests for any
-surface the spec declares but the build has not yet covered.
+surface the spec declares but the build has not yet covered. The same continuous gate also runs the cheap edge of
+the security and refactoring suites every commit: a `security_scan` (`vibescan --fast`, the one security owner) and
+a `structure_scan` (`vibeclean` on the changed surface); the function-length number is owned in one place, the
+closure-gate threshold (per the ownership matrix in [systems.md](./systems.md), system 7, LDD-INV-9).
 *Prevents:* quality drift, the third failure from section 1. When this runs continuously, the heavy periodic
 refactor becomes a *net for what slipped*, not the enforcement itself. The duplication ratchet is specifically
 what stops Tasky's rebuild from re-growing a fourth way to complete a task: the second copy of the logic trips
@@ -271,22 +274,28 @@ BUILD  ->  STRUCTURE  ->  SECURITY  ->  VERIFY  ->  PLAN
 ```
 
 1. **BUILD.** Implement the milestone's scope. Formatter, linter, and tests green.
-2. **STRUCTURE.** A mandatory structural *scan* of the new surface: does the duplication ratchet hold? Any
-   over-long function, God-object, or leaked abstraction? You escalate to a full refactor pass *only* if the scan
-   flags real debt, because the continuous closure-gate is already doing the primary structural enforcement.
-   This is a scan, not a ritual.
-3. **SECURITY.** Cheap supply-chain checks every milestone (dependencies, advisories). The *heavy* security audit
-   is **risk-targeted**: mandatory on a high-risk surface (auth, money, crypto, multi-tenancy, anything externally
-   reachable) and periodic otherwise, not bureaucratically run on a trivial surface the verifier already attacked.
-   Tasky's M1 includes exactly such a high-risk surface: the share link, its new expiry plus revocation, and the
-   resolve-path access check all get the deep audit.
-4. **VERIFY.** An **independent adversarial verifier** re-runs from a clean checkout, attacks the milestone's
-   invariants, and tries to break the new surface. This is the primary correctness-and-security net, every
-   milestone.
+2. **STRUCTURE.** A mandatory structural *scan* of the new surface (the closure-gate continuous gates plus
+   `vibeclean` on the changed surface): does the duplication ratchet hold? Any over-long function, God-object, or
+   leaked abstraction? You escalate to a full refactor pass (the refactoring suite) *only* if the scan flags real
+   debt, because the continuous closure-gate is already doing the primary structural enforcement. This is a scan,
+   not a ritual.
+3. **SECURITY.** The continuous `vibescan --fast` gate (the one security owner, subsuming the supply-chain check)
+   has already run on every commit; at close you run the full `vibescan .` sweep. The *heavy* deep audit (owned by
+   the security suite methodology, with `vibeaudit` as its scanner engine) is **risk-targeted**: mandatory on a
+   high-risk surface (auth, money, crypto, multi-tenancy, anything externally reachable) and periodic otherwise, not
+   bureaucratically run on a trivial surface the verifier already attacked. Tasky's M1 includes exactly such a
+   high-risk surface: the share link, its new expiry plus revocation, and the resolve-path access check all get the
+   deep audit.
+4. **VERIFY.** `vibetest` checks test quality (missing tests, weak assertions, coverage gaps), and an
+   **independent adversarial verifier** re-runs from a clean checkout, attacks the milestone's invariants, and tries
+   to break the new surface. This is the primary correctness-and-security net, every milestone.
 5. **PLAN.** **Mandatory.** The milestone does not close, and the next build does not start, until the next steps
    are planned: the next milestone's scope, sequence, and risks, plus the single next move. A high-stakes or
    uncertain next fork escalates to a planning agent or a council. There is no drifting into an unplanned next
    milestone.
+
+Which tool owns which concern and at which trigger is not restated here: see the two-tier(+) ownership matrix in
+[docs/systems.md](./systems.md) (system 7), the single source of truth (LDD-INV-9).
 
 The sign-off for a milestone records all five phases and their evidence. See
 [docs/artifacts.md, "The milestone sign-off"](./artifacts.md#the-milestone-sign-off),

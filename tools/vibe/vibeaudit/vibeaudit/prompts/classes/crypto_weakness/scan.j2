@@ -1,0 +1,112 @@
+{# vibeaudit prompt v1.0 — crypto_weakness #}
+You are analyzing code for **Cryptographic Weakness** vulnerabilities.
+
+## What Is a Cryptographic Weakness?
+
+Cryptographic weakness occurs when an application uses insecure hashing algorithms for passwords, weak or predictable random number generators for security-sensitive tokens, deprecated encryption algorithms, or insufficient key lengths. This enables attackers to crack passwords, predict tokens, or decrypt sensitive data.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **Weak password hashing**: MD5, SHA1, SHA256 (without salting/stretching) used for passwords instead of bcrypt, scrypt, or argon2
+2. **Predictable randomness**: `Math.random()`, `random.random()`, `rand()` used for tokens, session IDs, OTPs, or secrets
+3. **Hardcoded encryption keys or IVs**: Encryption keys embedded in source code
+4. **Deprecated algorithms**: DES, 3DES, RC4, MD5 for integrity, SHA1 for signatures
+5. **Insufficient key length**: RSA < 2048 bits, AES < 128 bits, HMAC with short keys
+6. **ECB mode**: AES-ECB preserves patterns in encrypted data
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Node.js: `crypto.randomBytes()` and `crypto.randomUUID()` are safe for token generation
+- `Math.random()` is NOT cryptographically secure — never use for tokens, secrets, or IDs with security implications
+- `bcrypt` or `bcryptjs` with cost factor >= 10 is correct for passwords
+- `crypto.createHash('md5')` is fine for checksums, NOT for passwords
+{% elif framework == "django" %}
+- Django: `make_password()` uses PBKDF2 by default (safe). `hashlib.md5(password)` is NOT
+- `secrets.token_hex()` and `secrets.token_urlsafe()` are safe. `random.randint()` is NOT for security
+- `get_random_string()` from `django.utils.crypto` is safe
+{% elif framework == "flask" %}
+- Flask: `werkzeug.security.generate_password_hash()` uses PBKDF2 (safe)
+- `os.urandom()` and `secrets` module are safe for token generation
+{% elif framework == "rails" %}
+- Rails: `has_secure_password` uses bcrypt (safe). `Digest::MD5.hexdigest(password)` is NOT
+- `SecureRandom.hex()` is safe. `rand()` is NOT for security tokens
+{% endif %}
+
+## True Positive Examples
+
+1. MD5 used for password hashing:
+   ```typescript
+   const hash = crypto.createHash('md5').update(password).digest('hex');
+   await prisma.user.create({ data: { email, passwordHash: hash } });
+   ```
+   MD5 is unsalted and fast — trivially crackable with rainbow tables or GPU brute force.
+
+2. Math.random() for API key generation:
+   ```javascript
+   const apiKey = Math.random().toString(36).substring(2);
+   ```
+   `Math.random()` is predictable — an attacker can reproduce the output given enough samples.
+
+3. Hardcoded encryption key:
+   ```python
+   cipher = AES.new(b'my-secret-key-16', AES.MODE_CBC, iv)
+   encrypted = cipher.encrypt(pad(data, AES.block_size))
+   ```
+   Key in source code — anyone with repo access can decrypt all data.
+
+## False Positive Examples
+
+1. MD5 used for non-security purposes (checksum, cache key, deduplication):
+   ```typescript
+   const cacheKey = crypto.createHash('md5').update(queryString).digest('hex');
+   ```
+   NOT a vulnerability — MD5 is acceptable for non-security hashing.
+
+2. `Math.random()` used for UI purposes (random color, shuffle display order):
+   ```javascript
+   const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+   ```
+   NOT a vulnerability — no security implication.
+
+## Calibration
+
+- MD5/SHA1 for password storage is always HIGH or CRITICAL.
+- `Math.random()` for security tokens is HIGH. For non-security purposes it is NOT a vulnerability.
+- Hardcoded encryption keys in production code are CRITICAL. In test/example files, they are NOT.
+- Distinguish between hashing for integrity (checksums, ETags) and hashing for security (passwords, signatures).
+- bcrypt with cost factor < 10 is MEDIUM (weak but not broken). bcrypt >= 10 is safe.
+- Context matters: check what the hash/random value is actually used for before flagging.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-327 or CWE-330",
+  "owasp_category": "A02:2021 Cryptographic Failures",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning about the cryptographic usage and its security context",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

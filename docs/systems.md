@@ -68,7 +68,11 @@ machine-checkable definition of "done".
   (if it is as big as the legacy, you transcribed, you did not distil).
 - **Walking skeleton.** Build the thinnest end-to-end slice that actually runs: one real path through every layer
   (storage, domain, API, surface), before deepening any one part. *Exit criterion:* one real request runs end to
-  end from a clean checkout with the gates green. Thin, but whole.
+  end from a clean checkout with the gates green. The one real path is an authenticated path that crosses its
+  trust/tenant boundary (it traverses one real auth check and one real tenant boundary), not a no-auth happy path,
+  so the skeleton has a security spine from the first slice; "the gates green" explicitly includes the continuous
+  `security_scan` gate. Thin, but whole. (LDD-INV-12, the skeleton built first through every layer; LDD-INV-11, the
+  closure-gate stood up before the skeleton.)
 - **Loop to zero gaps.** Each pass, build the next slice on the skeleton, run the closure sweep against the spec,
   close the gaps (amending the spec when building proves a line wrong), journal the beat. *Exit criterion (the
   headline rule):* "done" means the closure sweep finds zero gaps, not "the tests pass".
@@ -201,7 +205,8 @@ slipped*, not the primary enforcement.
 
 **Feeds / depends on.** Depends on the **spec** (system 9) to know which surfaces are declared-but-unbuilt (the
 red-until-built tests) and on **consolidation over fragmentation** (system 8) as the principle the ratchet
-enforces. Is the gap detector the **loop** (system 2) runs each pass. Feeds the **milestone close** (system 7): it
+enforces (the ratchet-by-folding rule is registered as LDD-INV-10 in [docs/invariants.md](./invariants.md)). Is
+the gap detector the **loop** (system 2) runs each pass. Feeds the **milestone close** (system 7): it
 is the per-commit Tier 1 enforcement that makes the STRUCTURE phase a scan rather than the primary check. At scale
 (system 10) it is one of the four things that keep autonomous throughput honest rather than runaway.
 
@@ -235,7 +240,29 @@ under-checking (skipping the deep audit on a high-risk one).
 
 The two-tier gate is the through-line: **Tier 1** (the closure-gate, system 6) runs on every commit so quality is
 enforced continuously; **Tier 2** (the deep security audit, the full refactor pass, the adversarial verifier) is
-spent where risk lives and on a periodic cadence, not uniformly.
+spent where risk lives and on a periodic cadence, not uniformly; see the two-tier(+) ownership matrix below for the
+single owner of each.
+
+### The two-tier(+) ownership matrix (one owner per concern, LDD-INV-9)
+
+This table is the single source of truth for which tool owns which concern and at which cadence. Every other doc
+and every gate config CITES this matrix; none restates it. "Tier" here is the GATE-CADENCE axis (continuous
+per-commit vs risk-triggered heavy pass), distinct from the court's judgement Tiers (Council / Appeals / Supreme,
+owned by the council skill). The continuous tier holds only the cheap edge of each suite; every heavy pass stays
+risk-triggered under one owner (the anti-bloat veto).
+
+| Concern | Single owner | Tier / trigger |
+|---|---|---|
+| Structural floor (function length, duplication, formatter, linter, type-check, tests) | The closure-gate (`tools/closure-gate/closure_gate.py`, 8 gates) + `vibeclean --changed` as its `structure_scan` edge | Continuous, every commit (the per-commit gate). Function-length number is owned by `[function] max_lines` in `closure-gate.toml`; all other surfaces cite it. |
+| Fast security: secrets + dependency CVEs + fast SAST | `vibescan --fast` (the closure-gate `security_scan` gate) | Continuous, every commit. The ONE security owner at this tier; subsumes the old separate supply-chain / dep-CVE gate. |
+| Full SAST sweep (whole tree) | `vibescan .` (full, not `--fast`) | Push / CI, and at milestone-close SECURITY. |
+| Deep security reasoning (exploitability, cross-subsystem chains, threat model, the 14-section audit) | The security suite methodology (`skills/security/methodology.md`); `vibeaudit` is its scanner engine, NOT a parallel auditor | Tier 2, risk-triggered: mandatory on auth / money / crypto / multi-tenant-isolation / any externally-reachable surface, plus periodic. Never routine. |
+| Behaviour-preserving cleanup (refactor rounds, structural sweep) | The refactoring suite (`skills/refactoring/`) | Tier 2, risk-triggered: escalate from the STRUCTURE scan ONLY on a tripped debt counter (see structural-sweep). Never routine. |
+| Test quality (missing tests, weak assertions, smells, coverage gaps) | `vibetest` | Milestone-close VERIFY, alongside the independent adversarial verifier. |
+| Performance / deploy readiness | `viberapid` (perf) / `vibedeploy` (ship-safe gate) | Referenced, never mandatory: run as needed on a perf-budget or pre-deploy trigger. |
+
+The method invariants this matrix anchors are registered in [docs/invariants.md](./invariants.md) (LDD-INV-9 one
+owner per concern, LDD-INV-10 the duplication ratchet); cite them by ID rather than restating the rule.
 
 **Feeds / depends on.** Depends on the **closure-gate** (system 6) as its Tier 1, on the **builder + verifier**
 shape (system 3) for VERIFY, and on the **deliberation budget** (system 5) for why STRUCTURE and SECURITY are

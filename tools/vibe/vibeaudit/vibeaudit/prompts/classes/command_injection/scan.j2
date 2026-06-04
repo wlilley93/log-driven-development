@@ -1,0 +1,108 @@
+{# vibeaudit prompt v1.0 — command_injection #}
+You are analyzing code for **Command Injection (OS Command Injection)** vulnerabilities.
+
+## What Is Command Injection?
+
+Command injection occurs when an application passes user-controlled input to a system shell command without proper sanitization. An attacker can append or inject shell metacharacters (`;`, `|`, `&&`, `$(...)`, backticks) to execute arbitrary operating system commands on the server, potentially gaining full system access.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **String interpolation/concatenation in shell commands**: `exec(\`ls ${userInput}\`)`, `os.system(f"convert {filename}")`, `system("ping #{ip}")`
+2. **Functions that invoke a shell**: `child_process.exec()`, `os.system()`, `subprocess.call(shell=True)`, `Kernel.system()`, `Runtime.exec()`
+3. **Template strings with user input**: `execSync(\`ffmpeg -i ${path}\`)` where `path` comes from request
+4. **Indirect shell execution**: User input in environment variables or config files that are later used in shell commands
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Node.js: `child_process.exec()` and `execSync()` invoke a shell — vulnerable to injection. `execFile()` and `spawn()` do NOT invoke a shell and are safe (when used without `{ shell: true }`)
+- Template literals: `exec(\`command ${input}\`)` is dangerous. Use `execFile('command', [input])` instead
+- `child_process.spawn('cmd', [arg1, arg2])` is safe — arguments are passed as an array, not parsed by a shell
+{% elif framework == "django" or framework == "flask" %}
+- Python: `os.system()`, `subprocess.call(cmd, shell=True)`, and `subprocess.Popen(cmd, shell=True)` are vulnerable
+- Safe: `subprocess.run(['command', arg1, arg2], shell=False)` — arguments as a list with `shell=False`
+- `shlex.quote()` can sanitize arguments for shell commands, but array form is preferred
+{% elif framework == "rails" %}
+- Ruby: `system()`, backticks, `%x{}`, `Kernel.exec()`, `IO.popen()` are all shell-invocating
+- Safe: `system('command', arg1, arg2)` — multi-argument form bypasses shell interpretation
+{% endif %}
+
+## True Positive Examples
+
+1. User input interpolated into exec:
+   ```typescript
+   const { filename } = req.query;
+   exec(`convert /uploads/${filename} /output/${filename}.png`, (err, stdout) => {
+     res.send(stdout);
+   });
+   ```
+   Attacker sends `filename=;cat /etc/passwd` to execute arbitrary commands.
+
+2. Python subprocess with shell=True:
+   ```python
+   ip = request.GET.get('ip')
+   result = subprocess.check_output(f"ping -c 4 {ip}", shell=True)
+   ```
+   Attacker sends `ip=8.8.8.8; cat /etc/shadow` for command chaining.
+
+3. Ruby system with string interpolation:
+   ```ruby
+   system("nslookup #{params[:domain]}")
+   ```
+   Attacker sends `domain=example.com; rm -rf /` to destroy the filesystem.
+
+## False Positive Examples
+
+1. Using execFile or spawn with array arguments (no shell):
+   ```typescript
+   execFile('convert', [inputPath, outputPath], (err, stdout) => { ... });
+   ```
+   NOT vulnerable — arguments are not parsed by a shell.
+
+2. Input is a hardcoded constant or comes from server config:
+   ```typescript
+   exec(`pg_dump ${process.env.DATABASE_URL}`, callback);
+   ```
+   NOT vulnerable — the value is from server environment, not user input. (Though secrets in commands have other risks.)
+
+## Calibration
+
+- `exec()` or `system()` with ANY user-controlled input is almost always CRITICAL — full RCE.
+- `execFile()` / `spawn()` with array arguments and no `shell: true` are NOT vulnerable — do not flag.
+- If user input is validated against a strict allowlist (e.g., only alphanumeric characters), the risk is mitigated. Flag with LOW confidence.
+- Sanitization via regex (e.g., stripping `;|&`) is fragile and should still be flagged as MEDIUM.
+- Commands triggered by cron or internal events (no user input) are NOT command injection.
+- Check whether the input actually originates from an external user or from trusted internal sources.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-78",
+  "owasp_category": "A03:2021 Injection",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning tracing user input to the shell command",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

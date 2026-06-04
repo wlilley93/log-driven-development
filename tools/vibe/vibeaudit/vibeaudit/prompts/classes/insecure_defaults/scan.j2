@@ -1,0 +1,122 @@
+{# vibeaudit prompt v1.0 — insecure_defaults #}
+You are analyzing code for **Insecure Default Configuration** vulnerabilities.
+
+## What Are Insecure Defaults?
+
+Insecure defaults occur when an application ships with security-relevant settings set to permissive or debug values, and those values are not overridden in production. This includes disabled security flags (secure cookies set to false, CSRF protection off), debug mode in production, wildcard CORS origins, verbose error reporting, and default credentials left unchanged.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **Cookie security flags disabled**: `secure: false`, `httpOnly: false`, `sameSite: 'none'` without justification
+2. **CORS wildcard in production**: `origin: '*'` or `Access-Control-Allow-Origin: *` on authenticated endpoints
+3. **Debug mode enabled**: `DEBUG = True`, `app.debug = True`, `NODE_ENV !== 'production'` checks missing
+4. **Security middleware disabled**: CSRF protection turned off, helmet/security headers not applied, rate limiting disabled
+5. **Default credentials**: Hardcoded admin passwords, default API keys, unchanged secret keys
+6. **Permissive TLS/SSL**: Disabled certificate verification (`rejectUnauthorized: false`, `verify=False`)
+7. **Verbose error responses**: Full stack traces, SQL errors, or internal state exposed by default
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Express: Check for `helmet()` middleware, CORS configuration, cookie settings in session config
+- Next.js: `next.config.js` — check `poweredBy` (should be disabled), `headers()` for security headers
+- Session cookies: Must have `secure: true`, `httpOnly: true`, `sameSite: 'lax'` or `'strict'` in production
+- `rejectUnauthorized: false` in HTTPS/TLS connections disables certificate verification
+{% elif framework == "django" %}
+- `DEBUG = True` in production is CRITICAL (interactive debugger, SQL queries, settings exposed)
+- `ALLOWED_HOSTS = ['*']` bypasses host header validation
+- `CSRF_COOKIE_SECURE`, `SESSION_COOKIE_SECURE`, `SECURE_SSL_REDIRECT` should be True in production
+- `SECRET_KEY` should not be the default from `django-admin startproject`
+{% elif framework == "flask" %}
+- `app.debug = True` or `FLASK_DEBUG=1` enables interactive debugger (RCE via debugger PIN)
+- `SESSION_COOKIE_SECURE`, `SESSION_COOKIE_HTTPONLY` should be True
+- `app.secret_key` should not be a short or hardcoded string
+{% elif framework == "rails" %}
+- `config.consider_all_requests_local = true` in production exposes debug info
+- `config.force_ssl = true` should be set in production
+- `Rails.application.credentials.secret_key_base` should be unique and not default
+{% endif %}
+
+## True Positive Examples
+
+1. Session cookie without secure flag:
+   ```typescript
+   app.use(session({
+     secret: process.env.SESSION_SECRET,
+     cookie: { secure: false, httpOnly: false }
+   }));
+   ```
+   Cookies transmitted over HTTP and accessible via JavaScript — session hijacking risk.
+
+2. CORS wildcard on authenticated API:
+   ```typescript
+   app.use(cors({ origin: '*', credentials: true }));
+   ```
+   Any origin can make authenticated requests — CSRF via cross-origin.
+
+3. TLS certificate verification disabled:
+   ```typescript
+   const agent = new https.Agent({ rejectUnauthorized: false });
+   const response = await fetch(internalUrl, { agent });
+   ```
+   Accepts any certificate including attacker-controlled MITM certificates.
+
+## False Positive Examples
+
+1. Insecure settings guarded by environment check:
+   ```typescript
+   cookie: {
+     secure: process.env.NODE_ENV === 'production',
+     httpOnly: true,
+     sameSite: 'lax',
+   }
+   ```
+   NOT vulnerable — secure is true in production, false only in development.
+
+2. CORS configured with specific origins:
+   ```typescript
+   app.use(cors({ origin: ['https://app.example.com', 'https://admin.example.com'] }));
+   ```
+   NOT vulnerable.
+
+## Calibration
+
+- Always check whether the insecure value is conditional on the environment. `secure: false` behind a `NODE_ENV === 'development'` check is NOT a production vulnerability.
+- CORS `origin: '*'` on truly public APIs (no credentials, no cookies) is acceptable — only flag if `credentials: true` is also set.
+- Debug mode in production is HIGH for frameworks with interactive debuggers (Flask, Django), MEDIUM for others.
+- Default/hardcoded `SECRET_KEY` or `NEXTAUTH_SECRET` in production code is CRITICAL.
+- `rejectUnauthorized: false` in production is HIGH (MITM). In test/dev environments it is NOT a vulnerability.
+- Check if the file is a test configuration, development config, or example file before flagging.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-1188",
+  "owasp_category": "A05:2021 Security Misconfiguration",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning about the configuration and its production implications",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

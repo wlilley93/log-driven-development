@@ -146,7 +146,15 @@ config is [`templates/closure-gate.config.md`](../templates/closure-gate.config.
       commit pass** (raising it concedes the sprawl you are fighting).
 - [ ] **Red-until-built tests** present for every spec surface declared but not yet built (so an unbuilt surface is
       visibly red, never silently absent).
+- [ ] **`security_scan`** (`vibescan --fast`): the continuous, fast security gate (secrets, dependency CVEs, fast
+      SAST), the single security owner at this tier. Loud-skip if the tool is missing (warn, never silently pass).
+- [ ] **`structure_scan`** (`vibeclean --changed`): the structural-suite edge on the changed surface, paired with
+      the max-function-length and duplication gates above. Loud-skip if the tool is missing.
 - [ ] **A clean tree** (no stray artefacts, nothing uncommitted you did not mean to leave).
+
+These are the eight gates the orchestrator runs every commit (the function-length number, the duplication budget,
+and which security tool owns this tier are not restated here; see the two-tier(+) ownership matrix in
+[systems.md](./systems.md), system 7, LDD-INV-7 / LDD-INV-9).
 
 ### 4b. The milestone close (five phases, in order)
 
@@ -156,17 +164,24 @@ A milestone is **not done** until all five run, in order. Record them in
 and the actual result), not "looks fine".
 
 1. [ ] **BUILD.** Implement the milestone's scope. Formatter, linter, tests green from a clean checkout.
-2. [ ] **STRUCTURE.** A structural *scan* of the new surface (does the ratchet hold? any over-long function,
-   God-object, leaked abstraction?). Escalate to a **full refactor pass only on flagged debt** (the continuous gate
-   already did the heavy lifting). This is a scan, not a ritual.
-3. [ ] **SECURITY.** Cheap **supply-chain** checks every time (dependencies, advisories). The **heavy audit is
-   risk-targeted**: mandatory on a high-risk surface (auth, money, crypto, multi-tenancy, anything externally
-   reachable), plus periodically. Do not bureaucratically deep-audit a trivial surface the verifier already attacked.
-4. [ ] **VERIFY.** An **independent adversarial verifier** re-runs **from clean**, attacks the milestone's
-   invariants, and tries to break the new surface. This is the primary correctness-and-security net, every milestone.
+2. [ ] **STRUCTURE.** A structural *scan* of the new surface (the closure-gate continuous gates plus `vibeclean`):
+   does the ratchet hold? any over-long function, God-object, leaked abstraction? Escalate to a **full refactor
+   pass** (the refactoring suite) **only on flagged debt** (the continuous gate already did the heavy lifting). This
+   is a scan, not a ritual.
+3. [ ] **SECURITY.** The continuous `vibescan --fast` gate (the one security owner, subsuming supply-chain) ran on
+   every commit; at close run the full `vibescan .` sweep. The **heavy deep audit** (the security-suite methodology,
+   with `vibeaudit` as its scanner engine) is **risk-targeted**: mandatory on a high-risk surface (auth, money,
+   crypto, multi-tenancy, anything externally reachable), plus periodically. Do not bureaucratically deep-audit a
+   trivial surface the verifier already attacked.
+4. [ ] **VERIFY.** `vibetest` for test quality, and an **independent adversarial verifier** re-runs **from clean**,
+   attacks the milestone's invariants, and tries to break the new surface. This is the primary
+   correctness-and-security net, every milestone.
 5. [ ] **PLAN (MANDATORY).** The milestone does **not** close, and the next build does **not** start, until the next
    steps are planned: the next milestone's scope, sequence, and risks, plus the single next move. A high-stakes next
    fork escalates to a planning agent or a Council. **Never drift into an unplanned next milestone.**
+
+> Which tool owns each phase and at which trigger is not restated here: see the two-tier(+) ownership matrix in
+> [systems.md](./systems.md) (system 7), the single source of truth (LDD-INV-9).
 
 > **What "done" means at the gate.** "Done" means **you ground-truthed it and the closure sweep is clean.** It never
 > means "the tests pass" alone, and it never means a worker said so.
@@ -257,7 +272,11 @@ defect the builder talked itself out of seeing.
 
 **A milestone is done when:**
 
-- [ ] All five close phases ran in order with reproduced evidence: BUILD, STRUCTURE, SECURITY, VERIFY, PLAN.
+- [ ] All five close phases ran in order, and the sign-off records, **per phase, the actual command string and its
+      actual output** (BUILD, STRUCTURE, SECURITY, VERIFY, PLAN): not "looks fine", but the literal command run and
+      the result it returned (e.g. the `vibescan --fast` result and, when risk-triggered, the `vibescan .` /
+      security-suite output for SECURITY; the closure-gate / `vibeclean` result for STRUCTURE; the `vibetest` result
+      for VERIFY). DoD cites tool output (LDD-INV-5).
 - [ ] An **independent adversarial verifier** re-ran from clean and failed to break the invariants.
 - [ ] PLAN named the next milestone's scope, sequence, risks, and the single next move (the close does not finish
       without this).
@@ -307,12 +326,14 @@ SHAPES:
   unknown-size discovery         -> loop-until-dry (K consecutive empty rounds)
   judgement under stakes         -> council
 
-GATES:
+GATES (8 per commit; owner of each concern = the matrix in systems.md system 7):
   every commit -> formatter, linter (warnings=errors), type-check, max-fn-length,
-                  invariant tests green from clean, duplication ratchet (fold, never raise),
-                  red-until-built tests, clean tree
-  milestone    -> BUILD, STRUCTURE (scan), SECURITY (supply-chain always; deep audit risk-targeted),
-                  VERIFY (independent adversary from clean), PLAN (mandatory)
+                  duplication ratchet (fold, never raise), invariant tests green from clean,
+                  security_scan (vibescan --fast, the one security owner), structure_scan (vibeclean --changed),
+                  + red-until-built tests present, clean tree
+  milestone    -> BUILD, STRUCTURE (closure-gate + vibeclean scan), SECURITY (vibescan --fast continuous +
+                  vibescan . at close; deep audit = security suite, vibeaudit engine, risk-targeted),
+                  VERIFY (vibetest + independent adversary from clean), PLAN (mandatory)
 
 SUBAGENTS: tell them: don't journal, don't touch shared state, don't commit; RETURN what+why; cite file:line.
            give exact anchors + the invariant to prove (+ for a verifier: the exact attack + verdict shape).

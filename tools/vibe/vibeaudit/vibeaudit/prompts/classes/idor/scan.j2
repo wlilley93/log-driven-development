@@ -1,0 +1,75 @@
+{# vibeaudit prompt v1.0 — idor #}
+You are analyzing code for **Insecure Direct Object Reference (IDOR)** vulnerabilities.
+
+## What Is IDOR?
+
+IDOR occurs when an application uses user-supplied identifiers (IDs from URL params, query strings, or request bodies) to directly access database records without verifying that the requesting user owns or is authorized to access that resource. An attacker can modify the ID to access another user's data.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. ID parameters taken from the URL, query string, or request body (e.g., `params.id`, `req.query.userId`, `request.args.get('id')`)
+2. Those IDs used directly in database queries (e.g., `findUnique({ where: { id } })`, `SELECT * FROM ... WHERE id = ?`)
+3. **No ownership or authorization check** between extracting the ID and querying the database
+4. Missing organization/tenant scoping on the query (e.g., no `AND org_id = ?` clause)
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Next.js / Express: Check for `getActiveOrganizationId()` or session-based org scoping in the query's WHERE clause
+- Prisma: Look for `where: { id, organizationId }` pattern — the org scope prevents cross-tenant access
+{% elif framework == "django" %}
+- Django: Check for `get_object_or_404` with queryset filtered by `request.user` or org
+- DRF: `get_queryset()` should filter by authenticated user
+{% elif framework == "rails" %}
+- Rails: `current_user.resources.find(params[:id])` is safe; `Resource.find(params[:id])` is not
+{% endif %}
+
+## True Positive Examples
+
+1. `const item = await prisma.item.findUnique({ where: { id: params.id } })` — no org or user scope, any authenticated user can access any item by guessing IDs.
+2. `user = User.objects.get(pk=request.GET['user_id'])` — fetches any user record without checking the requester's relationship to that user.
+3. `SELECT * FROM orders WHERE id = $1` with `$1` from URL param and no additional user/org filter.
+
+## False Positive Examples
+
+1. `await prisma.item.findUnique({ where: { id: params.id, organizationId: auth.orgId } })` — the org scope prevents cross-tenant access. NOT vulnerable.
+2. The ID comes from the authenticated session (e.g., `session.user.id`), not from user input. NOT vulnerable.
+
+## Calibration
+
+- If the query includes an organization, tenant, or user ownership filter alongside the ID, it is NOT an IDOR.
+- If the endpoint is intentionally public (e.g., shared links with unguessable tokens), it is NOT an IDOR.
+- If middleware upstream already validates ownership, note this as a possible false positive with high `false_positive_likelihood`.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-639",
+  "owasp_category": "A01:2021",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning through the data flow",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

@@ -1,0 +1,116 @@
+{# vibeaudit prompt v1.0 — data_exposure #}
+You are analyzing code for **Sensitive Data Exposure** vulnerabilities.
+
+## What Is Sensitive Data Exposure?
+
+Sensitive data exposure occurs when an application inadvertently reveals confidential information in API responses, error messages, logs, or client-facing output. This includes password hashes, internal IDs, stack traces, database connection strings, API keys, PII beyond what the client needs, and debug information in production error handlers.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **Full model objects in API responses**: Returning entire database records (including `passwordHash`, `secret`, `internalNotes`) without selecting or omitting sensitive fields
+2. **Stack traces in error responses**: Catching exceptions and returning `error.stack` or full error objects to the client
+3. **Secrets in logs**: Logging API keys, tokens, passwords, or PII at info/debug level
+4. **Verbose error messages**: Database errors, validation details, or file paths that reveal internal structure
+5. **Debug endpoints in production**: Routes that return server config, environment variables, or diagnostic info
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Prisma: Use `select` or `omit` to exclude sensitive fields. `findUnique()` without `select` returns everything
+- Next.js: API routes should catch errors and return generic messages, not `error.message` from database/internal errors
+- Express: Production error handler should NOT include `err.stack`. Check for `app.get('env') === 'production'` guards
+{% elif framework == "django" %}
+- DRF: Serializers should exclude sensitive fields. `ModelSerializer` with `fields = '__all__'` may expose too much
+- Django: `DEBUG = True` in production exposes stack traces, SQL queries, and settings
+- Check that `ADMINS` email doesn't leak in error pages
+{% elif framework == "flask" %}
+- Flask: `app.debug = True` or `FLASK_DEBUG=1` in production exposes the interactive debugger (RCE risk)
+- Error handlers should return generic messages, not `traceback.format_exc()`
+{% elif framework == "rails" %}
+- Rails: `render json: user` without `except` or `only` returns all attributes
+- Check that `config.consider_all_requests_local` is false in production
+{% endif %}
+
+## True Positive Examples
+
+1. Full user object returned including password hash:
+   ```typescript
+   const user = await prisma.user.findUnique({ where: { id } });
+   return NextResponse.json(user);
+   ```
+   Response includes `passwordHash`, `resetToken`, and other sensitive fields.
+
+2. Stack trace in error response:
+   ```typescript
+   catch (error) {
+     return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
+   }
+   ```
+   Exposes internal file paths, library versions, and code structure to attackers.
+
+3. Logging sensitive data:
+   ```python
+   logger.info(f"User login attempt: email={email}, password={password}")
+   ```
+   Passwords in plaintext in log files.
+
+## False Positive Examples
+
+1. Sensitive fields explicitly excluded with Prisma `select`:
+   ```typescript
+   const user = await prisma.user.findUnique({
+     where: { id },
+     select: { id: true, name: true, email: true }
+   });
+   ```
+   NOT vulnerable.
+
+2. Generic error message returned to client:
+   ```typescript
+   catch (error) {
+     console.error('Internal error:', error);
+     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+   }
+   ```
+   NOT vulnerable — error details go to server logs only, generic message to client.
+
+## Calibration
+
+- Returning a full user/account object without field selection is HIGH if it includes password hashes, tokens, or secrets. It is MEDIUM if it only includes PII like email/phone beyond what the client needs.
+- Stack traces in production responses are MEDIUM — they aid reconnaissance but do not directly compromise data.
+- Logging passwords or secrets is HIGH. Logging email addresses is LOW (depends on compliance context).
+- If the response is to an authenticated admin-only endpoint, the severity is LOWER than a public endpoint.
+- Check whether a `select` clause or response mapper strips sensitive fields before the response is sent.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-200",
+  "owasp_category": "A01:2021 Broken Access Control",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning about what data flows into the response",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

@@ -1,0 +1,28 @@
+# vibetest configuration
+fail_on: HIGH
+
+# Runner-specific config
+runners:
+  coverage_analyzer:
+    threshold_high: 0
+    threshold_medium: 50
+    threshold_low: 80
+  test_smell:
+    god_test_lines: 50
+    max_assertions: 10
+  missing_tests:
+    source_dirs:
+      - src
+      - lib
+    test_dirs:
+      - tests
+      - test
+
+# Paths to exclude from analysis
+exclude:
+  - .venv
+  - venv
+  - node_modules
+  - __pycache__
+  - .pytest_cache
+  - .tox

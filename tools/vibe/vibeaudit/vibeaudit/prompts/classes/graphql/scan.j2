@@ -1,0 +1,130 @@
+{# vibeaudit prompt v1.0 — graphql #}
+You are analyzing code for **GraphQL Security** vulnerabilities.
+
+## What Are GraphQL Security Issues?
+
+GraphQL introduces unique attack surfaces beyond REST APIs: introspection exposing the full schema in production, unbounded query depth enabling denial of service, missing field-level authorization allowing data access bypass, batch query abuse, and query complexity attacks. These stem from GraphQL's flexible query language giving clients more control over data retrieval.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **Introspection enabled in production**: `introspection: true` or no explicit disable — attackers can discover the entire schema including internal types and fields
+2. **No query depth limit**: Missing `depthLimit` or equivalent — enables deeply nested queries that exhaust server resources
+3. **No query complexity limit**: Missing `queryComplexity` or `costAnalysis` — allows expensive queries with many joins/relations
+4. **Missing field-level authorization**: Resolvers that return data without checking the requesting user's permission for that specific field
+5. **Batch query abuse**: No limit on the number of queries in a single request (array batching)
+6. **N+1 query patterns without DataLoader**: Resolver fetches related records in a loop, enabling DoS via crafted queries
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Apollo Server: `introspection` defaults to `true` in dev, `false` in production (v4+). Verify explicitly
+- `graphql-depth-limit` package: `validationRules: [depthLimit(10)]`
+- `graphql-query-complexity`: Integrate as a validation rule with a max cost
+- Apollo `context`: Auth/session should be resolved here and passed to resolvers
+{% elif framework == "django" %}
+- Graphene-Django: Introspection is always enabled by default — must explicitly disable
+- `graphene-django-optimizer` helps with N+1, but does not solve auth
+- DjangoObjectType: Check `exclude_fields` or explicit `fields` to prevent over-fetching
+{% elif framework == "rails" %}
+- graphql-ruby: `max_depth` and `max_complexity` should be set on the schema
+- Introspection: Use `disable_introspection_entry_points` for production
+{% elif framework == "flask" %}
+- Ariadne / Strawberry: Check for introspection settings and middleware for depth/complexity
+{% endif %}
+
+## True Positive Examples
+
+1. GraphQL server with introspection enabled and no depth limit:
+   ```typescript
+   const server = new ApolloServer({
+     typeDefs,
+     resolvers,
+     introspection: true,
+   });
+   ```
+   Attacker discovers full schema and crafts deeply nested queries for DoS.
+
+2. Resolver without authorization check:
+   ```typescript
+   const resolvers = {
+     Query: {
+       user: (_, { id }) => prisma.user.findUnique({ where: { id } }),
+     },
+   };
+   ```
+   Any authenticated (or unauthenticated) user can query any user's data by ID.
+
+3. No batch query limit:
+   ```typescript
+   app.use('/graphql', graphqlHTTP({
+     schema,
+     graphiql: process.env.NODE_ENV !== 'production',
+   }));
+   ```
+   Attacker sends array of 1000 queries in a single HTTP request.
+
+## False Positive Examples
+
+1. Introspection explicitly disabled in production:
+   ```typescript
+   const server = new ApolloServer({
+     typeDefs,
+     resolvers,
+     introspection: process.env.NODE_ENV !== 'production',
+     validationRules: [depthLimit(10)],
+   });
+   ```
+   NOT vulnerable.
+
+2. Resolver checks authorization via context:
+   ```typescript
+   user: async (_, { id }, context) => {
+     if (!context.user) throw new AuthenticationError('Not authenticated');
+     if (context.user.role !== 'ADMIN' && context.user.id !== id)
+       throw new ForbiddenError('Not authorized');
+     return prisma.user.findUnique({ where: { id } });
+   }
+   ```
+   NOT vulnerable.
+
+## Calibration
+
+- Introspection in production is MEDIUM — it aids reconnaissance but does not directly expose data.
+- Missing depth/complexity limits are MEDIUM — DoS risk, not data breach.
+- Missing field-level auth in resolvers is HIGH — direct data access bypass.
+- If the GraphQL endpoint requires authentication and has depth limits, reduce severity.
+- Apollo Server v4+ disables introspection in production by default — check the version.
+- If the application does not use GraphQL at all, this check is NOT applicable.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-200",
+  "owasp_category": "A01:2021 Broken Access Control",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning about the GraphQL server configuration and resolver authorization",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

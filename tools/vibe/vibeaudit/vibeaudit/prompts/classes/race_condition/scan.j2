@@ -1,0 +1,115 @@
+{# vibeaudit prompt v1.0 — race_condition #}
+You are analyzing code for **Race Condition** vulnerabilities (TOCTOU — Time of Check to Time of Use).
+
+## What Is a Race Condition?
+
+A race condition occurs when a program reads a value, makes a decision based on it, then writes an update — but another concurrent request can change the value between the read and the write. In web applications, this commonly manifests as check-then-act patterns without database-level locking or transactions, allowing double-spending, duplicate creation, or privilege escalation.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **Read-then-write** without a transaction: `findFirst`/`findUnique` followed by `update`/`create` on the same or related record outside a `$transaction`
+2. **Check-then-act**: Checking a condition (e.g., balance, quota, availability) then performing an operation based on it without atomic guarantees
+3. **Counter/balance updates** using application-level read + compute + write instead of database-level `increment`/`decrement` or `UPDATE ... SET x = x + 1`
+4. **Unique constraint bypass**: Checking if a record exists then creating it, without a unique DB constraint as a safety net
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Prisma: `prisma.$transaction([...])` or interactive transactions `prisma.$transaction(async (tx) => { ... })` are safe
+- Prisma `update` with `increment`/`decrement` is atomic: `prisma.account.update({ data: { balance: { decrement: amount } } })`
+- Raw SQL: `SELECT ... FOR UPDATE` inside a transaction is safe
+- Multiple sequential Prisma calls outside `$transaction` are vulnerable to interleaving
+{% elif framework == "django" %}
+- Django: `with transaction.atomic():` block with `select_for_update()` is safe
+- `F()` expressions for updates (`Account.objects.filter(...).update(balance=F('balance') - amount)`) are atomic
+- Sequential `get()` then `save()` outside atomic block is vulnerable
+{% elif framework == "rails" %}
+- Rails: `with_lock` or `lock!` inside a transaction is safe
+- `update_counters` is atomic; manual read-modify-write is not
+{% endif %}
+
+## True Positive Examples
+
+1. Balance check then deduction without transaction:
+   ```typescript
+   const account = await prisma.account.findUnique({ where: { id } });
+   if (account.balance >= amount) {
+     await prisma.account.update({ where: { id }, data: { balance: account.balance - amount } });
+   }
+   ```
+   Two concurrent requests both read the same balance and both deduct — double-spend.
+
+2. Quota check then creation without locking:
+   ```python
+   count = Submission.objects.filter(form_id=form_id).count()
+   if count < form.max_submissions:
+       Submission.objects.create(form_id=form_id, data=data)
+   ```
+
+3. Unique check then insert without constraint:
+   ```typescript
+   const existing = await prisma.invite.findFirst({ where: { email, orgId } });
+   if (!existing) {
+     await prisma.invite.create({ data: { email, orgId } });
+   }
+   ```
+
+## False Positive Examples
+
+1. Operations wrapped in `prisma.$transaction()`:
+   ```typescript
+   await prisma.$transaction(async (tx) => {
+     const account = await tx.account.findUnique({ where: { id } });
+     if (account.balance >= amount) {
+       await tx.account.update({ where: { id }, data: { balance: { decrement: amount } } });
+     }
+   });
+   ```
+   NOT vulnerable.
+
+2. Using atomic increment/decrement without reading first:
+   ```typescript
+   await prisma.account.update({ where: { id }, data: { balance: { decrement: amount } } });
+   ```
+   NOT vulnerable (database enforces atomicity).
+
+## Calibration
+
+- If the read and write are inside the same `$transaction`, `transaction.atomic()`, or `with_lock` block, it is NOT a race condition.
+- If the database has a unique constraint that would reject duplicates even without application-level checking, severity is LOW.
+- If the operation is idempotent (e.g., setting a boolean flag), the race condition may exist but impact is negligible — use LOW severity.
+- Race conditions on financial operations (balance, credits, quotas) are HIGH or CRITICAL severity.
+- Race conditions on non-sensitive counters or analytics are LOW severity.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-362",
+  "owasp_category": "A04:2021 Insecure Design",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning through the read-write sequence and concurrency risks",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

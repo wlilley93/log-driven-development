@@ -1,0 +1,114 @@
+{# vibeaudit prompt v1.0 — xxe #}
+You are analyzing code for **XML External Entity (XXE)** vulnerabilities.
+
+## What Is XXE?
+
+XXE occurs when an XML parser processes user-supplied XML input with external entity resolution enabled. An attacker can craft XML with malicious entity definitions to read arbitrary server files (`file:///etc/passwd`), perform SSRF, cause denial of service via entity expansion (billion laughs), or in some cases achieve remote code execution.
+
+## Code Under Review
+
+File: `{{ file_path }}`
+Language: {{ language }}
+Framework: {{ framework }}
+
+```{{ language }}
+{{ code }}
+```
+
+## What To Look For
+
+1. **XML parsing without disabling external entities**: Default parser configurations in many libraries allow external entity resolution
+2. **DTD processing enabled**: Parsers that process Document Type Definitions allow entity declarations
+3. **User-controlled XML input**: File uploads, API request bodies, SOAP endpoints, SVG uploads, XLSX/DOCX processing
+4. **XSLT processing**: Stylesheet transforms on user-controlled XML can include external resources
+
+## Framework-Specific Guidance
+
+{% if framework == "nextjs" or framework == "express" %}
+- Node.js: `xml2js`, `fast-xml-parser`, `cheerio` are generally safe by default (no DTD processing)
+- `libxmljs`: External entities enabled by default — must set `noent: false` and `dtdload: false`
+- `xmldom`/`@xmldom/xmldom`: Generally safe but verify DTD handling
+- XLSX/DOCX parsing libraries (e.g., `xlsx`, `exceljs`) may internally parse XML — check their XXE protections
+{% elif framework == "django" or framework == "flask" %}
+- Python `lxml.etree`: `etree.parse(source)` and `etree.fromstring(data)` allow external entities by default
+- Safe: `etree.parse(source, etree.XMLParser(resolve_entities=False, no_network=True))`
+- `defusedxml` library is a drop-in replacement that disables dangerous features by default
+- `xml.etree.ElementTree` (stdlib): Vulnerable to entity expansion DoS, but does not resolve external entities
+{% elif framework == "rails" %}
+- Ruby `Nokogiri`: External entities disabled by default since v1.5.4 (safe). Older versions are vulnerable
+- `REXML`: Check for `entity_expansion_limit` and ensure external entities are not enabled
+{% elif framework == "java" or framework == "spring" %}
+- Java `DocumentBuilderFactory`: External entities enabled by default — MUST set features to disable
+- Safe: `factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)`
+- `SAXParserFactory`, `XMLInputFactory`, `TransformerFactory` all need explicit hardening
+{% endif %}
+
+## True Positive Examples
+
+1. Python lxml parsing user input without safe parser:
+   ```python
+   from lxml import etree
+   tree = etree.parse(uploaded_file)
+   ```
+   Attacker uploads XML with `<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>` to read files.
+
+2. Java DocumentBuilder without entity restrictions:
+   ```java
+   DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+   Document doc = factory.newDocumentBuilder().parse(request.getInputStream());
+   ```
+   Default factory allows external entities and DTD processing.
+
+3. Node.js libxmljs with default settings:
+   ```javascript
+   const doc = libxmljs.parseXml(req.body.xmlData);
+   ```
+   External entities processed by default in libxmljs.
+
+## False Positive Examples
+
+1. Parser configured with entities disabled:
+   ```python
+   parser = etree.XMLParser(resolve_entities=False, no_network=True, dtd_validation=False)
+   tree = etree.parse(source, parser)
+   ```
+   NOT vulnerable.
+
+2. Using a safe-by-default library like `defusedxml`:
+   ```python
+   import defusedxml.ElementTree as ET
+   tree = ET.parse(uploaded_file)
+   ```
+   NOT vulnerable.
+
+## Calibration
+
+- Check the specific XML library and version — many modern libraries disable external entities by default.
+- If the application does not accept XML input (JSON-only APIs), there is no XXE risk — mark as NOT vulnerable.
+- SVG file uploads are an often-overlooked XXE vector if the server parses SVG as XML.
+- XLSX and DOCX files are ZIP archives containing XML — processing these with XML parsers can be an XXE vector.
+- If the parser is configured to disable DTD processing and external entities, it is NOT vulnerable regardless of input.
+- XXE that reads local files is HIGH. XXE limited to SSRF is MEDIUM. Entity expansion DoS is MEDIUM.
+
+## Required Output
+
+Respond with a single JSON object:
+{
+  "is_vulnerable": true or false,
+  "severity": "critical|high|medium|low|info",
+  "confidence": "high|medium|low",
+  "title": "Brief title of the finding",
+  "description": "Detailed description of the vulnerability",
+  "attack_scenario": "Step-by-step description of how an attacker exploits this",
+  "impact": "What data or actions the attacker gains access to",
+  "remediation": "How to fix the vulnerability",
+  "fix_example": "Code snippet showing the corrected version",
+  "cwe_id": "CWE-611",
+  "owasp_category": "A05:2021 Security Misconfiguration",
+  "affected_lines": [line numbers as integers],
+  "reasoning": "Step-by-step reasoning about the XML parser configuration and input source",
+  "false_positive_likelihood": "low|medium|high"
+}
+
+If the code is NOT vulnerable, respond with:
+{"is_vulnerable": false, "reasoning": "Explanation of why the code is safe."}

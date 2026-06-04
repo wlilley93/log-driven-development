@@ -13,6 +13,10 @@ HOW: read the old code and write down what it MEANT, with provenance (file:line)
 **Harvested:** <date> by <agent or person>
 **Provenance convention:** every claim ends with `(file:line)` pointing at the real legacy code it came from.
 A line with no citation is a guess and must be removed or marked `(UNVERIFIED)` for someone to ground-truth.
+**Risk surface:** <auth | tenant | money | crypto | external | none> (one or more). This drives the SECURITY-phase
+risk trigger and the Tier-2 dispatch in the ownership matrix: pick `none` only when this area touches no auth,
+no multi-tenant isolation, no money, no crypto, and no externally-reachable surface. See `docs/invariants.md`
+LDD-INV-15 (security and structural intent are first-class harvest registers).
 
 ---
 

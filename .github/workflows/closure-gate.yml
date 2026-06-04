@@ -1,0 +1,112 @@
+# LDD closure-gate (the CI half of the continuous per-commit gate).
+#
+# This is the SAME closure_gate.py the local pre-commit hook runs, so "green
+# locally" cannot diverge from "green from a clean checkout" (tools/closure-gate/pre-commit
+# and tools/closure-gate/README.md promise exactly this). It runs the continuous
+# tier on every push (including the new security_scan + structure_scan gates), and
+# on pull_request it additionally runs the full security sweep and the test-quality
+# pass. The heavy passes (the deep security-suite methodology, a full refactor round)
+# are NOT here: they fire at milestone-close on a risk trigger (the anti-bloat veto).
+#
+# Cadence and ownership are defined once in the two-tier(+) ownership matrix in
+# docs/systems.md (system 7); this workflow only wires it, it does not restate it.
+# See docs/invariants.md LDD-INV-9 (one owner per concern) and LDD-INV-11 (the gate
+# stands up before the walking skeleton).
+#
+# This file is intentionally generic: the project wires its own stack commands in
+# tools/closure-gate/closure-gate.toml ([commands]) and its own setup steps below.
+# Uncomment the toolchain/setup that matches your stack and leave the rest.
+
+name: closure-gate
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  # Continuous tier: runs on every push AND every pull_request. This is the exact
+  # command the local hook runs, including gate 7 (security_scan = vibescan --fast,
+  # the one security owner) and gate 8 (structure_scan = vibeclean --changed).
+  continuous:
+    name: closure-gate (continuous, every commit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # --- Project setup: wire YOUR stack here (uncomment one) ---
+      # Python is required to run the gate orchestrator itself.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      # Example toolchains (uncomment + adapt the one your project uses, then set
+      # the matching [commands] in tools/closure-gate/closure-gate.toml):
+      #
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: "lts/*"
+      # - run: npm ci
+      #
+      # - uses: dtolnay/rust-toolchain@stable
+      #   with:
+      #     components: rustfmt, clippy
+      #
+      # - run: pip install -r requirements.txt
+
+      # Install the vendored vibe tools so security_scan + structure_scan are ON
+      # (not a loud-skip). See tools/vibe/README.md and README.md step 3. If they
+      # are absent, the gate is a loud-skip (exit 127 = warn), never a hard block.
+      # - run: pip install ./tools/vibe   # or your project's vibe install step
+
+      # The continuous per-commit gate. Same command as tools/closure-gate/pre-commit
+      # (which skips tests for speed); CI runs the FULL sweep, so it does not skip
+      # tests. security_scan is never skipped (LDD-INV-7).
+      - name: Run closure-gate
+        run: python3 tools/closure-gate/closure_gate.py --config ./tools/closure-gate/closure-gate.toml --paths . --cwd .
+
+  # Pull-request tier: on top of the continuous gate above, run the FULL security
+  # sweep (vibescan ., not --fast) and the test-quality pass (vibetest), per the
+  # matrix rows "Full SAST sweep" and "Test quality". These are the cheap CI escalation,
+  # NOT the heavy milestone-close passes; keep them matrix-aligned and do not add
+  # routine deep audits here (anti-bloat veto).
+  pull-request:
+    name: full security + test-quality (pull_request)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      # Install the vendored vibe tools (see tools/vibe/README.md). If absent, these
+      # steps loud-skip rather than block, matching the continuous gate's semantics.
+      # - run: pip install ./tools/vibe
+
+      # Full SAST sweep of the whole tree (matrix: owned by `vibescan .`, at push/CI).
+      # A missing tool (exit 127) is a loud-skip, never a hard block (same semantics
+      # as the continuous gate); any real finding fails the job.
+      - name: Full security sweep (vibescan)
+        run: |
+          vibescan . || {
+            code=$?
+            if [ "$code" -eq 127 ]; then
+              echo "vibescan not installed (exit 127). Full SAST sweep skipped, not silently absent. Install the vendored tool (tools/vibe). See tools/vibe/README.md."
+            else
+              exit "$code"
+            fi
+          }
+
+      # Test-quality pass (matrix: owned by `vibetest`, at VERIFY). Surfaces missing
+      # tests, weak assertions, and coverage gaps alongside the human verifier.
+      - name: Test-quality pass (vibetest)
+        run: |
+          vibetest . || {
+            code=$?
+            if [ "$code" -eq 127 ]; then
+              echo "vibetest not installed (exit 127). Test-quality pass skipped, not silently absent. Install the vendored tool (tools/vibe). See tools/vibe/README.md."
+            else
+              exit "$code"
+            fi
+          }
