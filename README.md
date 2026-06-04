@@ -80,9 +80,16 @@ LDD is built to prevent all three by construction.
    not "the tests pass".
 
 > **What you actually say:** *"You told me the spec is finished, but did you actually check it against the real
-> codebase, or just that it reads consistently?"* That one question triggers the leg most people skip: the
-> source-coverage sweep that catches anything in the code that never made it into the spec. More plain-English
-> prompts, per element, in [docs/prompting.md](docs/prompting.md).
+> codebase, or just that it reads consistently?"*
+>
+> That question draws the distinction the whole "done" gate turns on. Checking the spec reads consistently is one
+> leg, ids resolve, nothing contradicts itself, the cross-references line up. It feels like done, and it is the
+> leg most people stop at. But it is **blind to an omission**: if a whole behaviour in the code never made it
+> into the spec, there is nothing for an internal check to trip on, no contradiction, no dangling reference, just
+> a silent hole. The only way to catch that is the *other* leg: walk the source and ask "what is in here that
+> never reached the spec?" Your sentence ("check it against the real codebase") is what triggers that second leg.
+> "Done" means both legs are clean, and asking for the second one by name is the single highest-leverage habit in
+> the whole method. More plain-English prompts, per element, in [docs/prompting.md](docs/prompting.md).
 
 ---
 
@@ -99,9 +106,17 @@ rebuild auditable by construction.
 
   > **What you actually say** (plain English, no jargon): *"I inherited this task tracker and nobody knows how
   > 'completion' really works, there seem to be a few competing versions of it. Before we touch anything, figure
-  > out what the code actually does and write it down, with where you found each rule."* The method supplies the
-  > discipline you did not state: it captures both the data shapes and the real procedures, cites the source
-  > lines, and records what it deliberately leaves out.
+  > out what the code actually does and write it down, with where you found each rule."*
+  >
+  > Three small phrases in that sentence quietly set the whole discipline. "Figure out what the code actually
+  > does" is the difference between a harvest and a guess: the agent reads the real files, not its memory of how
+  > task trackers usually work. "Where you found each rule" forces provenance, every claim lands with a
+  > `file:line` so a later reader can check it, and an ungrounded claim is simply not written. And "how completion
+  > really works" pushes for the *procedure*, not just the shapes: the method captures both the three competing
+  > `done` / `status` / `archivedAt` fields (the system) AND the actual rule for how a task flips between them (the
+  > process), because a ledger that has the enums but not the behaviour is the most common way a harvest looks
+  > finished while missing the point. You did not have to know any of those rules existed; describing the mess and
+  > asking for the truth, with sources, was enough.
 - **The spec.** The distilled, minimal description of the system to build: the primitives, the invariants, the
   things deliberately dropped (each with a reason). The spec is the source of truth; the code is kept in sync
   with it, not the other way around.
@@ -145,8 +160,15 @@ will look at it later". Its verdict **is the decision** unless someone appeals i
 
 > **What you actually say** (no jargon, you never describe the panel): *"We keep arguing about whether Tasky's
 > share links should expire. Get a few independent, honest reads on the real code and just make the call, don't
-> book another meeting."* A Council convenes blind, independent seats, each citing the actual code, and ends in a
-> decision (say: add expiry and revocation), with the losing argument recorded as dissent.
+> book another meeting."*
+>
+> What that one sentence buys you, that a chat does not: the method seats a handful of critics with *distinct*
+> lenses (a security read, a simplicity read, a pre-mortem), runs them **blind to each other** so they cannot
+> drift into agreement, and ignores any seat that argues from vibes instead of citing the actual code. You did
+> not ask for any of that, it is the council's standing discipline. The two phrases that did the work are "on the
+> real code" (forces ground-truth) and "just make the call" (forces a build-or-kill, not a deferral). The output
+> is a decision you can act on now (say: add expiry and revocation), plus the **losing argument written down** as
+> dissent, because that dissent is what gives anyone standing to appeal later.
 
 ### The Appeals Council
 
@@ -160,8 +182,16 @@ Council's full record (every seat's verdict, the synthesis, the dissent, the inp
 **uphold or overturn**. Its decision stands unless taken to the Supreme Council.
 
 > **What you actually say** (same share-link fork, escalated): *"I'm not convinced, the worry about breaking
-> existing links got brushed aside."* That is standing for an appeal; fresh seats re-weigh it against the
-> Council's full record and either uphold or overturn.
+> existing links got brushed aside."*
+>
+> The key thing here is what counts as a *reason* to reopen. "I would have decided it differently" is not enough,
+> and the method will say so; an appeal needs **standing**: the principal disagrees, a recorded dissent was left
+> unanswered, or new ground-truth contradicts something the Council leaned on. Your sentence has it, the dissent
+> about existing links was real and under-weighed. So fresh critics convene, but they do not start over from a
+> blank page: they are handed the **full Council record** (every seat's verdict, the synthesis, the dissent) and
+> must *engage its actual reasoning*, then uphold or overturn. It is still a fight about the merits, the right
+> design, just reviewed rather than re-run. That "must engage the record" rule is what stops an appeal from being
+> a do-over that quietly forgets what the first court already established.
 
 ### The Supreme Council
 
