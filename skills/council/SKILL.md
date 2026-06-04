@@ -48,10 +48,18 @@ with standing.
    the uncomfortable truth, not a hedge.
 4. **Synthesise honestly.** The orchestrator reconciles the seats (they will disagree), states the through-line,
    and converts it into committed changes plus tasks.
-5. **End in build-or-kill, the same beat.** The verdict resolves to a committed change or an explicit kill,
+5. **Determine genuine function (REQUIRED, before resolving).** Invoke a *period of determination*: find, by
+   ground-truth (a spike, a test, a demonstrated end-to-end path, a concrete mechanism), whether the decided
+   thing **will genuinely function as intended** - not merely whether it is the right design on the merits. The
+   merits ask "is this right?"; this asks "will it actually work?". "It looks right" / "it should work" is not a
+   determination (it is the over-claim this phase exists to catch). If genuine function cannot be affirmatively
+   determined, the verdict may NOT resolve to build/ratify - only to KILL or SPIKE-FIRST (exercise it, then
+   re-determine). At system scale the determination is a real end-to-end run, not design-soundness alone.
+6. **End in build-or-kill, the same beat.** The verdict resolves to a committed change or an explicit kill,
    never another deferring artifact. Act on it now.
-6. **Record dissent.** Write the verdict to the ledger and preserve the surviving dissent verbatim: it is the
-   standing of any future appeal. Then dissolve the panel; nothing persists but the verdict and the dissent.
+7. **Record dissent + the determination.** Write the verdict to the ledger with the genuine-function
+   determination and the surviving dissent verbatim (the standing of any future appeal). Then dissolve the
+   panel; nothing persists but the verdict, the determination, and the dissent.
 
 ## Tier 1 - The Council (court of first instance)
 
@@ -68,6 +76,11 @@ with standing.
 4. **Bluntness is the deliverable.** Each seat leads with the uncomfortable truth, not a hedge.
 
 ### The discipline (non-negotiable)
+- **Determine genuine function before resolving (required, every tier).** A verdict may not resolve to
+  build/ratify/uphold until the council has determined, *by ground-truth not assertion*, that the system will
+  genuinely function as intended. If it cannot, the verdict is a kill or a spike-first. This is separate from
+  the merits and governs them: a council can be right on the design and still wrong on whether it works. The
+  apex court may review whether this determination was properly conducted (a point of law).
 - **End in a build action or a kill - never another deferring artifact.** Record the verdict, then *act on it
   the same beat*. A council whose output is "we'll look at it later" is the exact pathology it exists to catch.
 - **Ephemeral.** The seats dissolve after; nothing persists but the verdict in the ledger + the **surviving
