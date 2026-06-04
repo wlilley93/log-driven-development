@@ -181,10 +181,22 @@ narrowing the precedent on a point of law, can refine it. The court hierarchy it
 framework within which spec law is made, and it gives the rare contested decision a principled, bounded path to a
 final answer, without a standing committee that accretes politics.
 
-> **What you actually say** (same fork, now at the apex): *"This same fight keeps coming up on other projects,
-> settle the rule itself, not just this one case."* The Supreme Council rules on the point of law and writes a
-> numbered **spec law** that binds every future project. Three plain sentences across the three tiers; the whole
-> court underneath.
+> **What you actually say** (same fork, now at the apex): *"Hold on, the appeal let the expiry requirement slide
+> because someone promised an ops process would revoke links by hand. That is not how we are supposed to decide a
+> security call. Rule on the rule, not this one link."*
+>
+> Notice the question changed. The lower courts argued the *merits* (should links expire?). The Supreme Council
+> is not asked that. It is asked a **point of law**: *was a security holding allowed to be relaxed by a promise
+> of a future control rather than a built, verifiable one?* It rules on that and only that, and the ruling is
+> written into the precedent register [`council/SPEC-LAW.md`](council/SPEC-LAW.md) as a numbered entry. This
+> exact question produced a real precedent there, **SPEC-LAW-1**: *a stakeholder's preference is not evidence;
+> a security control must be built and checkable, never promised; and a holding whose fact has collapsed is
+> vacated, not patched.* From then on it **binds every future court on every project**: a later council that
+> tries to green a security gate on an IOU is refused at the spec layer, citing SPEC-LAW-1. (The register's other
+> entry, SPEC-LAW-2, came the same way: a court tried to mark a system "done" because the design composed on
+> paper; the Supreme Council ruled that genuine function must be shown by a real run, not asserted.) That is how
+> the method sharpens itself: one contested fork, escalated in three plain sentences, leaves behind a rule the
+> whole community inherits.
 
 ---
 
