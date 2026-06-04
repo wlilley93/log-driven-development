@@ -143,18 +143,10 @@ verdict in the ledger and the **surviving dissent** (recorded, never buried, bec
 future appeal). The non-negotiable discipline: a Council **must end in a build action or a kill**, never in "we
 will look at it later". Its verdict **is the decision** unless someone appeals it.
 
-> **What you actually say** (plain English, and how it climbs the court). You never describe the panel; you ask,
-> and the court forms itself.
-> - **Decide it.** *"We keep arguing about whether Tasky's share links should expire. Get a few independent,
->   honest reads on the real code and just make the call, don't book another meeting."* A Council convenes:
->   blind, independent seats, each citing the actual code, ending in a decision (say, add expiry + revocation),
->   with the losing argument recorded as dissent.
-> - **You're not sure / you disagree.** *"I'm not convinced, the worry about breaking existing links got brushed
->   aside."* That is standing for an appeal. Fresh seats re-weigh the merits against the Council's record and
->   uphold or overturn.
-> - **Settle it for good.** *"This same fight keeps coming up on other projects, settle the rule itself, not
->   just this one case."* The Supreme Council rules on the point of law and writes a numbered **spec law** that
->   binds every future project. Three plain sentences from you; the whole court machinery underneath.
+> **What you actually say** (no jargon, you never describe the panel): *"We keep arguing about whether Tasky's
+> share links should expire. Get a few independent, honest reads on the real code and just make the call, don't
+> book another meeting."* A Council convenes blind, independent seats, each citing the actual code, and ends in a
+> decision (say: add expiry and revocation), with the losing argument recorded as dissent.
 
 ### The Appeals Council
 
@@ -166,6 +158,10 @@ It re-weighs the **merits** (still the question of *what the right design is*), 
 independent seats who must **engage the Council's actual reasoning**, not re-argue blind. It is handed the
 Council's full record (every seat's verdict, the synthesis, the dissent, the inputs and outputs). It can
 **uphold or overturn**. Its decision stands unless taken to the Supreme Council.
+
+> **What you actually say** (same share-link fork, escalated): *"I'm not convinced, the worry about breaking
+> existing links got brushed aside."* That is standing for an appeal; fresh seats re-weigh it against the
+> Council's full record and either uphold or overturn.
 
 ### The Supreme Council
 
@@ -184,6 +180,11 @@ spec layer the same way a trust boundary refuses an unknown command. Only a late
 narrowing the precedent on a point of law, can refine it. The court hierarchy itself is constitutional: it is the
 framework within which spec law is made, and it gives the rare contested decision a principled, bounded path to a
 final answer, without a standing committee that accretes politics.
+
+> **What you actually say** (same fork, now at the apex): *"This same fight keeps coming up on other projects,
+> settle the rule itself, not just this one case."* The Supreme Council rules on the point of law and writes a
+> numbered **spec law** that binds every future project. Three plain sentences across the three tiers; the whole
+> court underneath.
 
 ---
 
