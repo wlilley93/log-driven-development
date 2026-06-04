@@ -106,9 +106,14 @@ real code, each handed the full record of the tier below.
   the method's own discipline correctly applied?), not on the design. Because it rules on law, its ruling becomes
   **spec law**: an immutable, numbered precedent that binds every future court on every project.
 
-That last tier is what makes LDD **self-improving**: a genuinely hard, contested fork doesn't just resolve
-locally, it crystallises into a permanent sharpening of the method that every later run inherits, propagated to
-every project the way a shared linter ruleset propagates.
+That last tier is what makes LDD **self-improving, and it compounds with use.** Every time a genuinely hard,
+contested question is referred all the way up, the Supreme Council's answer becomes a permanent, numbered rule
+(spec law) that every future decision is checked against. So **the more hard cases you refer up, the more of your
+ruleset crystallises into precedent**: the grey areas get settled for good, the same rule binds every project
+(propagated the way a shared linter ruleset propagates), and a question argued once never has to be argued from
+scratch again. A young project has a handful of precedents and lots of judgement calls; a mature one has a thick
+register and very little left to argue. *(This very repo is the example: a real fork over whether to split the
+court produced SPEC-LAW-3, which now decides every future "should we split X?" automatically.)*
 
 > The full court machinery, the worked example of a fork escalating to spec law, and the three precedents the
 > method has already produced (*Reference re Evidence and Built Controls*, *Reference re Genuine Function*, and
