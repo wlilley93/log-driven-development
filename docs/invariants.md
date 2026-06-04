@@ -303,9 +303,8 @@ LDD-INV-15's two named registers); `templates/intent-ledger.md:36-53` (the requi
 section); `docs/methodology.md:65-77,135-138`; `docs/systems.md:37-41,67-74`; the harvest brief
 `docs/playbook.md:294-309`; anti-pattern #17 `docs/anti-patterns.md:377-403`; smell `docs/anti-patterns.md:492`;
 and the source-coverage leg of LDD-INV-5 (an empty PROCESS altitude is exactly what the source->spec sweep
-re-detects). Origin: the Clara-estate council verdict on harvest deficiency
-(`_qa/_COUNCIL-harvest-deficiency.md`, BUILD-2), determined-by-ground-truth (an empty PROCESS section would have
-blocked the knowledge-corpus ledger's green grade at write time).
+re-detects). Origin: a council verdict on harvest deficiency, determined by ground-truth (an empty PROCESS
+section would have blocked an intent ledger's green grade at write time).
 
 ---
 
