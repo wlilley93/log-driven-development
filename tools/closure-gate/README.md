@@ -34,10 +34,10 @@ two continuous suite gates (`security_scan`, `structure_scan`), which you wire i
 4. **Max-function-length** (deny over the limit) - `max_function_length.py`.
 5. **Duplication ratchet** (deny over budget) - `duplication_ratchet.py`. The load-bearing one.
 6. **Tests** green from a clean checkout (deny on fail).
-7. **Security-scan** (`vibescan --fast`) - the ONE security owner at this tier: secrets +
+7. **Security-scan** (`vibescan scan`) - the ONE security owner at this tier: secrets +
    dependency CVEs + a fast SAST pass in one. It subsumes the old separate supply-chain /
    dep-CVE gate.
-8. **Structure-scan** (`vibeclean --changed`) - the richer AI-slop / god-file / duplication
+8. **Structure-scan** (`vibeclean scan`) - the richer AI-slop / god-file / duplication
    scanner the per-commit ratchet shells out to.
 
 Gates 1-3 and 6 are your project commands (blank = skipped, and a skipped gate is

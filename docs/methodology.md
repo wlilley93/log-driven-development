@@ -272,7 +272,7 @@ Make "is it clean? is it complete?" an *executable mechanism that runs on every 
 a max-function-length lint that denies, a cross-module **duplication ratchet** (a budget you hold by *folding*
 duplication, never by raising the number), formatter and linter as hard gates, and red-until-built tests for any
 surface the spec declares but the build has not yet covered. The same continuous gate also runs the cheap edge of
-the security and refactoring suites every commit: a `security_scan` (`vibescan --fast`, the one security owner) and
+the security and refactoring suites every commit: a `security_scan` (`vibescan scan`, the one security owner) and
 a `structure_scan` (`vibeclean` on the changed surface); the function-length number is owned in one place, the
 closure-gate threshold (per the ownership matrix in [systems.md](./systems.md), system 7, LDD-INV-9).
 *Prevents:* quality drift, the third failure from section 1. When this runs continuously, the heavy periodic
@@ -334,7 +334,7 @@ BUILD  ->  STRUCTURE  ->  SECURITY  ->  VERIFY  ->  PLAN
    leaked abstraction? You escalate to a full refactor pass (the refactoring suite) *only* if the scan flags real
    debt, because the continuous closure-gate is already doing the primary structural enforcement. This is a scan,
    not a ritual.
-3. **SECURITY.** The continuous `vibescan --fast` gate (the one security owner, subsuming the supply-chain check)
+3. **SECURITY.** The continuous `vibescan scan` gate (the one security owner, subsuming the supply-chain check)
    has already run on every commit; at close you run the full `vibescan .` sweep. The *heavy* deep audit (owned by
    the security suite methodology, with `vibeaudit` as its scanner engine) is **risk-targeted**: mandatory on a
    high-risk surface (auth, money, crypto, multi-tenancy, anything externally reachable) and periodic otherwise, not

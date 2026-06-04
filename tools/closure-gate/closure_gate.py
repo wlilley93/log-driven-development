@@ -14,10 +14,11 @@ The gates, in order (each is skipped only if its command is left blank in the co
   4. max-function-len - the portable deny gate in this directory (deny on fail)
   5. duplication      - the ratchet in this directory: hold-or-lower, never raise (deny on fail)
   6. tests            - your full suite, run from a clean state (deny on fail)
-  7. security-scan    - the ONE continuous security owner (vibescan --fast: secrets + dep-CVE +
+  7. security-scan    - the ONE continuous security owner (vibescan scan: secrets + dep-CVE +
                         fast SAST; subsumes the old supply-chain gate). Deny on a new finding.
   8. structure-scan   - the continuous structural slop scan (vibeclean: AI-slop, god-files,
                         duplication the richer scanner catches). Deny on a regression.
+  9. docs-links       - every relative markdown link resolves (no dead links, no half-done rename).
 
 Gates 7 and 8 are the continuous edge of the security and refactoring suites (the LDD process
 court's two-tier(+) model: cheap per-commit gates here, heavy passes at milestone-close). They
@@ -40,6 +41,7 @@ from __future__ import annotations
 
 import argparse
 import shlex
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -54,6 +56,22 @@ def read_commands(config_path):
     return read_config_section(config_path, "commands")
 
 
+def _tool_available(command):
+    """True iff the command's binary is on PATH and actually runs (probed via --help). A stale or
+    broken launcher (present on PATH but crashing on startup, e.g. a ModuleNotFoundError) probes
+    False, so the suite gate loud-skips rather than DENYing every commit (the present-but-broken
+    failure mode, distinct from a clean finding)."""
+    binary = (shlex.split(command) or [""])[0]
+    if not binary or shutil.which(binary) is None:
+        return False
+    try:
+        proc = subprocess.run([binary, "--help"], stdout=subprocess.DEVNULL,
+                              stderr=subprocess.DEVNULL, timeout=20)
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return proc.returncode == 0
+
+
 def run_step(name, command, cwd, tolerate_missing=False):
     """Run a shell command. Returns (ok, skipped).
 
@@ -64,6 +82,11 @@ def run_step(name, command, cwd, tolerate_missing=False):
     """
     if not command:
         print(f"[skip] {name}: no command configured (skipped, not silently absent).")
+        return True, True
+    if tolerate_missing and not _tool_available(command):
+        binary = (shlex.split(command) or [""])[0]
+        print(f"[warn] {name}: '{binary}' not installed or not runnable (probe failed). This gate is OFF "
+              f"until you install it (e.g. pip install vibescan vibeclean, or run from ../vibe). Reported, not silent.")
         return True, True
     print(f"[run ] {name}: {command}")
     try:
@@ -147,6 +170,14 @@ def main(argv=None):
             continue
         ok, skipped = run_step(name, cmds.get(key, ""), cwd, tolerate_missing=True)
         results.append((name, ok, skipped))
+
+    # 9: portable docs-link check - relative markdown links must resolve. "Done = the clean
+    # sweep" applied to the docs themselves: a half-done rename or a dead link is denied here.
+    if "docs-links" in skip:
+        results.append(("docs-links", True, True))
+    else:
+        ok = run_python_check("docs-links", "docs_link_check.py", paths, config_path, cwd)
+        results.append(("docs-links", ok, False))
 
     return _report(results)
 

@@ -282,8 +282,8 @@ risk-triggered under one owner (the anti-bloat veto).
 
 | Concern | Single owner | Tier / trigger |
 |---|---|---|
-| Structural floor (function length, duplication, formatter, linter, type-check, tests) | The closure-gate (`tools/closure-gate/closure_gate.py`, 8 gates) + `vibeclean --changed` as its `structure_scan` edge | Continuous, every commit (the per-commit gate). Function-length number is owned by `[function] max_lines` in `closure-gate.toml`; all other surfaces cite it. |
-| Fast security: secrets + dependency CVEs + fast SAST | `vibescan --fast` (the closure-gate `security_scan` gate) | Continuous, every commit. The ONE security owner at this tier; subsumes the old separate supply-chain / dep-CVE gate. |
+| Structural floor (function length, duplication, formatter, linter, type-check, tests) | The closure-gate (`tools/closure-gate/closure_gate.py`, 8 gates) + `vibeclean scan` as its `structure_scan` edge | Continuous, every commit (the per-commit gate). Function-length number is owned by `[function] max_lines` in `closure-gate.toml`; all other surfaces cite it. |
+| Fast security: secrets + dependency CVEs + fast SAST | `vibescan scan` (the closure-gate `security_scan` gate) | Continuous, every commit. The ONE security owner at this tier; subsumes the old separate supply-chain / dep-CVE gate. |
 | Full SAST sweep (whole tree) | `vibescan .` (full, not `--fast`) | Push / CI, and at milestone-close SECURITY. |
 | Deep security reasoning (exploitability, cross-subsystem chains, threat model, the 14-section audit) | The security suite methodology (`skills/security/methodology.md`); `vibeaudit` is its scanner engine, NOT a parallel auditor | Tier 2, risk-triggered: mandatory on auth / money / crypto / multi-tenant-isolation / any externally-reachable surface, plus periodic. Never routine. |
 | Behaviour-preserving cleanup (refactor rounds, structural sweep) | The refactoring suite (`skills/refactoring/`) | Tier 2, risk-triggered: escalate from the STRUCTURE scan ONLY on a tripped debt counter (see structural-sweep). Never routine. |

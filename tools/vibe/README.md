@@ -13,7 +13,7 @@ None of them needs configuration to start.
 
 | Tool | What it does | LDD phase it serves |
 |---|---|---|
-| **vibescan** | Security scanner. Orchestrates ~13 OSS security tools (secrets, SAST, dependency CVEs, IaC, licences) in parallel, dedups, one verdict. | SECURITY: the fast edge (`vibescan --fast`) is the continuous per-commit owner via the closure-gate `security_scan` gate; full `vibescan .` runs at push/CI and milestone-close. See the ownership matrix in `../../docs/systems.md` (system 7). |
+| **vibescan** | Security scanner. Orchestrates ~13 OSS security tools (secrets, SAST, dependency CVEs, IaC, licences) in parallel, dedups, one verdict. | SECURITY: the fast edge (`vibescan scan`) is the continuous per-commit owner via the closure-gate `security_scan` gate; full `vibescan .` runs at push/CI and milestone-close. See the ownership matrix in `../../docs/systems.md` (system 7). |
 | **vibeaudit** | Deep security auditor. The heavier, evidence-extracting pass behind vibescan for high-risk surfaces. | SECURITY: the scanner engine of the security-suite deep methodology (`skills/security/`), Tier 2 risk-triggered, NOT a parallel auditor. See the matrix in `../../docs/systems.md` (system 7). |
 | **vibetest** | Test-quality auditor (not a runner). Statically finds missing tests, weak assertions, test smells, flakiness, coverage gaps. | VERIFY (alongside the adversarial verifier) |
 | **vibeclean** | AI-slop and hygiene detector. Catches the spaghetti, dead code, and mess that LLM-assisted coding produces. | STRUCTURE (alongside the refactoring suite) |
@@ -25,7 +25,7 @@ None of them needs configuration to start.
 The five-phase milestone close (`skills/log-driven-development`) wires to these tools:
 
 - **STRUCTURE** runs `vibeclean .` over the new surface (and the refactoring suite when it flags real debt).
-- **SECURITY** has two cadences for one owner: the continuous per-commit owner is `vibescan --fast` (the
+- **SECURITY** has two cadences for one owner: the continuous per-commit owner is `vibescan scan` (the
   closure-gate `security_scan` gate, which catches secrets + dependency CVEs + a fast SAST pass on every commit),
   and the milestone-close runs the full `vibescan .` sweep over the whole tree. On a high-risk surface (auth,
   money, crypto, multi-tenancy, any externally-reachable entry point) it escalates to the security-suite

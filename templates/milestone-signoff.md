@@ -37,13 +37,13 @@ docs/systems.md (system 7).>
 
 <The continuous fast scan runs every milestone (it ran on every commit); the deep audit is risk-triggered:
 run it where risk lives. The owners and triggers are fixed by the two-tier(+) ownership matrix in
-docs/systems.md (system 7): `vibescan --fast` continuous, `vibescan .` + the security-suite methodology
+docs/systems.md (system 7): `vibescan scan` continuous, `vibescan .` + the security-suite methodology
 (skills/security/, with `vibeaudit` as its engine) when risk-triggered.>
 - Continuous fast scan (record the ACTUAL command + its ACTUAL result, LDD-INV-5):
-  `<cmd, e.g. vibescan --fast .>` -> <result, e.g. 0 new findings>
+  `<cmd, e.g. vibescan scan .>` -> <result, e.g. 0 new findings>
 - Risk-triggered deep audit run? <yes/no + why> on <surface, per the intent ledger's Risk surface field>.
   If yes, record the command + result: `<cmd, e.g. vibescan .>` -> <result>
-- Example (Tasky): `vibescan --fast .` -> 0 new findings. This milestone did not touch auth or sharing
+- Example (Tasky): `vibescan scan .` -> 0 new findings. This milestone did not touch auth or sharing
   (Risk surface: none), so no deep audit. The share-link-expiry smell (_harvest/sharing.md) is tracked for
   the sharing milestone, see Deferred.
 

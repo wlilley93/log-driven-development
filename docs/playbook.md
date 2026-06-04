@@ -147,9 +147,9 @@ config is [`templates/closure-gate.config.md`](../templates/closure-gate.config.
       commit pass** (raising it concedes the sprawl you are fighting).
 - [ ] **Red-until-built tests** present for every spec surface declared but not yet built (so an unbuilt surface is
       visibly red, never silently absent).
-- [ ] **`security_scan`** (`vibescan --fast`): the continuous, fast security gate (secrets, dependency CVEs, fast
+- [ ] **`security_scan`** (`vibescan scan`): the continuous, fast security gate (secrets, dependency CVEs, fast
       SAST), the single security owner at this tier. Loud-skip if the tool is missing (warn, never silently pass).
-- [ ] **`structure_scan`** (`vibeclean --changed`): the structural-suite edge on the changed surface, paired with
+- [ ] **`structure_scan`** (`vibeclean scan`): the structural-suite edge on the changed surface, paired with
       the max-function-length and duplication gates above. Loud-skip if the tool is missing.
 - [ ] **A clean tree** (no stray artefacts, nothing uncommitted you did not mean to leave).
 
@@ -169,7 +169,7 @@ and the actual result), not "looks fine".
    does the ratchet hold? any over-long function, God-object, leaked abstraction? Escalate to a **full refactor
    pass** (the refactoring suite) **only on flagged debt** (the continuous gate already did the heavy lifting). This
    is a scan, not a ritual.
-3. [ ] **SECURITY.** The continuous `vibescan --fast` gate (the one security owner, subsuming supply-chain) ran on
+3. [ ] **SECURITY.** The continuous `vibescan scan` gate (the one security owner, subsuming supply-chain) ran on
    every commit; at close run the full `vibescan .` sweep. The **heavy deep audit** (the security-suite methodology,
    with `vibeaudit` as its scanner engine) is **risk-targeted**: mandatory on a high-risk surface (auth, money,
    crypto, multi-tenancy, anything externally reachable), plus periodically. Do not bureaucratically deep-audit a
@@ -363,7 +363,7 @@ with no adversary.
 
 - [ ] All five close phases ran in order, and the sign-off records, **per phase, the actual command string and its
       actual output** (BUILD, STRUCTURE, SECURITY, VERIFY, PLAN): not "looks fine", but the literal command run and
-      the result it returned (e.g. the `vibescan --fast` result and, when risk-triggered, the `vibescan .` /
+      the result it returned (e.g. the `vibescan scan` result and, when risk-triggered, the `vibescan .` /
       security-suite output for SECURITY; the closure-gate / `vibeclean` result for STRUCTURE; the `vibetest` result
       for VERIFY). DoD cites tool output (LDD-INV-5).
 - [ ] An **independent adversarial verifier** re-ran from clean and failed to break the invariants.
@@ -426,9 +426,9 @@ SHAPES:
 GATES (8 per commit; owner of each concern = the matrix in systems.md system 7):
   every commit -> formatter, linter (warnings=errors), type-check, max-fn-length,
                   duplication ratchet (fold, never raise), invariant tests green from clean,
-                  security_scan (vibescan --fast, the one security owner), structure_scan (vibeclean --changed),
+                  security_scan (vibescan scan, the one security owner), structure_scan (vibeclean scan),
                   + red-until-built tests present, clean tree
-  milestone    -> BUILD, STRUCTURE (closure-gate + vibeclean scan), SECURITY (vibescan --fast continuous +
+  milestone    -> BUILD, STRUCTURE (closure-gate + vibeclean scan), SECURITY (vibescan scan continuous +
                   vibescan . at close; deep audit = security suite, vibeaudit engine, risk-targeted),
                   VERIFY (vibetest + independent adversary from clean), PLAN (mandatory)
 

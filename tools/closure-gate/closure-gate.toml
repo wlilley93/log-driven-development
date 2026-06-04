@@ -30,32 +30,32 @@
 # lint           = "eslint . --max-warnings=0"
 # typecheck      = "tsc --noEmit"
 # test           = "npm test"
-# security_scan  = "vibescan --fast ."     # secrets + dep-CVE + fast SAST (the one security owner)
-# structure_scan = "vibeclean --changed ." # AI-slop / god-file / duplication scanner
+# security_scan  = "vibescan scan ."     # secrets + dep-CVE + fast SAST (the one security owner)
+# structure_scan = "vibeclean scan . --fail-on high" # AI-slop / god-file / duplication scanner
 
 # --- Rust (cargo) ---
 # format_check   = "cargo fmt --check"
 # lint           = "cargo clippy -- -D warnings"
 # typecheck      = ""                      # the compiler is the type-check; covered by test/build
 # test           = "cargo test"
-# security_scan  = "vibescan --fast ."
-# structure_scan = "vibeclean --changed ."
+# security_scan  = "vibescan scan ."
+# structure_scan = "vibeclean scan . --fail-on high"
 
 # --- Python ---
 # format_check   = "ruff format --check ."
 # lint           = "ruff check ."
 # typecheck      = "mypy ."
 # test           = "pytest -q"
-# security_scan  = "vibescan --fast ."
-# structure_scan = "vibeclean --changed ."
+# security_scan  = "vibescan scan ."
+# structure_scan = "vibeclean scan . --fail-on high"
 
 # --- Go ---
 # format_check   = "test -z \"$(gofmt -l .)\""
 # lint           = "golangci-lint run"
 # typecheck      = "go vet ./..."
 # test           = "go test ./..."
-# security_scan  = "vibescan --fast ."
-# structure_scan = "vibeclean --changed ."
+# security_scan  = "vibescan scan ."
+# structure_scan = "vibeclean scan . --fail-on high"
 
 # Defaults: the stack commands are blank until you wire your stack, BUT the two continuous
 # suite gates default ON to vibescan/vibeclean (vendored with LDD under ../vibe). If those
@@ -67,8 +67,8 @@ lint = ""
 typecheck = ""
 # This repo's own first-party code is the closure-gate tools; its tests are the gate's tests.
 test = "python3 -m unittest discover -s tools/closure-gate/tests"
-security_scan = "vibescan --fast ."
-structure_scan = "vibeclean --changed ."
+security_scan = "vibescan scan . --fail-on high"
+structure_scan = "vibeclean scan . --fail-on high"
 
 [scope]
 # Consumed-commodity trees the gate must NOT police (the consume-the-commodity boundary,

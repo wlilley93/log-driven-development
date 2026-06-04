@@ -202,7 +202,7 @@ Reach for an orchestration shape over inline edits for any substantive task. Def
    over-long function / God-object / leaked abstraction?), run by the continuous closure-gate (the duplication
    ratchet) + `vibeclean`. **Escalate** to the full refactoring suite (`skills/refactoring/`) only on a tripped
    debt counter - the *continuous* closure-gate is the primary structural enforcement, so this is a scan, not a ritual.
-3. **SECURITY**: `vibescan --fast` runs every commit as the continuous one-security-owner (it subsumes the
+3. **SECURITY**: `vibescan scan` runs every commit as the continuous one-security-owner (it subsumes the
    supply-chain check). The **heavy** pass is **risk-triggered**: the full `vibescan .` sweep plus the security-suite
    methodology (`skills/security/`, with `vibeaudit` as its scanner engine, not a parallel auditor), mandatory on a
    high-risk surface (auth, money, crypto, multi-tenancy/isolation, any externally-reachable entry point) +
