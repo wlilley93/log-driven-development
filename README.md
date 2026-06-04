@@ -5,12 +5,14 @@ afraid to touch. LDD is how you turn that into a clean, auditable rebuild, with 
 the code already does.**
 
 > **What it does, and what it does not.** LDD makes vibe-coded code clean and auditable: it harvests the intent,
-> writes the spec, and rebuilds the core without the sprawl. But it **polishes the architecture you gave it**, it
-> does not tell you that architecture was *wrong*. It will faithfully, auditably rebuild a bad design. It does not
-> judge whether the design should exist, whether the security model is sound for your threat environment, or
-> whether the product is the right one to build. So keep a **human engineer in the loop** for anything
-> production-bound: LDD raises the floor (clean, traced, testable), it does not replace the judgement that sets
-> the ceiling.
+> writes the spec, and rebuilds the core without the sprawl. Its deliberation court *does* push on design, the
+> "is this actually working?" retrospective and the genuine-function determination exist to catch a fork going
+> the wrong way, and they often do. But that is a safety net, not a guarantee: LDD mainly **polishes the
+> architecture you gave it**, and it will faithfully, auditably rebuild a flawed design without ever flagging that
+> it was the wrong one. It does not own the call on whether the design should exist, whether the security model
+> fits your threat environment, or whether the product is the right one to build. So keep a **human engineer in
+> the loop** for anything production-bound: LDD raises the floor (clean, traced, testable) and the court guards
+> against some of the bigger missteps, but neither replaces the judgement that sets the ceiling.
 
 LDD is a software methodology, and a [Claude Code](https://claude.com/claude-code) plugin that puts it to work.
 It's built for the **brownfield reality of AI coding**: you (or an agent) vibe-coded a first attempt, and now
