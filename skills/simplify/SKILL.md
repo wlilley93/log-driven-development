@@ -1,6 +1,6 @@
 ---
 name: simplify
-description: The quality cleanup pass of Ledger-Driven Development. Review the recently changed code for reuse, simplification, efficiency, and "altitude" (right level of abstraction), then apply the fixes - while preserving observable behaviour exactly. Quality only: it folds duplication into shared helpers, removes needless complexity and dead abstraction, prefers existing helpers, and clarifies, but it does NOT hunt for bugs (use code-review for that). Use after a slice lands, in the STRUCTURE phase, or whenever a change "works but reads badly", to keep the rebuild from re-growing the sprawl it escaped.
+description: The quality cleanup pass of Log-Driven Development. Review the recently changed code for reuse, simplification, efficiency, and "altitude" (right level of abstraction), then apply the fixes - while preserving observable behaviour exactly. Quality only: it folds duplication into shared helpers, removes needless complexity and dead abstraction, prefers existing helpers, and clarifies, but it does NOT hunt for bugs (use code-review for that). Use after a slice lands, in the STRUCTURE phase, or whenever a change "works but reads badly", to keep the rebuild from re-growing the sprawl it escaped.
 ---
 
 # Simplify (the quality cleanup pass)

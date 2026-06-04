@@ -13,7 +13,7 @@ Carried in all six prose surfaces:
 - `docs/playbook.md` (beat-loop step 5, section 4c the FREEZE both-legs gate, section 6 the three-level DoD, the quick-ref card)
 - `docs/methodology.md` (Step 4 the two-leg subtlety, + the closing headline, now fixed)
 - `docs/systems.md` (system 2 arc loop, system 6 closure-gate, system 9 decisions-of-record)
-- `skills/ledger-driven-development/SKILL.md` (Rules-you-do-not-break + the arc loop)
+- `skills/log-driven-development/SKILL.md` (Rules-you-do-not-break + the arc loop)
 - NOT in `templates/intent-ledger.md` - correct: two-leg closure is a project-FREEZE definition, not a per-ledger field.
 
 ### Finding 2 - Both-altitudes harvest (LDD-INV-18: SYSTEM and PROCESS)
@@ -23,7 +23,7 @@ Carried in all seven surfaces including the template:
 - `docs/playbook.md` (the harvest brief, HARVEST AT BOTH ALTITUDES block)
 - `docs/methodology.md` (Step 1 "Harvest at two altitudes, not one")
 - `docs/systems.md` (system 1 spine, system 2 harvest exit criterion)
-- `skills/ledger-driven-development/SKILL.md` (the spine, ledger #1)
+- `skills/log-driven-development/SKILL.md` (the spine, ledger #1)
 - `templates/intent-ledger.md` (the REQUIRED `## The process / procedure` section)
 
 ### Finding 3 - Distil adversary (LDD-INV-13: drop-list adversary + retained-claim fidelity + security-complete)
@@ -33,7 +33,7 @@ Carried in six prose surfaces:
 - `docs/playbook.md` (the distil-adversary brief, section "run BEFORE harvest done")
 - `docs/methodology.md` (Step 2 "Distil is the one step that must carry its own adversary")
 - `docs/systems.md` (system 2 distil exit criterion)
-- `skills/ledger-driven-development/SKILL.md` (the arc, distil step)
+- `skills/log-driven-development/SKILL.md` (the arc, distil step)
 - NOT in `templates/intent-ledger.md` as a named field - acceptable: the DROP-with-reason section is what the
   adversary re-opens; the adversary itself is a process step, not a fill-in field.
 
@@ -49,7 +49,7 @@ Carried where the source-coverage re-walk and the harvest are defined:
    final word, single-leg, with no acknowledgement of the source-coverage leg. Rewritten to require BOTH legs
    and cite LDD-INV-5. (This was the one surviving stale single-leg done-definition at a load-bearing surface;
    the body of Step 4 was already two-legged.)
-2. `skills/ledger-driven-development/SKILL.md:83` - cross-reference said the register runs `LDD-INV-1..17`; it
+2. `skills/log-driven-development/SKILL.md:83` - cross-reference said the register runs `LDD-INV-1..17`; it
    now runs through 18. Corrected to `LDD-INV-1..18` so the reference resolves over the full register.
 
 ## Cross-reference repairs (bidirectional resolution)

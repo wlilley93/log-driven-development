@@ -1,6 +1,6 @@
 ---
 name: refactoring
-description: The behaviour-preserving improvement engine - the STRUCTURE phase tool of Ledger-Driven Development. Four chained playbooks (structural-sweep, create-refactor-plan, run-refactor, verify-refactor) plus a per-project bootstrap, run as orchestrated multi-agent waves over a real codebase. Inventory every module, run a deterministic + LLM preflight, atomize findings into sequenced fix-prompts, dispatch worktree agents under a worker constitution, then prove no behaviour changed against captured baselines. Use when you want to clean up, simplify, de-slop, or structurally atomize existing code WITHOUT changing what it does, on a repeatable round-by-round cadence that is auditable by construction.
+description: The behaviour-preserving improvement engine - the STRUCTURE phase tool of Log-Driven Development. Four chained playbooks (structural-sweep, create-refactor-plan, run-refactor, verify-refactor) plus a per-project bootstrap, run as orchestrated multi-agent waves over a real codebase. Inventory every module, run a deterministic + LLM preflight, atomize findings into sequenced fix-prompts, dispatch worktree agents under a worker constitution, then prove no behaviour changed against captured baselines. Use when you want to clean up, simplify, de-slop, or structurally atomize existing code WITHOUT changing what it does, on a repeatable round-by-round cadence that is auditable by construction.
 ---
 
 # Refactoring suite
@@ -10,7 +10,7 @@ description: The behaviour-preserving improvement engine - the STRUCTURE phase t
 > dispatch worktree agents under a strict worker constitution, and then prove against captured baselines that
 > nothing observable changed. Every round leaves a ledger trail: findings, plan, fixes, verification, deferrals.
 
-This is the **STRUCTURE** phase tool of Ledger-Driven Development. LDD harvests requirements out of legacy code,
+This is the **STRUCTURE** phase tool of Log-Driven Development. LDD harvests requirements out of legacy code,
 distils a minimal spec, builds a walking skeleton, then loops spec versus build to zero-gap. The refactoring
 suite is how you keep the *structure* of that build honest as it grows: it improves existing code while holding
 observable behaviour fixed, so the spec stays the source of truth and the code stays readable.

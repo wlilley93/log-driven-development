@@ -141,6 +141,19 @@ the central register, reviewed for exactly that fact-free universality. A projec
 precedent file for genuinely project-specific rulings, and promote any that prove general to the central register
 by PR.
 
+## Naming a case (the caption)
+A council case has no claimant and no defendant; it is a **matter**, and the adversarial part is the seats, not
+two named parties. Caption it the way real courts caption non-adversarial proceedings:
+- **Council and Appeals Council (the merits): "In re <subject>"** (in the matter of ...). Name the fork by its
+  subject, e.g. *In re the Court-Split*. The caption heads the ledger verdict, and an appeal carries it forward.
+- **Supreme Council (a point of law): "Reference re <point of law>"**. The apex answers a *referred point of law*,
+  so name it by the question, e.g. *Reference re Consolidation*. That caption **becomes the precedent's name** in
+  [`council/SPEC-LAW.md`](../../council/SPEC-LAW.md) and is cited as *Reference re Consolidation (SPEC-LAW-n)*.
+
+The two opposing views are recorded *inside* the case (the seats; and, at the apex, the rival constructions),
+never in the caption - that is the whole point of "In re"/"Reference re": these are matters and references, not
+party disputes.
+
 ## How to run it
 - **Tier 1:** a single parallel fan-out - one agent per seat (told to ground-truth + be blunt), then the
   orchestrator synthesises. Cheap to run, expensive to ignore.

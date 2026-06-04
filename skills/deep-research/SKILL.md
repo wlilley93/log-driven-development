@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: The research harness of Ledger-Driven Development. Fan out a question into 3-5 sub-questions, search multiple web sources, deep-read the best ones, adversarially verify the load-bearing claims against a second independent source, then synthesise a cited report with explicit confidence. Every claim carries a source; an uncited claim is dropped or flagged. Use when a build-vs-consume fork, a library or framework choice, a security advisory, or a council seat needs grounded external evidence instead of a guess, or when the user asks for a thorough, fact-checked research report on any topic.
+description: The research harness of Log-Driven Development. Fan out a question into 3-5 sub-questions, search multiple web sources, deep-read the best ones, adversarially verify the load-bearing claims against a second independent source, then synthesise a cited report with explicit confidence. Every claim carries a source; an uncited claim is dropped or flagged. Use when a build-vs-consume fork, a library or framework choice, a security advisory, or a council seat needs grounded external evidence instead of a guess, or when the user asks for a thorough, fact-checked research report on any topic.
 ---
 
 # Deep research (the grounded-evidence harness)

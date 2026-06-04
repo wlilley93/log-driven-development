@@ -1,11 +1,11 @@
 # LDD templates
 
-Copy-paste skeletons for the artefacts Ledger-Driven Development produces. Each file is a clean page-or-less
+Copy-paste skeletons for the artefacts Log-Driven Development produces. Each file is a clean page-or-less
 form with inline guidance in comments and `<placeholders>`. To use one, copy it into your project, rename it
 for the area or sequence, delete the leading `<!-- ... -->` guidance comment, and fill every section with
 real, grounded content (provenance or it does not go in). The filled examples all reference one running
 scenario, "Tasky" (a vibe-coded task tracker being rebuilt with LDD), so the artefacts cross-reference and
-read as one project. For the method these serve, read `skills/ledger-driven-development/SKILL.md` and
+read as one project. For the method these serve, read `skills/log-driven-development/SKILL.md` and
 `skills/council/SKILL.md`; for a fully worked set, see the example directory.
 
 ## The templates

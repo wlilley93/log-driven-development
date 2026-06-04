@@ -2,7 +2,7 @@
 
 This is the **prescriptive** operating manual. The [README](../README.md) is the pitch, the
 [methodology](./methodology.md) is the narrative *why*, and [systems.md](./systems.md) is the reference for *how the
-parts interlock*. This doc is the *how to operate*: a capable agent should be able to run Ledger-Driven Development
+parts interlock*. This doc is the *how to operate*: a capable agent should be able to run Log-Driven Development
 (LDD) from here with no further questions. Everything below is imperative and mechanical. When you are unsure what
 to do next, the answer is in one of the seven sections here.
 

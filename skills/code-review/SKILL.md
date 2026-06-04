@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: The adversarial code review used in the VERIFY phase of Ledger-Driven Development. Review a diff (or a set of files) for real correctness bugs, security holes, silent failures, weak type design, comment rot, and inadequate test coverage - each finding evidence-backed with a file:line citation and a confidence score, reported high-confidence-first, never inflated. Run as a fan-out of specialised reviewer lenses whose findings the orchestrator integrates. Use when an independent skeptic must try to BREAK a change before it is called done, before a commit, or before opening a pull request.
+description: The adversarial code review used in the VERIFY phase of Log-Driven Development. Review a diff (or a set of files) for real correctness bugs, security holes, silent failures, weak type design, comment rot, and inadequate test coverage - each finding evidence-backed with a file:line citation and a confidence score, reported high-confidence-first, never inflated. Run as a fan-out of specialised reviewer lenses whose findings the orchestrator integrates. Use when an independent skeptic must try to BREAK a change before it is called done, before a commit, or before opening a pull request.
 ---
 
 # Code review (the adversarial VERIFY lens)
@@ -9,7 +9,7 @@ description: The adversarial code review used in the VERIFY phase of Ledger-Driv
 > change for the defects a builder talks itself out of seeing, returns every finding with a `file:line` citation
 > and a confidence score, and reports high-confidence findings first. It does not confirm; it attacks.
 
-This is the **VERIFY-phase** reviewer of Ledger-Driven Development and the standing *builder + adversarial
+This is the **VERIFY-phase** reviewer of Log-Driven Development and the standing *builder + adversarial
 verifier* shape applied to code quality and correctness. The builder's "it works" is an **input**, never the
 verdict. The reviewer's job is to ground-truth the real tree, re-run the load-bearing checks, and surface what
 the build missed. A review with no findings is a *result*, not a goal: it must be earned by genuinely trying to

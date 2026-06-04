@@ -1,14 +1,14 @@
 {
-  "name": "ledger-driven-development",
-  "version": "1.0.0",
-  "description": "Ledger-Driven Development (LDD) + the deliberation court: a multi-agent software methodology. Harvest precious logic out of legacy → distil a minimal spec → build a walking skeleton → loop spec⇄build to zero-gap, made auditable by a twin-ledger spine and driven by orchestrated agents (builder + adversarial-verifier; the council). Includes the UK-law-modelled Council → Appeals Council → Supreme Council hierarchy for high-stakes decisions.",
+  "name": "log-driven-development",
+  "version": "2.0.0",
+  "description": "Log-Driven Development (LDD) + the deliberation court: a multi-agent software methodology. Harvest precious logic out of legacy → distil a minimal spec → build a walking skeleton → loop spec⇄build to zero-gap, made auditable by a twin-ledger spine and driven by orchestrated agents (builder + adversarial-verifier; the council). Includes the UK-law-modelled Council → Appeals Council → Supreme Council hierarchy for high-stakes decisions.",
   "author": {
     "name": "Will Lilley"
   },
   "keywords": [
     "methodology",
     "multi-agent",
-    "ledger-driven-development",
+    "log-driven-development",
     "council",
     "deliberation",
     "adversarial-verification"

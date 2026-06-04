@@ -1,9 +1,9 @@
 ---
-description: Start or continue a Ledger-Driven Development beat (harvest → distil → walking skeleton → loop to zero-gap), with the twin-ledger spine and orchestrated agents
+description: Start or continue a Log-Driven Development beat (harvest → distil → walking skeleton → loop to zero-gap), with the twin-ledger spine and orchestrated agents
 argument-hint: <what to build/harvest, or "status"> 
 ---
 
-Apply **Ledger-Driven Development** (see the `ledger-driven-development` skill) to:
+Apply **Log-Driven Development** (see the `log-driven-development` skill) to:
 
 **$ARGUMENTS**
 

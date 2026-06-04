@@ -1,9 +1,9 @@
 ---
-name: ledger-driven-development
+name: log-driven-development
 description: A multi-agent methodology for the brownfield reality of AI coding - you (or an agent) vibe-coded a first attempt that works-ish but has no spec or plan, and the code is now the only record of the requirements. LDD harvests those requirements out of the code → distils a minimal spec + plan → builds a walking skeleton → loops spec⇄build until an automated sweep finds zero gaps; auditable by a twin-ledger spine; run by orchestrated agents (builder + adversarial-verifier; the council). Use when cleaning up or rebuilding a vibe-coded/legacy codebase, or any time you want decisions auditable by construction.
 ---
 
-# Ledger-Driven Development (LDD)
+# Log-Driven Development (LDD)
 
 > Harvest the precious logic out of overcooked legacy → distil it into a minimal **substrate spec** → build a
 > **walking skeleton** → **loop spec⇄build until an automated sweep finds zero gaps**: run by **orchestrated

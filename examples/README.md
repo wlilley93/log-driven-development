@@ -1,11 +1,11 @@
 # Worked example: rebuilding Tasky with LDD
 
-This folder is one continuous, filled-in run of Ledger-Driven Development on a single fictional project. Every
+This folder is one continuous, filled-in run of Log-Driven Development on a single fictional project. Every
 file here describes the *same* project and cross-references the same handful of concrete details, so you can see
 what each LDD artefact looks like in practice and how they fit together. Read it top to bottom and you will watch
 a real mess turn into a small clean spec, with the reasoning recorded at every step.
 
-If you want the method itself, read [`../skills/ledger-driven-development/SKILL.md`](../skills/ledger-driven-development/SKILL.md)
+If you want the method itself, read [`../skills/log-driven-development/SKILL.md`](../skills/log-driven-development/SKILL.md)
 and [`../skills/council/SKILL.md`](../skills/council/SKILL.md). This folder is the *applied* version: copy the
 shapes here for your own project.
 

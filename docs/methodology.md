@@ -1,4 +1,4 @@
-# Ledger-Driven Development: the full method
+# Log-Driven Development: the full method
 
 This is the long-form walkthrough. The two `skills/*/SKILL.md` files are the compressed canon; the
 [README](../README.md) is the pitch. This doc is the one you read when you actually want to understand *why* each

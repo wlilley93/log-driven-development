@@ -1,7 +1,7 @@
 # The vibe* tools - the coded gates of LDD
 
 These are the runnable command-line tools that mechanise the LDD quality and security gates. The methodology
-(see `skills/ledger-driven-development`) describes the gates abstractly; these tools are how an agent actually
+(see `skills/log-driven-development`) describes the gates abstractly; these tools are how an agent actually
 executes them on a real tree. They are vendored here in full so the kit is self-contained (the whole operating
 model in one place), and each is also an independent MIT-licensed package you can `pip install`.
 
@@ -22,7 +22,7 @@ None of them needs configuration to start.
 
 ## How the LDD process invokes them
 
-The five-phase milestone close (`skills/ledger-driven-development`) wires to these tools:
+The five-phase milestone close (`skills/log-driven-development`) wires to these tools:
 
 - **STRUCTURE** runs `vibeclean .` over the new surface (and the refactoring suite when it flags real debt).
 - **SECURITY** has two cadences for one owner: the continuous per-commit owner is `vibescan --fast` (the
