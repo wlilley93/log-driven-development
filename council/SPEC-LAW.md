@@ -54,3 +54,51 @@ green on promises rather than built controls; and falsified premises surviving u
 
 **Status:** immutable; binds every Council, Appeals Council, and the spec layer. Refined only by a later Supreme
 Council expressly narrowing it on a point of law.
+
+---
+
+## SPEC-LAW-2: The Determination of Genuine Function is a ground-truth gate, scoped to what the spec claims, over the layers you own
+
+**Origin.** A Supreme Council ruling on points of law arising from a determination of whether a built system
+"genuinely supports" its target use cases. The lower courts had been pressed to (i) accept design-soundness ("the
+primitives exist and compose") as a discharge of the Determination of Genuine Function, (ii) re-narrow the
+function claim to a sub-scope smaller than the spec's own definition-of-done, and (iii) drop the
+product-facing surfaces out of the claim by reclassifying them as a consumed commodity.
+
+**The rule (four limbs):**
+
+**(a) Ground-truth, not assertion.** A court discharges the **Determination of Genuine Function** (the council
+skill's required determination phase) only by pointing to a spike, a test, or a demonstrated end-to-end path.
+"The pieces exist", "the design is sound", and "it composes by design" meet the *design-sufficiency* bar only,
+which is necessary and never sufficient. A seat that asserts function without exercising it is ignored on that
+point. Where function is unproven at the claimed scope, the verdict may not resolve to build / ratify / uphold; it
+resolves to **spike-first** (obtain the ground-truth, then re-determine) or **kill**. A court may not ratify a
+hypothesis.
+
+**(b) Scope is what the spec claims, not what a party prefers.** Genuine function is measured at the scope the
+spec itself names in its definition-of-done, not a scope a court or party finds convenient. A party may not
+re-narrow the claimed scope by re-reading the spec to mean less than it says (LDD-INV-1, LDD-INV-2). Only a new
+ratified decision of record (an append-only superseding entry, LDD-INV-16) may move the scope; a court's
+construction of the existing spec may not.
+
+**(c) Own/consume is a layer parse, and you cannot shrink the claim by reclassifying an owned layer as consumed.**
+Where the architecture distinguishes *consumed* commodity layers (the bought/adopted engine, driver, runtime,
+upstream chrome) from *owned* differentiating layers (the project's moat: its core, its governance, and its
+product-facing surfaces), the genuine-function claim covers the **owned** layers proven at the spec-named scope.
+Consuming a commodity *engine* is not consuming the *surfaces built over it*; the move "the upstream tool is
+consumed, therefore the screens we built on it are out of the claim" conflates the two and is **barred**.
+
+**(d) The autonomous determination instrument and the gated final run are distinct.** A spike that exercises the
+owned layers *autonomously* is the strongest determination reachable without the principal and, under build-first
+discipline, is sequenced **first** as the kill-or-confirm gate. A final end-to-end run that needs the principal (a
+live environment, real data, a human-gated resource) is the **final** determination and stays gated. Proving the
+first does not discharge the second; failing the first is the kill signal. The two must not be conflated, in
+either direction.
+
+**What it prevents.** "Looks done / composes on paper" laundered into a discharge of the function gate; the
+function claim quietly shrunk below the spec's own definition-of-done; and the product-facing surfaces dropped from
+the claim by relabelling them commodity. Together with SPEC-LAW-1, it keeps both the *evidence* and the *scope* of
+a determination honest.
+
+**Status:** immutable; binds every Council, Appeals Council, and the spec layer. Refined only by a later Supreme
+Council expressly narrowing it on a point of law.
