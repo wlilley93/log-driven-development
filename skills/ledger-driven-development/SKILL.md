@@ -17,6 +17,76 @@ complete core - without re-importing the sprawl, and without losing the behaviou
 equally on an older rotted legacy system - same move: the intent lives in the code; harvest it first.) It is run
 with **multi-agent orchestration**, not solo edits.
 
+> **ADR = Architecture Decision Record:** one significant, hard-to-reverse decision captured as the context
+> that forced it, the decision taken, and the consequences (the tradeoffs kept and the tradeoffs given up). A
+> plain journal decision *graduates* into an ADR when it is load-bearing enough that people will later need to
+> find and cite it. The term is expanded here on first use and used in short form below.
+
+## Operating procedure (do this)
+This section is prescriptive: an agent following it should never be unsure what to do next. The fuller manual is
+[docs/playbook.md](../../docs/playbook.md) (the step-by-step operating manual, with annotated example briefs and a
+quick-reference card), backed by [docs/methodology.md](../../docs/methodology.md) (the long-form walkthrough),
+[docs/artifacts.md](../../docs/artifacts.md) (artefact-by-artefact construction), and
+[docs/anti-patterns.md](../../docs/anti-patterns.md) (the failure modes and the rule that prevents each).
+
+### The beat loop (every beat, in this order)
+1. **Orient.** Read the RESUME pointer (you-are-here + the one next move + the paste-to-resume block), the last
+   few journal entries, and the task list. That is the entire working state; load it before anything else.
+2. **Ground-truth before deciding.** Grep, read the real files, run the tests. Never trust a summary, a memory,
+   or a prior claim over the actual tree. If you cannot cite `file:line` or command output, you do not know it
+   yet.
+3. **Pick the one next move.** The smallest coherent unit that advances the goal. One thing, not three.
+4. **Orchestrate, do not edit inline** for anything substantive. Spawn the right agent shape (see Shape
+   selection). Write the brief with EXACT anchors (`file:line`), the load-bearing invariant to prove, and for a
+   verifier the EXACT attack to run. Vague briefs produce vague work.
+5. **Ground-truth the result yourself, from clean.** Build, test, lint, and re-prove the load-bearing invariant.
+   A subagent saying "done" is an INPUT, never the verdict.
+6. **Fix anything wrong before committing.** If it is a SECURITY issue, fix it the moment it is found: never ask
+   first, never commit it.
+7. **Commit per beat with EXPLICIT paths** (never a blanket `add -A`, it sweeps build artifacts). One coherent
+   unit per commit, with a co-author trailer.
+8. **Record.** Write the metacognition journal entry (what + why, with the alternatives for a decision), add the
+   one-line INDEX pointer, update RESUME (you-are-here + the next move), update the task list. ONLY the
+   orchestrator writes shared state (the one-writer rule).
+9. **Report at milestone boundaries,** not mid-batch.
+
+### Decision rules (apply mechanically)
+| Situation | What you do |
+|---|---|
+| Reversible or swappable choice | ONE decisive sentence, then build it. Convene nothing. (Build-phase risk lives in the unbuilt surface, so bias hard to building.) |
+| Irreversible or load-bearing choice | A spike or thin slice that exercises it BEFORE you commit. Never record a decision selecting a buildable thing (framework, store, protocol) without having exercised it. |
+| A genuine hard fork, or an honest "is this actually working?" | Convene a COUNCIL. It must end in a build action or a kill, never another doc that defers. |
+| A challenged council verdict | The Appeals Council (needs standing). A question of how the invariants or method were APPLIED goes to the Supreme Council, whose ruling is spec law. |
+| A principal-owner policy or domain call (not a technical one) | ASK the principal. Do not guess on their behalf. |
+| A security issue | Fix immediately. This overrides every schedule. |
+
+### Orchestration shape selection
+- **Build one thing and be sure it is correct** -> BUILDER + ADVERSARIAL VERIFIER: one produces, an independent
+  skeptic tries to BREAK it (grounding in the real tree, re-running the load-bearing checks). In practice the
+  verifier catches real defects the builder introduced, including security holes.
+- **Author a volume of independent files** -> MULTI-AUTHOR + COHERENCE: N authors, each owning DISTINCT files,
+  then one coherence pass merges and dedups. Never let two agents write the same file.
+- **Unknown-size discovery** (find all the gaps, all the bugs) -> LOOP-UNTIL-DRY: keep going until K
+  consecutive rounds find nothing new. A fixed count misses the tail.
+- **A judgement call under stakes** -> the COUNCIL (see the `council` skill).
+
+### Precision with subagents
+- Tell every spawned agent: do NOT journal, do NOT touch shared state, do NOT commit; RETURN your what and why,
+  and the orchestrator records it.
+- Give exact anchors (`file:line`), the precise invariant or property to prove, and for a verifier the exact
+  adversarial attack to run plus the exact verdict shape to return.
+- Prefer free-text returns and self-written files; rigid output schemas fail under rate-limiting. Wave-throttle
+  concurrency.
+
+## Rules you do not break
+- **Ground-truth, no vibes.** Cite `file:line` or command output, or you do not know it.
+- **One-writer rule.** Only the orchestrator writes the ledgers, the index, and the task list.
+- **File-partition.** Parallel authors own distinct files; never two agents on one file.
+- **"Done" is the orchestrator judgement.** It means ground-truthed from clean + the closure sweep is clean, never "the tests pass" alone and never a worker's self-report.
+- **Commit explicit paths.** Never a blanket `add -A`.
+- **Fix security immediately.** The moment it is found, before any commit, ahead of every schedule.
+- **A council ends in build-or-kill.** Never another doc that defers.
+
 ## The spine - two ledgers (auditability by construction)
 1. **Intent ledgers** (`_harvest/*`) - *what the old code meant.* Before building, harvest the precious logic
    out of the legacy: the domain rules, the edge cases, the security mechanisms, the data shapes - each captured

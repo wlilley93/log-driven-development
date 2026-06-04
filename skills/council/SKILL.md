@@ -19,6 +19,40 @@ description: The adversarial deliberation court - convene N independent, named s
 Do NOT convene for a reversible/swappable decision - that gets one decisive sentence (the deliberation budget).
 A court is expensive currency; spend it rarely. The appeals tiers are rarer still.
 
+## When you (the agent) should convene one
+Prescriptive triggers. Convene a Council when, and only when, one of these holds:
+- A **genuine hard fork**: a load-bearing, hard-to-reverse choice (architecture, build-vs-consume, sequencing a
+  whole program) where a single perspective would rationalise.
+- An **honest "is this actually working?"**: a periodic retrospective on whether the artifact is on track AND
+  whether the method itself is silently failing.
+- A **pre-mortem** before committing to a path: "it is N months later and this failed, why?"
+
+Do NOT convene one when:
+- The choice is **reversible or swappable** -> one decisive sentence, then build it.
+- The choice is **irreversible but buildable** (a framework, store, protocol) -> a spike or thin slice that
+  exercises it, not a debate.
+- It is a **principal-owner policy or domain call** (not a technical one) -> ASK the principal; do not convene a
+  panel to guess on their behalf.
+- It is a **security issue** -> fix it immediately; do not deliberate.
+
+A challenged Council verdict does not get a re-run Council: it escalates the appeals hierarchy below, and only
+with standing.
+
+## How to run one, step by step
+1. **Pick the seats: distinct lenses, not redundancy.** Choose seats whose viewpoints do not overlap (for a
+   retrospective: project health, process critic, collaboration, devil's advocate / pre-mortem; swap in
+   security, cost, UX, or a named alternative's advocate to fit the question). One agent per seat.
+2. **Each seat grounds-truth FIRST.** Tell each seat to grep, read files, run counts and tests, and to cite real
+   evidence from the tree. A seat that cannot cite is ignored.
+3. **Run them independently.** Seats run concurrently and do not see each other mid-run. Brief each to lead with
+   the uncomfortable truth, not a hedge.
+4. **Synthesise honestly.** The orchestrator reconciles the seats (they will disagree), states the through-line,
+   and converts it into committed changes plus tasks.
+5. **End in build-or-kill, the same beat.** The verdict resolves to a committed change or an explicit kill,
+   never another deferring artifact. Act on it now.
+6. **Record dissent.** Write the verdict to the ledger and preserve the surviving dissent verbatim: it is the
+   standing of any future appeal. Then dissolve the panel; nothing persists but the verdict and the dissent.
+
 ## Tier 1 - The Council (court of first instance)
 
 ### The shape (one parallel fan-out)

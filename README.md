@@ -202,8 +202,11 @@ shapes (builder plus adversarial-verifier; the council). Any team, human or agen
 
 ## Going deeper
 
-The README is the pitch. When you want to actually run LDD, read these in order:
+The README is the pitch. When you want to actually run LDD:
 
+- **[docs/playbook.md](docs/playbook.md)** : start here to RUN it. The prescriptive operating manual: the beat
+  loop, the decision rules, how to choose an orchestration shape, the gate checklists, how to brief a subagent
+  (with annotated examples), and definition-of-done at the beat, milestone, and project level.
 - **[docs/methodology.md](docs/methodology.md)** : the long-form walkthrough of the arc (harvest, distil, walking
   skeleton, loop), the disciplines, and the milestone close, against one running example.
 - **[docs/systems.md](docs/systems.md)** : the comprehensive systems reference. Every distinct system that makes
@@ -212,6 +215,8 @@ The README is the pitch. When you want to actually run LDD, read these in order:
   one machine.
 - **[docs/artifacts.md](docs/artifacts.md)** : the deepest how-to. For each artefact: what it is, the failure it
   prevents, how to constitute it step by step, and the mistakes people actually make.
+- **[docs/anti-patterns.md](docs/anti-patterns.md)** : the ways the method breaks in practice, each paired with
+  the one rule that prevents it, ending in a smell-test checklist.
 - **[templates/](templates/)** : copy-paste skeletons for every artefact (intent ledger, metacognition entry,
   ADR, spec, milestone sign-off, council verdict, closure-gate config).
 - **[examples/](examples/)** : one continuous worked run of LDD on a single fictional project (Tasky), from
@@ -228,8 +233,10 @@ skills/ledger-driven-development/SKILL.md          the full method
 skills/council/SKILL.md                            the council and the appeals hierarchy
 commands/ldd.md                                    the /ldd slash command
 commands/council.md                                the /council slash command
+docs/playbook.md                                   the prescriptive operating manual: exactly what to do
 docs/methodology.md                                the long-form walkthrough of the method
 docs/systems.md                                    the systems reference: every part, and how they interlock
+docs/anti-patterns.md                              how the method breaks, and the rule that prevents each
 docs/artifacts.md                                  artefact-by-artefact how-to (what, why, how to constitute)
 templates/                                         blank skeletons for every artefact
 examples/                                          one continuous worked run on a fictional project (Tasky)
