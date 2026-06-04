@@ -25,7 +25,7 @@ test run); a claim you cannot point at, you do not know yet, and it does not ent
 
 **Prevents.** Confident fiction: an agent asserting "there is one completion path" until a grep finds three.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:82` (rule), `:35-37`, `:114-116`;
+**Enforced at.** `skills/log-driven-development/SKILL.md` (rule), `:35-37`, `:114-116`;
 `docs/methodology.md:178-184`; `docs/playbook.md:31-34`; `docs/systems.md:253-255`; anti-pattern #4
 `docs/anti-patterns.md:94-112`; smell `docs/anti-patterns.md:376`. The coded loud-skip (a missing tool is a
 reported `[warn]`, never a silent absence) is the gate-level expression of "never silently absent":
@@ -41,7 +41,7 @@ domain rules (see LDD-INV-15).
 
 **Enforced at.** `docs/artifacts.md:20-22` (the governing rule of every artefact), `:69-71`; named "the rule that
 matters most" `docs/methodology.md:392-394`; `docs/methodology.md:140-142`;
-`skills/log-driven-development/SKILL.md:91-93`; `docs/systems.md:265-266`; the harvest template
+`skills/log-driven-development/SKILL.md`; `docs/systems.md:265-266`; the harvest template
 `templates/intent-ledger.md:14-15`; anti-pattern #4 `docs/anti-patterns.md:104-105`.
 
 ## LDD-INV-3: One-writer rule
@@ -51,7 +51,7 @@ list, the sign-offs. Spawned agents RETURN their what/why as text; the orchestra
 
 **Prevents.** Collision and lost writes when many agents append to one surface at once.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:83` (rule), `:48-50`, `:117-119`;
+**Enforced at.** `skills/log-driven-development/SKILL.md` (rule), `:48-50`, `:117-119`;
 `docs/methodology.md:186-192`; `docs/playbook.md:65-69,183-184`; `docs/systems.md:256-258`; anti-pattern #8
 `docs/anti-patterns.md:179-197`; smell `docs/anti-patterns.md:382`.
 
@@ -62,7 +62,7 @@ RETURN content blocks, a coherence agent emits an integration checklist, and the
 
 **Prevents.** Two agents racing on one file and corrupting it.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:84` (rule), `:67-68`, `:120-123`;
+**Enforced at.** `skills/log-driven-development/SKILL.md` (rule), `:67-68`, `:120-123`;
 `docs/methodology.md:194-201`; `docs/playbook.md:120-121`; `docs/systems.md:259-261`; anti-pattern #3
 `docs/anti-patterns.md:73-91`; smell `docs/anti-patterns.md:383`.
 
@@ -85,7 +85,7 @@ unbuilt; and the subtler failure this register was itself amended for: an intern
 "complete" while a whole layer of the source (e.g. the step-by-step domain procedure) sits un-folded and unseen,
 because no gate ever looked back at the source.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:85` (rule), `:42-43`, `:111`, `:171-172`;
+**Enforced at.** `skills/log-driven-development/SKILL.md` (rule), `:42-43`, `:111`, `:171-172`;
 `docs/methodology.md:129-132` ("Done" = zero-gap sweep, the headline rule); `docs/playbook.md:48-52,245-275`;
 `docs/systems.md:188-189,262-264`; `tools/closure-gate/closure_gate.py:7-8,30-32`;
 `tools/closure-gate/README.md:9-11`; anti-pattern #2 `docs/anti-patterns.md:50-69` and (the source-coverage leg)
@@ -98,7 +98,7 @@ trailer; never a blanket `add -A` / `add .` (it sweeps build artefacts).
 
 **Prevents.** Unattributable, unbisectable history and accidental staging of artefacts.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:86` (rule), `:46-47`, `:165-166`;
+**Enforced at.** `skills/log-driven-development/SKILL.md` (rule), `:46-47`, `:165-166`;
 `docs/playbook.md:60-63`; `docs/systems.md:269-270`; anti-pattern #5 `docs/anti-patterns.md:114-132`; smell
 `docs/anti-patterns.md:378`.
 
@@ -110,7 +110,7 @@ and never deliberated (a security issue is not a court question).
 **Prevents.** A known hole (Tasky's no-expiry share link) surviving the rebuild because it was filed for later; a
 leaked credential becoming permanent git history.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:87` (rule), `:44-45`, `:61`;
+**Enforced at.** `skills/log-driven-development/SKILL.md` (rule), `:44-45`, `:61`;
 `docs/playbook.md:54-58,97`; `docs/systems.md:267-268`; the per-commit security gate that makes "fix the moment
 found" have something that FINDS: `tools/closure-gate/closure-gate.toml:18-26,69`;
 `tools/closure-gate/closure_gate.py:17-18,157-162`; the hook forbids skipping it
@@ -126,7 +126,7 @@ never another doc that defers. The seats are ephemeral; only the verdict and the
 **Prevents.** Decision-theatre: a deliberation that produces a meeting and "we will look at it later" instead of a
 commit. (The meta-to-build ratio is surfaced honestly: more courts than shipped milestones is itself a finding.)
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:88` (rule), `:58`, `:124-128`;
+**Enforced at.** `skills/log-driven-development/SKILL.md` (rule), `:58`, `:124-128`;
 `skills/court/SKILL.md:70-76`; `docs/methodology.md:203-212,312-313`; `docs/playbook.md:93,99-102`;
 `docs/systems.md:134-136,160-163,170-174`; anti-pattern #6 `docs/anti-patterns.md:135-153`; smell
 `docs/anti-patterns.md:380`.
@@ -142,7 +142,7 @@ one owner.
 **Prevents.** The original sin that makes a codebase (and a methodology) a mess: three completion paths, three
 function-length numbers, three definitions of "Tier 2", two duplication enforcers with no stated owner.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:134-135` (rule); `docs/methodology.md:226-231`;
+**Enforced at.** `skills/log-driven-development/SKILL.md` (rule); `docs/methodology.md:226-231`;
 `docs/systems.md:271-273`; the security side ("one authoritative folder; other engines call this suite instead of
 duplicating security methodology") `skills/security/README.md:11`; the refactoring side (security delegated, not
 duplicated) `skills/refactoring/SKILL.md:24-29`; the continuous-tier one-security-owner declaration
@@ -158,7 +158,7 @@ the config by hand and journal the reason so the concession is on the record, ne
 
 **Prevents.** Quality drift: agents accreting duplication until the rebuild is the mess being escaped.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:129-132` (the closure-gate discipline);
+**Enforced at.** `skills/log-driven-development/SKILL.md` (the closure-gate discipline);
 `docs/methodology.md:214-224`; `docs/playbook.md:144-146`; `docs/systems.md:197-200`; code-enforced
 `tools/closure-gate/duplication_ratchet.py:4-7,24-32,244-260` (`--update-budget` "REFUSES to raise");
 `tools/closure-gate/closure-gate.toml:77-84`; `tools/closure-gate/README.md:68-85`; anti-pattern #1
@@ -174,7 +174,7 @@ SECURITY phases be a proportionate scan rather than a ritual.
 primary enforcement instead of a net for what slipped.
 
 **Enforced at.** `docs/playbook.md:133-135`; `docs/methodology.md:214-224`; `docs/systems.md:185-189,195-200`;
-`skills/log-driven-development/SKILL.md:129-133`; `tools/closure-gate/closure_gate.py:5-8`;
+`skills/log-driven-development/SKILL.md`; `tools/closure-gate/closure_gate.py:5-8`;
 `tools/closure-gate/closure-gate.toml:60-64`; `docs/artifacts.md:355-356`. The cited owner of the continuous-tier
 membership is the two-tier(+) ownership matrix in `docs/systems.md` (system 7).
 
@@ -187,7 +187,7 @@ trust boundary, not a no-auth happy path).
 
 **Prevents.** Hiding integration risk until the end, and a skeleton with no security spine.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:108-109`; `docs/methodology.md:104-118`;
+**Enforced at.** `skills/log-driven-development/SKILL.md`; `docs/methodology.md:104-118`;
 `docs/systems.md:69-71` (the exit criterion this register binds to add the security spine); `README.md:69-72`;
 anti-pattern #11 `docs/anti-patterns.md:243-261`; smell `docs/anti-patterns.md:386`.
 
@@ -211,7 +211,7 @@ holding a live secret).
 and the inverse failure: a coverage hole (dropped procedure), a wrong-but-internally-consistent claim, or a
 skipped-file secret passing unchallenged because distil was the one major step with no adversary.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:106-107`; `docs/methodology.md:79-99`;
+**Enforced at.** `skills/log-driven-development/SKILL.md`; `docs/methodology.md:79-99`;
 `docs/systems.md:65-68`; `templates/intent-ledger.md:49-58` (the DROP-with-reason section); the distil-adversary
 brief `docs/playbook.md:315-345`; anti-pattern #12 `docs/anti-patterns.md:264-281` and (the drop-list/fidelity
 adversary) anti-pattern #19 `docs/anti-patterns.md:441-467`; smell `docs/anti-patterns.md:387,494`.
@@ -224,7 +224,7 @@ scope, sequence, risks, and the single next move are named.
 
 **Prevents.** "Done" being a self-report and the run drifting into an unplanned next milestone.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:149-162`; `docs/methodology.md:264-289`;
+**Enforced at.** `skills/log-driven-development/SKILL.md`; `docs/methodology.md:264-289`;
 `docs/playbook.md:151-169,258-264`; `docs/systems.md:210-244`; the record artefact
 `templates/milestone-signoff.md:1-61`; anti-pattern #10 (PLAN) `docs/anti-patterns.md:223-240`; smell
 `docs/anti-patterns.md:385`. The five phases name their concrete tools and tiers by citing the two-tier(+)
@@ -241,7 +241,7 @@ risk-surface field. Security invariants graduate into red-until-built tests in t
 **Prevents.** The harvest silently dropping the two concerns the project most needs carried over, leaving security
 and structural budgets as un-cited prose nobody can audit.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:90-93` (the intent-ledger spine, to gain the two named
+**Enforced at.** `skills/log-driven-development/SKILL.md` (the intent-ledger spine, to gain the two named
 registers + the risk-surface field); `docs/artifacts.md:47-87` (the intent-ledger how-to); `templates/intent-ledger.md`
 (to gain the risk-surface field); the security suite's own evidence discipline
 `skills/security/WORKFLOW.md:48-58`; the refactoring suite's structural floor as the structural baseline
@@ -258,7 +258,7 @@ load-bearing decision graduates to an ADR.
 **Prevents.** The spec, the code, the invariants, and the backlog quietly disagreeing (the harmonize step catches
 the drift), and history being rewritten so the audit trail lies.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:96-97,173-174`; `docs/methodology.md:148-151,164-169`;
+**Enforced at.** `skills/log-driven-development/SKILL.md,173-174`; `docs/methodology.md:148-151,164-169`;
 `docs/systems.md:296-299,306-312`; `docs/artifacts.md:108-112,149-150,168-169`; `docs/playbook.md:327-334`.
 
 ## LDD-INV-17: Escalation needs standing; the wrong tier is refused; spec law binds
@@ -273,7 +273,7 @@ layer, the same fail-closed shape a trust boundary uses.
 **Prevents.** The wrong question reaching the wrong court; a decided fork being re-litigated forever; a future court
 silently re-fragmenting a consolidated concern (LDD-INV-9) with no precedent to deny against.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:53-61`; `skills/court/SKILL.md:22-36,78-110`;
+**Enforced at.** `skills/log-driven-development/SKILL.md`; `skills/court/SKILL.md:22-36,78-110`;
 `commands/court.md:6-25`; `docs/methodology.md:298-339`; `docs/playbook.md:83-97`;
 `docs/systems.md:119-152,376-401`; the spec-law register `skills/court/SKILL.md:104-110` and
 `docs/artifacts.md:285-316`; anti-pattern #15 `docs/anti-patterns.md:326-347`; smell `docs/anti-patterns.md:390`.
@@ -298,7 +298,7 @@ field with structure (enums, state-machine names, taxonomy) while the actual dom
 altitude down in the source, is never opened, so the spec captures the SYSTEM and silently withholds the PROCESS
 and the closure gate cannot see it (because nothing it checks is below the structure altitude).
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:102-107` (the intent-ledger spine, alongside
+**Enforced at.** `skills/log-driven-development/SKILL.md` (the intent-ledger spine, alongside
 LDD-INV-15's two named registers); `templates/intent-ledger.md:36-53` (the required `## The process / procedure`
 section); `docs/methodology.md:65-77,135-138`; `docs/systems.md:37-41,67-74`; the harvest brief
 `docs/playbook.md:294-309`; anti-pattern #17 `docs/anti-patterns.md:377-403`; smell `docs/anti-patterns.md:492`;
@@ -321,7 +321,7 @@ A Supreme ruling about the method becomes **spec law about the method**: an immu
 in the spec-law register and cited by ID as controlling in every later decision. That is the fail-closed mechanism
 that keeps a future court from silently re-splitting a concern this register consolidated: a decision that collides
 with the precedent "one concern, one owner: function-length is owned by the closure-gate threshold; security is
-owned by `vibescan --fast` at the continuous tier" is refused at the spec layer, exactly as a trust boundary
+owned by `vibescan scan` at the continuous tier" is refused at the spec layer, exactly as a trust boundary
 refuses an unmapped capability. Only a later Supreme Court, expressly narrowing the precedent on a point of
 invariant law, may refine it: never a lower court, never the build phase, never an inline edit. When such a ruling
 is made, it is recorded here (or in the spec-law register this register cites) so the method governs itself by the
