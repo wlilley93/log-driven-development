@@ -79,10 +79,10 @@ LDD is built to prevent all three by construction.
    omission leaves no contradiction); the source leg is the one that sees it. "Done" means *both* legs are clean,
    not "the tests pass".
 
-> **Example prompt (the two-leg close).** "Run BOTH legs of the close. Leg A: walk the SOURCE and ask 'what
-> load-bearing procedure lives here that never reached the spec?', looping until a pass finds nothing new (evidence
-> = the source, not the spec). Leg B: check the spec against itself (ids resolve, no contradictions). Done only if
-> both are clean." More recipes in [docs/prompting.md](docs/prompting.md).
+> **What you actually say:** *"You told me the spec is finished, but did you actually check it against the real
+> codebase, or just that it reads consistently?"* That one question triggers the leg most people skip: the
+> source-coverage sweep that catches anything in the code that never made it into the spec. More plain-English
+> prompts, per element, in [docs/prompting.md](docs/prompting.md).
 
 ---
 
@@ -97,10 +97,11 @@ rebuild auditable by construction.
   A ledger must capture **both altitudes** (LDD-INV-18): the SYSTEM (shapes, enums, state-machines) and the
   PROCESS (the step-by-step procedure one level below). A structure-only ledger is incomplete by construction.
 
-  > **Example prompt (harvest, both altitudes).** "Harvest Tasky's completion + blocking area. Capture BOTH the
-  > SYSTEM (the `done` / `status` / `archivedAt` shapes that represent completion) AND the PROCESS (exactly how the
-  > auto-reopen-on-blocker cascade runs: order, depth, whether it notifies). Cite `file:line` for every claim;
-  > record what you DROP and why."
+  > **What you actually say** (plain English, no jargon): *"I inherited this task tracker and nobody knows how
+  > 'completion' really works, there seem to be a few competing versions of it. Before we touch anything, figure
+  > out what the code actually does and write it down, with where you found each rule."* The method supplies the
+  > discipline you did not state: it captures both the data shapes and the real procedures, cites the source
+  > lines, and records what it deliberately leaves out.
 - **The spec.** The distilled, minimal description of the system to build: the primitives, the invariants, the
   things deliberately dropped (each with a reason). The spec is the source of truth; the code is kept in sync
   with it, not the other way around.
@@ -142,12 +143,18 @@ verdict in the ledger and the **surviving dissent** (recorded, never buried, bec
 future appeal). The non-negotiable discipline: a Council **must end in a build action or a kill**, never in "we
 will look at it later". Its verdict **is the decision** unless someone appeals it.
 
-> **Example prompt (convene a council).** "Convene a council on: 'is the Tasky harvest capturing behaviour, or
-> only structure?' Seat four lenses, run blind to each other: process-critic, closure-gate critic,
-> devil's-advocate (argue it is fine), method-improvement. Each grounds-truth the real tree first (a seat that
-> cannot cite is ignored) and leads with the uncomfortable truth. Then I synthesise, DETERMINE GENUINE FUNCTION
-> (does the fix actually catch the class, by demonstration not assertion?), and END IN BUILD-OR-KILL the same
-> beat, recording the surviving dissent." See [docs/prompting.md](docs/prompting.md) for the appeals-tier prompts.
+> **What you actually say** (plain English, and how it climbs the court). You never describe the panel; you ask,
+> and the court forms itself.
+> - **Decide it.** *"We keep arguing about whether Tasky's share links should expire. Get a few independent,
+>   honest reads on the real code and just make the call, don't book another meeting."* A Council convenes:
+>   blind, independent seats, each citing the actual code, ending in a decision (say, add expiry + revocation),
+>   with the losing argument recorded as dissent.
+> - **You're not sure / you disagree.** *"I'm not convinced, the worry about breaking existing links got brushed
+>   aside."* That is standing for an appeal. Fresh seats re-weigh the merits against the Council's record and
+>   uphold or overturn.
+> - **Settle it for good.** *"This same fight keeps coming up on other projects, settle the rule itself, not
+>   just this one case."* The Supreme Council rules on the point of law and writes a numbered **spec law** that
+>   binds every future project. Three plain sentences from you; the whole court machinery underneath.
 
 ### The Appeals Council
 
