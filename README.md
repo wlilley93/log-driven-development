@@ -127,6 +127,12 @@ final answer, without a standing committee that accretes politics.
 
 ## Running it at scale: workflows, "ultracode", and a standing goal
 
+![A single autonomous LDD run: 18 hours, 10 turns, 5.4 million tokens](assets/autonomous-run.png)
+
+*One autonomous run from the project this method was forged on: a single standing goal plus always-on
+orchestration, roughly 18 hours and 5.4 million tokens of fan-out work across 10 human turns. This is the heavy,
+long-running scale the rest of this section describes, with both the power and the token cost in plain view.*
+
 LDD is built for **multi-agent orchestration**, not solo edits. Its core shapes are all fan-outs of agents:
 a *builder* paired with an adversarial *verifier*; *multi-author plus a coherence pass* for volume; the *council*
 for judgement; *loop-until-dry* for unknown-size work like gap-closure. In Claude Code, those fan-outs run as
