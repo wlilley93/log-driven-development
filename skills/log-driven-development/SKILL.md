@@ -1,6 +1,6 @@
 ---
 name: log-driven-development
-description: A multi-agent methodology for the brownfield reality of AI coding - you (or an agent) vibe-coded a first attempt that works-ish but has no spec or plan, and the code is now the only record of the requirements. LDD harvests those requirements out of the code → distils a minimal spec + plan → builds a walking skeleton → loops spec⇄build until an automated sweep finds zero gaps; auditable by a twin-ledger spine; run by orchestrated agents (builder + adversarial-verifier; the council). Use when cleaning up or rebuilding a vibe-coded/legacy codebase, or any time you want decisions auditable by construction.
+description: A multi-agent methodology for the brownfield reality of AI coding - you (or an agent) vibe-coded a first attempt that works-ish but has no spec or plan, and the code is now the only record of the requirements. LDD harvests those requirements out of the code → distils a minimal spec + plan → builds a walking skeleton → loops spec⇄build until an automated sweep finds zero gaps; auditable by a twin-ledger spine; run by orchestrated agents (builder + adversarial-verifier; the court). Use when cleaning up or rebuilding a vibe-coded/legacy codebase, or any time you want decisions auditable by construction.
 ---
 
 # Log-Driven Development (LDD)
@@ -55,18 +55,18 @@ quick-reference card), backed by [docs/methodology.md](../../docs/methodology.md
 |---|---|
 | Reversible or swappable choice | ONE decisive sentence, then build it. Convene nothing. (Build-phase risk lives in the unbuilt surface, so bias hard to building.) |
 | Irreversible or load-bearing choice | A spike or thin slice that exercises it BEFORE you commit. Never record a decision selecting a buildable thing (framework, store, protocol) without having exercised it. |
-| A genuine hard fork, or an honest "is this actually working?" | Convene a COUNCIL. It must end in a build action or a kill, never another doc that defers. |
-| A challenged council verdict | The Appeals Council (needs standing). A question of how the invariants or method were APPLIED goes to the Supreme Council, whose ruling is spec law. |
+| A genuine hard fork, or an honest "is this actually working?" | Convene a COURT. It must end in a build action or a kill, never another doc that defers. |
+| A challenged court verdict | The Appeals Court (needs standing). A question of how the invariants or method were APPLIED goes to the Supreme Court, whose ruling is spec law. |
 | A principal-owner policy or domain call (not a technical one) | ASK the principal. Do not guess on their behalf. |
 | A security issue | Fix immediately. This overrides every schedule. |
 
-### Self-referral to the council (convene WITHOUT being asked)
+### Self-referral to the court (convene WITHOUT being asked)
 Do not wait to be told to convene. "A genuine hard fork" is made mechanical by these triggers: if ANY fires, you
-self-convene a council that same beat (it still ends in build-or-kill, never a stall), exactly as the closure-gate
+self-convene a court that same beat (it still ends in build-or-kill, never a stall), exactly as the closure-gate
 makes "done" mechanical. The triggers are deliberately NARROW so the deliberation budget is not blown on building
 that should just happen (a reversible choice still gets one sentence).
 - **Invariant / spec-law collision.** A decision would relax, contradict, or carve an exception to an LDD-INV or a
-  `council/SPEC-LAW.md` precedent. (This is the merits/law boundary itself; it may not be a solo call.)
+  `court/SPEC-LAW.md` precedent. (This is the merits/law boundary itself; it may not be a solo call.)
 - **Unprovable genuine function.** A load-bearing claim's Determination of Genuine Function cannot be
   affirmatively made (no spike, test, or demonstrated end-to-end path). Convene; resolve to spike-first or kill,
   never ratify a hypothesis (SPEC-LAW-2).
@@ -89,7 +89,7 @@ your autonomy is to CONVENE, never to overrule the principal.
   then one coherence pass merges and dedups. Never let two agents write the same file.
 - **Unknown-size discovery** (find all the gaps, all the bugs) -> LOOP-UNTIL-DRY: keep going until K
   consecutive rounds find nothing new. A fixed count misses the tail.
-- **A judgement call under stakes** -> the COUNCIL (see the `council` skill).
+- **A judgement call under stakes** -> the COURT (see the `court` skill).
 
 ### Precision with subagents
 - Tell every spawned agent: do NOT journal, do NOT touch shared state, do NOT commit; RETURN your what and why,
@@ -109,7 +109,7 @@ bullets below are the quick-reference.
 - **"Done" is the orchestrator judgement.** It means ground-truthed from clean + the closure sweep is clean, never "the tests pass" alone and never a worker's self-report.
 - **Commit explicit paths.** Never a blanket `add -A`.
 - **Fix security immediately.** The moment it is found, before any commit, ahead of every schedule.
-- **A council ends in build-or-kill.** Never another doc that defers.
+- **A court ends in build-or-kill.** Never another doc that defers.
 
 ## The spine - two ledgers (auditability by construction)
 1. **Intent ledgers** (`_harvest/*`) - *what the old code meant.* Before building, harvest the precious logic
@@ -172,7 +172,7 @@ system mean here?" without archaeology. That is the payoff - the method *is* the
    two agents race on one file.
 4. **Build-first in the build phase (the deliberation budget).** Once building, the risk lives in the *unbuilt*
    surfaces. So default to BUILD, not DELIBERATE: a reversible/swappable decision gets *one decisive sentence*,
-   not a panel; reserve the full steelman for irreversible/load-bearing choices. **A panel/audit/council ends in
+   not a panel; reserve the full steelman for irreversible/load-bearing choices. **A panel/audit/court ends in
    a committed change or an explicit kill - never another doc that defers.** Don't select a buildable artifact
    (framework/store/protocol) by ADR without a spike or thin slice that exercises it.
 5. **The closure-gate (continuous structural enforcement).** Make "is it clean / is it complete?" a *checkable
@@ -187,13 +187,13 @@ system mean here?" without archaeology. That is the payoff - the method *is* the
 Reach for an orchestration shape over inline edits for any substantive task. Defaults:
 - **Builder + adversarial-verifier**: one agent produces; ≥1 independent skeptic tries to *break* it
   (ground-truthing the real tree, re-running the load-bearing checks). The verdict is the orchestrator's input,
-  not the truth. This catches what a single pass rationalises away. *(See the `council` skill for the
+  not the truth. This catches what a single pass rationalises away. *(See the `court` skill for the
   decision-making analogue.)*
 - **Multi-author + coherence/dedup**: N authors in parallel (file-partitioned), one agent merges + checks
   coherence and emits the integration checklist.
 - **Loop-until-done / loop-until-dry**: for unknown-size work (gap-closure, bug-finding), keep spawning until
   K consecutive rounds find nothing new. Simple counters miss the tail.
-- **The council** (and its appeals hierarchy) - for high-stakes *judgement* calls. See the `council` skill.
+- **The court** (and its appeals hierarchy) - for high-stakes *judgement* calls. See the `court` skill.
 
 ## The milestone close - 5 phases (a milestone is not "done" until all run)
 **BUILD → STRUCTURE → SECURITY → VERIFY → PLAN.**
@@ -212,7 +212,7 @@ Reach for an orchestration shape over inline edits for any substantive task. Def
    try to break the new surface.
 5. **PLAN**: **mandatory.** The milestone does NOT close, and the next build does NOT start, until the next
    steps are planned: the next milestone's scope/sequence/risks + the single next move. A high-stakes/uncertain
-   next fork → a planning agent or a council. Never a vague "we'll see."
+   next fork → a planning agent or a court. Never a vague "we'll see."
 
 Which tool owns which concern, and at which cadence (the continuous per-commit tier vs the risk-triggered heavy
 pass), is not restated here: see the two-tier(+) ownership matrix in [docs/systems.md](../../docs/systems.md)

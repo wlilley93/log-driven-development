@@ -6,7 +6,7 @@
 
 - **Milestone:** M1, the task status lattice (the build of [`adr/ADR-0001-one-task-status-lattice.md`](adr/ADR-0001-one-task-status-lattice.md)).
 - **Scope:** the single ordered `status` replacing `done`/`status`/`archivedAt`; the migration map; the
-  INV-REOPEN invariant; the share-link expiry + revocation build action from the council.
+  INV-REOPEN invariant; the share-link expiry + revocation build action from the court.
 - **Date closed:** 2026-06-02
 - **Verdict: PASS WITH FIXES.** Two small fixes applied during close; one item deferred to M2 with rationale.
 
@@ -25,7 +25,7 @@ list view -> board view -> shared view), thin but end-to-end, before deepening a
 - Re-keyed the nightly archive job off `status >= done` (was `done === true`).
 - INV-REOPEN implemented over the ordered status with the cycle guard carried across from the legacy handler.
 - Share model gained `expiresAt` (30-day default) and `revokedAt`; resolve path rewritten to fail closed; one
-  revoke action added to the existing share list (per the council build action).
+  revoke action added to the existing share list (per the court build action).
 
 Formatter, linter, type-check, tests: **green.**
 
@@ -50,7 +50,7 @@ lifting).
   - The resolve path now checks existence AND not-expired AND not-revoked, all server-side at resolve time (not
     only at creation). Confirmed by reading the new `share.ts` resolve function.
   - **FIX APPLIED:** the first implementation compared `expiresAt` using local server time inconsistently; pinned
-    both sides to UTC. (This is precisely the failure mode the council's devil's-advocate seat predicted: a fix
+    both sides to UTC. (This is precisely the failure mode the court's devil's-advocate seat predicted: a fix
     that looks done but leaves the resolve path subtly wrong.)
   - Confirmed an `archived`/`deleted` task list is no longer reachable through an old token (the conflation at the
     old `share.ts:88` is gone).
@@ -66,8 +66,8 @@ invariants.
   `in_progress`. Built a cycle A -> B -> A; reopen terminated (cycle guard holds). **Passed.**
 - **Lattice:** attempted to construct a task that is "done in the list but open on the board" (the original bug).
   Could not: there is one field. **Passed.**
-- **Share link (required council check):** attacked an **expired** token and a **revoked** token; both denied at
-  the resolve path. Attacked a still-valid token: resolves. **Passed.** This is the check the council mandated.
+- **Share link (required court check):** attacked an **expired** token and a **revoked** token; both denied at
+  the resolve path. Attacked a still-valid token: resolves. **Passed.** This is the check the court mandated.
 
 Verifier's verdict: the milestone holds. The two issues it would have raised (inlined `isDone`, the UTC bug) were
 already caught and fixed in STRUCTURE and SECURITY; the verifier confirmed the fixes from clean.
@@ -76,17 +76,17 @@ already caught and fixed in STRUCTURE and SECURITY; the verifier confirmed the f
 
 ### Deferred from M1 (carried forward, with rationale)
 - **Per-link custom expiry.** M1 shipped a fixed 30-day default with no user-facing extend. This is the
-  **surviving dissent** from [`council/share-link-expiry-verdict.md`](council/share-link-expiry-verdict.md) (the
+  **surviving dissent** from [`court/share-link-expiry-verdict.md`](court/share-link-expiry-verdict.md) (the
   UX seat). Deferred deliberately, not forgotten: it is out of M1 scope and only justified if real support load
   shows the fixed window biting. **Trigger to revisit:** support tickets about expired links; that would be new
-  ground-truth and standing to reopen the council.
+  ground-truth and standing to reopen the court.
 
 ### Next milestone: M2
 - **Scope:** harvest and distil the *blocking graph editing* surface (creating/removing `blockedBy` edges), which
   M1 only consumed read-only via INV-REOPEN. M2 makes the edges first-class.
 - **Risks:** edge creation can introduce cycles; M1 proved the *reopen* path is cycle-safe, but the *edit* path
   must reject or tolerate cycles by an explicit, spec'd rule (not an accident). This is a real fork and likely
-  earns its own journal decision, possibly a council if it turns out to be hard to reverse.
+  earns its own journal decision, possibly a court if it turns out to be hard to reverse.
 - **Sequence:** harvest the edge-edit code (find where `blockedBy` is mutated today) -> decide the cycle policy ->
   walking skeleton -> loop to zero gaps -> 5-phase close.
 

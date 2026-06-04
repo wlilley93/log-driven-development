@@ -74,8 +74,8 @@ old paths, so the migration cannot silently un-complete work.
 
 **Neutral / follow-on**
 - The shared read-only view (`src/api/share.ts`) is touched by this only at `:88` (the "deleted" conflation). Its
-  *security* (no-expiry share links) is a separate decision, settled by council in
-  [`../council/share-link-expiry-verdict.md`](../council/share-link-expiry-verdict.md).
+  *security* (no-expiry share links) is a separate decision, settled by court in
+  [`../court/share-link-expiry-verdict.md`](../court/share-link-expiry-verdict.md).
 
 ## Compliance
 M1 ("the task status lattice") is the build of this ADR. The M1 sign-off

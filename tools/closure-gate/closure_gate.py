@@ -20,7 +20,7 @@ The gates, in order (each is skipped only if its command is left blank in the co
                         duplication the richer scanner catches). Deny on a regression.
 
 Gates 7 and 8 are the continuous edge of the security and refactoring suites (the LDD process
-council's two-tier(+) model: cheap per-commit gates here, heavy passes at milestone-close). They
+court's two-tier(+) model: cheap per-commit gates here, heavy passes at milestone-close). They
 default to the vibe* tools vendored under ../vibe. If a tool is not installed, the gate is a LOUD
 skip with an install hint (exit 127), never a silent absence and never a hard block on a missing
 tool. The heavy passes (vibeaudit deep, the security suite, a full refactor round) are NOT here:

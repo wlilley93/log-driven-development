@@ -68,7 +68,7 @@ nobody re-adds a dropped thing as a "missing feature".
   guard is explicitly **not** dropped.
 
 > Out of scope for this excerpt, handled elsewhere: the share-link security defect (no expiry, no revocation) is
-> a genuine hard fork settled by council in [`council/share-link-expiry-verdict.md`](council/share-link-expiry-verdict.md),
+> a genuine hard fork settled by court in [`court/share-link-expiry-verdict.md`](court/share-link-expiry-verdict.md),
 > not in this spec.
 
 ---

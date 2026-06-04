@@ -7,7 +7,7 @@
     {
       "name": "log-driven-development",
       "source": "./",
-      "description": "Log-Driven Development - turn a vibe-coded brownfield (working-ish code, no spec, no plan) into a clean, auditable rebuild: harvest the requirements out of the code → distil a minimal spec → walking skeleton → loop to zero-gap. Twin-ledger audit spine, builder + adversarial-verifier, a continuous closure-gate, and a UK-law deliberation court (Council → Appeals → Supreme → spec law)."
+      "description": "Log-Driven Development - turn a vibe-coded brownfield (working-ish code, no spec, no plan) into a clean, auditable rebuild: harvest the requirements out of the code → distil a minimal spec → walking skeleton → loop to zero-gap. Twin-ledger audit spine, builder + adversarial-verifier, a continuous closure-gate, and a UK-law deliberation court (Court → Appeals → Supreme → spec law)."
     }
   ]
 }

@@ -111,7 +111,7 @@ single ordered `status` lattice (`open -> in_progress -> done -> archived`, plus
 `deleted` its own explicit state). The auto-reopen rule is kept, because it is real behaviour people rely on, and
 it is written into the spec as a named, testable invariant, **INV-REOPEN**: *if a task drops below `done`, every
 task it blocks drops to at most `in_progress`*, recursively over `blockedBy`, with the legacy cycle guard
-preserved. The share-link defect the harvest surfaced is left to a council (it is a genuine hard fork), not
+preserved. The share-link defect the harvest surfaced is left to a court (it is a genuine hard fork), not
 settled in the spec by a sentence.
 
 The data structure *is* the product. Most of distillation is getting the core types and invariants right;
@@ -161,7 +161,7 @@ clean checkout, with the build/lint/test gates green. It is thin, but it is *who
 re-run an automated **closure sweep** that compares the build against the spec and reports the gaps. You close
 the gaps the sweep finds, which often means amending the spec too (building reveals that a spec line was wrong or
 incomplete, and the spec is the source of truth, so you fix it there and the journal records why). Spec and build
-move together. For Tasky, M1's slice lands the lattice with INV-REOPEN enforced and tested and the council's
+move together. For Tasky, M1's slice lands the lattice with INV-REOPEN enforced and tested and the court's
 share-link expiry plus revocation build action; later passes take up the rest of the harvested behaviour (M2 makes
 the `blockedBy` edges first-class), one coherent unit at a time.
 
@@ -219,7 +219,7 @@ makes the completion-collapse call with its rejected alternatives; read it along
 **A load-bearing decision graduates to an ADR.** When a choice is big and hard to reverse (collapsing Tasky's
 three completion paths into one is the canonical example), it is promoted from a journal entry into a short
 **Architecture Decision Record**, so the major calls are easy to find and cite later without scrolling the whole
-journal. This graduation needs no council: the decision was clear once the harvest was in, so journal beat `0002`
+journal. This graduation needs no court: the decision was clear once the harvest was in, so journal beat `0002`
 graduates straight to ADR-0001. See [docs/artifacts.md, "ADR"](./artifacts.md#adr-architecture-decision-record)
 and [`examples/adr/ADR-0001-one-task-status-lattice.md`](../examples/adr/ADR-0001-one-task-status-lattice.md).
 
@@ -259,11 +259,11 @@ across a dozen areas of Tasky safely. (This whole doc set was written that way: 
 
 Once you are building, the risk lives in the *unbuilt* surfaces, not in over-thinking the built ones. So default
 to BUILD, not DELIBERATE. A reversible, swappable decision gets *one decisive sentence*, not a panel. Reserve the
-full steelman (and the council) for irreversible, load-bearing forks. And **any panel, audit, or council must end
+full steelman (and the court) for irreversible, load-bearing forks. And **any panel, audit, or court must end
 in a committed change or an explicit kill, never another document that defers.** You do not pick a buildable
 artefact (a framework, a store, a protocol) by argument alone; you spike a thin slice that exercises it.
 *Prevents:* analysis paralysis and decision-theatre. Whether Tasky's task IDs are UUIDs or ULIDs is one
-sentence; collapsing the three completion paths earns a real ADR. Spending a council on the former and a sentence
+sentence; collapsing the three completion paths earns a real ADR. Spending a court on the former and a sentence
 on the latter is the failure this prevents.
 
 ### The closure-gate (continuous structural enforcement)
@@ -308,9 +308,9 @@ applies serially. *Why it works:* it gives you the throughput of parallelism wit
 authoring (parallel) from integration (serial, single-writer). This is the harvest shape: a dozen ledger areas of
 Tasky harvested at once.
 
-**The council.** For high-stakes *judgement* calls (not production volume), a fan-out of independent, named,
+**The court.** For high-stakes *judgement* calls (not production volume), a fan-out of independent, named,
 distinct-lens critics, each ground-truthing, each blunt, synthesised into one decision the same beat. Its full
-shape, and the three-tier appeals hierarchy, is in section 7 and the [`council` skill](../skills/council/SKILL.md).
+shape, and the three-tier appeals hierarchy, is in section 7 and the [`court` skill](../skills/court/SKILL.md).
 
 **Loop-until-dry.** For unknown-size work (gap-closure, bug-finding), keep spawning rounds until **K consecutive
 rounds find nothing new**. *Why it works:* a fixed number of passes either stops too early (misses the tail) or
@@ -346,7 +346,7 @@ BUILD  ->  STRUCTURE  ->  SECURITY  ->  VERIFY  ->  PLAN
    to break the new surface. This is the primary correctness-and-security net, every milestone.
 5. **PLAN.** **Mandatory.** The milestone does not close, and the next build does not start, until the next steps
    are planned: the next milestone's scope, sequence, and risks, plus the single next move. A high-stakes or
-   uncertain next fork escalates to a planning agent or a council. There is no drifting into an unplanned next
+   uncertain next fork escalates to a planning agent or a court. There is no drifting into an unplanned next
    milestone.
 
 Which tool owns which concern and at which trigger is not restated here: see the two-tier(+) ownership matrix in
@@ -362,44 +362,44 @@ The sign-off for a milestone records all five phases and their evidence. See
 ## 7. The deliberation court (how the hard forks get decided)
 
 Most build-phase decisions are reversible and get one sentence (the deliberation budget). A few are high-stakes
-and hard to reverse, and those go to the council, an adversarial deliberation court modelled on UK law. The full
-treatment is in the [`council` skill](../skills/council/SKILL.md); here is the shape and when each tier fires.
+and hard to reverse, and those go to the court, an adversarial deliberation court modelled on UK law. The full
+treatment is in the [`court` skill](../skills/court/SKILL.md); here is the shape and when each tier fires.
 
-**The Council (first instance).** Convened for a genuine high-stakes, hard-to-reverse fork (an architecture
+**The Court (first instance).** Convened for a genuine high-stakes, hard-to-reverse fork (an architecture
 choice, build-vs-consume, sequencing a whole program), or for an honest retrospective or pre-mortem. It is a
 single fan-out of a handful of **independent, named seats**, each given a **distinct lens** (project health,
 process critic, devil's advocate, plus a domain lens: security, cost, UX, the advocate of a named alternative).
 Each seat **ground-truths against the real code first**; a seat that cannot cite is ignored. Seats run
 independently and do not see each other while running, so they cannot converge into groupthink, and each leads
-with the blunt, uncomfortable truth. The Council is **ephemeral**: the seats dissolve after, and nothing persists
+with the blunt, uncomfortable truth. The Court is **ephemeral**: the seats dissolve after, and nothing persists
 but the verdict and the **surviving dissent** (recorded, never buried, because it is the standing of any future
-appeal). The non-negotiable discipline: a Council **ends in a build action or a kill**, never in "we will look at
+appeal). The non-negotiable discipline: a Court **ends in a build action or a kill**, never in "we will look at
 it later."
 
-For Tasky, the completion collapse did **not** need a council: once the harvest was in, collapsing three
+For Tasky, the completion collapse did **not** need a court: once the harvest was in, collapsing three
 mechanisms to one ordered status was the clear call, so journal beat `0002` graduated straight to ADR-0001 with one
-decisive line of reasoning. The council was reserved for the genuinely hard fork the build could not just decide:
+decisive line of reasoning. The court was reserved for the genuinely hard fork the build could not just decide:
 *do we keep share links simple (permanent, unguessable tokens), or add expiry and revocation now?* It is a
 security boundary, hard to reverse once links are in the wild, with real cost on both sides (UX friction vs
-standing exposure), which is exactly what a council is for. Three named seats (security, UX/simplicity, a
+standing exposure), which is exactly what a court is for. Three named seats (security, UX/simplicity, a
 devil's-advocate pre-mortem) ground-truth `src/api/share.ts`, and the synthesis ends in a committed build action
 (add `expiresAt` and `revokedAt`, fail the resolve path closed, one revoke action, no settings surface) plus a
 logged surviving dissent (the UX seat's objection to a fixed window). The worked verdict is at
-[`examples/council/share-link-expiry-verdict.md`](../examples/council/share-link-expiry-verdict.md);
-see [docs/artifacts.md, "The council verdict"](./artifacts.md#the-council-verdict) for how to constitute one.
+[`examples/court/share-link-expiry-verdict.md`](../examples/court/share-link-expiry-verdict.md);
+see [docs/artifacts.md, "The court verdict"](./artifacts.md#the-court-verdict) for how to constitute one.
 
-**The Appeals Council.** Convened when a verdict is **challenged with standing**: the principal disagrees, a
-load-bearing dissent was left unresolved, or new ground-truth contradicts a point the Council relied on. ("I
+**The Appeals Court.** Convened when a verdict is **challenged with standing**: the principal disagrees, a
+load-bearing dissent was left unresolved, or new ground-truth contradicts a point the Court relied on. ("I
 would have designed it differently" is not standing.) It re-weighs the **merits** as a *review*, with fresh
-independent seats who must **engage the Council's actual reasoning** (handed the full lower-court record), and may
+independent seats who must **engage the Court's actual reasoning** (handed the full lower-court record), and may
 **uphold or overturn**.
 
-**The Supreme Council.** The rare apex. It does *not* re-litigate the design. It hears **only points of law**:
+**The Supreme Court.** The rare apex. It does *not* re-litigate the design. It hears **only points of law**:
 *was the invariant spec and the LDD discipline correctly applied in reaching this decision?* (Were the invariants
 honoured? Was the ground-truthing real, the one-writer rule kept?) Because it rules on law rather than taste, its
 ruling becomes **spec law**: an immutable, numbered precedent that **binds every future court**. A first-instance
-Council cannot overturn spec law, and a decision that collides with a precedent is refused at the spec layer the
-same way a trust boundary refuses an unknown command. Only a later Supreme Council, expressly narrowing the
+Court cannot overturn spec law, and a decision that collides with a precedent is refused at the spec layer the
+same way a trust boundary refuses an unknown command. Only a later Supreme Court, expressly narrowing the
 precedent on a point of law, can refine it.
 
 ---
@@ -412,7 +412,7 @@ engine, and you should understand the trade before switching them on.
 
 **Always-on orchestration.** With this on, the model **authors and runs a workflow by default** for every
 substantive task, instead of editing inline. LDD gives those workflows their shape (the harvest fan-out, builder
-plus verifier, the council), so the two compose: the methodology says *what* to orchestrate, the mode makes
+plus verifier, the court), so the two compose: the methodology says *what* to orchestrate, the mode makes
 orchestration the default *how*.
 
 **A standing goal.** Give the agent a persistent objective ("rebuild Tasky's core to a clean, verified state")
@@ -421,11 +421,11 @@ own, closing each milestone with the 5 phases.
 
 **The trade, stated plainly.** Paired, these produce **heavy, long-running, fan-out workflows**. One standing
 goal can drive dozens of workflows in sequence, each spawning many parallel agents (harvesters, builders,
-verifiers, whole councils), running for a long time with little human input. That is the source of the power: it
+verifiers, whole courts), running for a long time with little human input. That is the source of the power: it
 can build and adversarially verify a large system largely autonomously. It is also the source of the cost: it
 consumes a lot of tokens and compute, by design. The trade is deliberate, thoroughness over speed. What keeps
 that throughput honest rather than runaway is the rest of LDD: the continuous closure-gate, the adversarial
-verifier on every milestone, the council on the hard forks, and the metacognition journal recording why each of
+verifier on every milestone, the court on the hard forks, and the metacognition journal recording why each of
 those many agents did what it did. Turn the engine on once the disciplines are in place, not before.
 
 ---
@@ -447,7 +447,7 @@ A concrete checklist. Run it against your own tangled, vibe-coded project the wa
    duplication ratchet as commit gates, so "clean" is checkable from the first line of the rebuild.
 6. **Build the walking skeleton.** One real path through every layer, green from a clean checkout. Thin but whole.
 7. **Loop spec and build to zero gaps.** Each pass: build a slice, run the closure sweep, close the gaps (amend
-   the spec when building proves it wrong), journal the beat, commit with explicit paths. Use a council only for
+   the spec when building proves it wrong), journal the beat, commit with explicit paths. Use a court only for
    the genuine hard forks; build the rest.
 8. **Close each milestone with the 5 phases.** BUILD, STRUCTURE, SECURITY, VERIFY, PLAN. Do not skip PLAN.
 9. **Only then, if you want the engine, turn on always-on orchestration with a standing goal,** and let it run,

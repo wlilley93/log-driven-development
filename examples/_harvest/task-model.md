@@ -111,7 +111,7 @@ future reader knows it was deliberate, not forgotten.
 - The auto-reopen behaviour itself (section 2): preserved as a spec invariant.
 - The cycle guard (`onTaskReopen.ts:27`): preserved as part of that invariant.
 - The shared read-only view's *existence* (`src/api/share.ts`): kept, but its security is a separate fork (see
-  [`../council/share-link-expiry-verdict.md`](../council/share-link-expiry-verdict.md)).
+  [`../court/share-link-expiry-verdict.md`](../court/share-link-expiry-verdict.md)).
 
 ---
 

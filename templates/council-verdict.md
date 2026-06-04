@@ -1,16 +1,16 @@
 <!--
-TEMPLATE: Council verdict (the deliberation record).
+TEMPLATE: Court verdict (the deliberation record).
 WHEN: a high-stakes, hard-to-reverse fork, or an honest retrospective/pre-mortem. NOT for a reversible
-      decision (that gets one decisive sentence, not a panel). A council must END IN A BUILD ACTION OR A
+      decision (that gets one decisive sentence, not a panel). A court must END IN A BUILD ACTION OR A
       KILL, never another doc that defers.
-HOW: copy this file (e.g. councils/0003-completion-model.md), delete this comment, fill it. Each seat is a
+HOW: copy this file (e.g. courts/0003-completion-model.md), delete this comment, fill it. Each seat is a
      distinct lens and must cite real evidence from the tree, or it is ignored. Record the surviving
-     dissent: it is the standing of any future appeal. See skills/council/SKILL.md for the appeal tiers.
+     dissent: it is the standing of any future appeal. See skills/court/SKILL.md for the appeal tiers.
 -->
 
-# Council: <the decision under deliberation>
+# Court: <the decision under deliberation>
 
-**Tier:** <Council (first instance) | Appeals Council | Supreme Council>
+**Tier:** <Court (first instance) | Appeals Court | Supreme Court>
 **Convened:** <date>  **Question:** <the one hard fork being decided, stated as a question>
 **Lower-court record:** <for Appeals/Supreme: link the full record being reviewed; omit for first instance>
 
@@ -62,4 +62,4 @@ a committed change or a kill. This is the decision. It must not merely defer.>
 <Standing required to escalate. "I'd have designed it differently" is not standing.>
 - This verdict stands unless appealed with standing: principal disagrees, the surviving dissent is
   load-bearing and unresolved, or new ground-truth contradicts a relied-upon point.
-- Next tier: <Appeals Council on the merits | Supreme Council only on a point of invariant/method law>.
+- Next tier: <Appeals Court on the merits | Supreme Court only on a point of invariant/method law>.

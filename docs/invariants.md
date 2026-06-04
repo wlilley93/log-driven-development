@@ -9,7 +9,7 @@ court. They live in the distilled spec, not here.
 **METHOD invariants** are different: they are the rules any LDD run must hold to be an LDD run at all, and they are
 part of LDD itself, not produced by it. This register is them. Where a project invariant answers "what must the
 software do?", a method invariant answers "what must the process do, every time, or it is not LDD?". They are
-numbered LDD-INV-1..N so that any surface (a skill, a doc, a tool config, a gate, a council brief) can CITE the
+numbered LDD-INV-1..N so that any surface (a skill, a doc, a tool config, a gate, a court brief) can CITE the
 number instead of restating the rule (LDD-INV-9). Each entry below is a one-line statement, the failure it
 prevents, and where in this repo it is enforced (file:line). The register is the single owner of "the rules of the
 method"; every "rules you do not break" / "standing disciplines" / "smell test" surface should cite this register
@@ -105,7 +105,7 @@ trailer; never a blanket `add -A` / `add .` (it sweeps build artefacts).
 ## LDD-INV-7: Fix security the moment it is found
 
 **Rule.** A security issue is fixed when found, before any commit, ahead of every schedule; it is never deferred
-and never deliberated (a security issue is not a council question).
+and never deliberated (a security issue is not a court question).
 
 **Prevents.** A known hole (Tasky's no-expiry share link) surviving the rebuild because it was filed for later; a
 leaked credential becoming permanent git history.
@@ -118,16 +118,16 @@ found" have something that FINDS: `tools/closure-gate/closure-gate.toml:18-26,69
 `skills/security/methodology.md:125,243-246`; anti-pattern #13 `docs/anti-patterns.md:284-303`; smell
 `docs/anti-patterns.md:388`.
 
-## LDD-INV-8: A council ends in build-or-kill
+## LDD-INV-8: A court ends in build-or-kill
 
-**Rule.** A panel, audit, or council always terminates in a committed change or an explicit kill the same beat,
+**Rule.** A panel, audit, or court always terminates in a committed change or an explicit kill the same beat,
 never another doc that defers. The seats are ephemeral; only the verdict and the surviving dissent persist.
 
 **Prevents.** Decision-theatre: a deliberation that produces a meeting and "we will look at it later" instead of a
-commit. (The meta-to-build ratio is surfaced honestly: more councils than shipped milestones is itself a finding.)
+commit. (The meta-to-build ratio is surfaced honestly: more courts than shipped milestones is itself a finding.)
 
 **Enforced at.** `skills/log-driven-development/SKILL.md:88` (rule), `:58`, `:124-128`;
-`skills/council/SKILL.md:70-76`; `docs/methodology.md:203-212,312-313`; `docs/playbook.md:93,99-102`;
+`skills/court/SKILL.md:70-76`; `docs/methodology.md:203-212,312-313`; `docs/playbook.md:93,99-102`;
 `docs/systems.md:134-136,160-163,170-174`; anti-pattern #6 `docs/anti-patterns.md:135-153`; smell
 `docs/anti-patterns.md:380`.
 
@@ -263,9 +263,9 @@ the drift), and history being rewritten so the audit trail lies.
 
 ## LDD-INV-17: Escalation needs standing; the wrong tier is refused; spec law binds
 
-**Rule.** The court is expensive currency spent rarely: a council fires only for a genuine hard fork or an honest
+**Rule.** The court is expensive currency spent rarely: a court fires only for a genuine hard fork or an honest
 retrospective, never for a reversible/buildable/policy/security question. An appeal needs standing ("I would have
-designed it differently" is not standing) and re-weighs the merits as a review; the Supreme Council hears only
+designed it differently" is not standing) and re-weighs the merits as a review; the Supreme Court hears only
 points of law (was the invariant spec and the method correctly APPLIED?) and its ruling becomes spec law, an
 immutable numbered precedent binding every future court. A decision colliding with spec law is refused at the spec
 layer, the same fail-closed shape a trust boundary uses.
@@ -273,9 +273,9 @@ layer, the same fail-closed shape a trust boundary uses.
 **Prevents.** The wrong question reaching the wrong court; a decided fork being re-litigated forever; a future court
 silently re-fragmenting a consolidated concern (LDD-INV-9) with no precedent to deny against.
 
-**Enforced at.** `skills/log-driven-development/SKILL.md:53-61`; `skills/council/SKILL.md:22-36,78-110`;
-`commands/council.md:6-25`; `docs/methodology.md:298-339`; `docs/playbook.md:83-97`;
-`docs/systems.md:119-152,376-401`; the spec-law register `skills/council/SKILL.md:104-110` and
+**Enforced at.** `skills/log-driven-development/SKILL.md:53-61`; `skills/court/SKILL.md:22-36,78-110`;
+`commands/court.md:6-25`; `docs/methodology.md:298-339`; `docs/playbook.md:83-97`;
+`docs/systems.md:119-152,376-401`; the spec-law register `skills/court/SKILL.md:104-110` and
 `docs/artifacts.md:285-316`; anti-pattern #15 `docs/anti-patterns.md:326-347`; smell `docs/anti-patterns.md:390`.
 (Open gap from the harvest, ldd-court G1: no `SPEC-LAW.md` register file exists yet, so a Supreme ruling about the
 METHOD itself, including a ruling about this register, has no defined home. Flagged for the build step, not closed
@@ -303,7 +303,7 @@ LDD-INV-15's two named registers); `templates/intent-ledger.md:36-53` (the requi
 section); `docs/methodology.md:65-77,135-138`; `docs/systems.md:37-41,67-74`; the harvest brief
 `docs/playbook.md:294-309`; anti-pattern #17 `docs/anti-patterns.md:377-403`; smell `docs/anti-patterns.md:492`;
 and the source-coverage leg of LDD-INV-5 (an empty PROCESS altitude is exactly what the source->spec sweep
-re-detects). Origin: a council verdict on harvest deficiency, determined by ground-truth (an empty PROCESS
+re-detects). Origin: a court verdict on harvest deficiency, determined by ground-truth (an empty PROCESS
 section would have blocked an intent ledger's green grade at write time).
 
 ---
@@ -311,18 +311,18 @@ section would have blocked an intent ledger's green grade at write time).
 ## How the deliberation court enforces this register
 
 This register is the spec of the method. The court's merits/law split (LDD-INV-17) is exactly what gives it teeth:
-the Council and the Appeals Council argue the merits of a project's design and never rule on the method, but the
-**Supreme Council** rules on a point of LAW: "was the invariant spec and the LDD discipline correctly APPLIED in
+the Court and the Appeals Court argue the merits of a project's design and never rule on the method, but the
+**Supreme Court** rules on a point of LAW: "was the invariant spec and the LDD discipline correctly APPLIED in
 deciding this?" When the invariant in question is one of THESE method invariants (was LDD-INV-9 honoured, did the
 court re-fragment a consolidated concern, was the one-writer rule kept, was ground-truthing real), the Supreme
-Council is ruling on whether this register was applied.
+Court is ruling on whether this register was applied.
 
 A Supreme ruling about the method becomes **spec law about the method**: an immutable, numbered precedent recorded
 in the spec-law register and cited by ID as controlling in every later decision. That is the fail-closed mechanism
 that keeps a future court from silently re-splitting a concern this register consolidated: a decision that collides
 with the precedent "one concern, one owner: function-length is owned by the closure-gate threshold; security is
 owned by `vibescan --fast` at the continuous tier" is refused at the spec layer, exactly as a trust boundary
-refuses an unmapped capability. Only a later Supreme Council, expressly narrowing the precedent on a point of
+refuses an unmapped capability. Only a later Supreme Court, expressly narrowing the precedent on a point of
 invariant law, may refine it: never a lower court, never the build phase, never an inline edit. When such a ruling
 is made, it is recorded here (or in the spec-law register this register cites) so the method governs itself by the
 same construction it imposes on the projects it rebuilds.

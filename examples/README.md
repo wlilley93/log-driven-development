@@ -6,7 +6,7 @@ what each LDD artefact looks like in practice and how they fit together. Read it
 a real mess turn into a small clean spec, with the reasoning recorded at every step.
 
 If you want the method itself, read [`../skills/log-driven-development/SKILL.md`](../skills/log-driven-development/SKILL.md)
-and [`../skills/council/SKILL.md`](../skills/council/SKILL.md). This folder is the *applied* version: copy the
+and [`../skills/court/SKILL.md`](../skills/court/SKILL.md). This folder is the *applied* version: copy the
 shapes here for your own project.
 
 ---
@@ -32,7 +32,7 @@ concrete knots show up again and again across the artefacts below, and they are 
 3. **A security smell.** Share links have no expiry and no revocation. Anyone who ever had a link still has access.
 
 LDD's first job is to *find* all three (harvest), then collapse the mess into the smallest correct spec (distil),
-record why (journal + ADR), settle the genuinely hard fork by deliberation (council), and ship the first
+record why (journal + ADR), settle the genuinely hard fork by deliberation (court), and ship the first
 milestone with a real sign-off (the 5-phase close).
 
 ---
@@ -60,10 +60,10 @@ reconstruct the entire line of thinking.
 will keep referring back to it, it graduates into a short **ADR**. ADR-0001 records the choice the journal made
 in `0002`: replace `done` / `status` / `archivedAt` with a single ordered status, and what follows from that.
 
-### 4. The hard fork, [`council/share-link-expiry-verdict.md`](council/share-link-expiry-verdict.md)
+### 4. The hard fork, [`court/share-link-expiry-verdict.md`](court/share-link-expiry-verdict.md)
 *The decision that needed a court, not a sentence.* Most decisions in LDD just get built. But the share-link
 security smell is a genuine high-stakes fork (keep it simple vs add expiry and revocation, with real cost on both
-sides), so it is settled by a **council**: three independent named seats, each with a distinct lens, each citing
+sides), so it is settled by a **court**: three independent named seats, each with a distinct lens, each citing
 the harvested code, a synthesis that ends in a *build action* (not a "we'll look at it later"), and a recorded
 surviving dissent. This shows what a real LDD deliberation reads like.
 
@@ -82,7 +82,7 @@ Read in order, the thread is:
 > The **harvest** found that "done" meant three contradictory things and uncovered a load-bearing auto-reopen
 > rule nobody had written down. The **spec** collapsed all three into one ordered status lattice, with the
 > auto-reopen rule preserved as an explicit invariant. An **ADR** recorded that choice so it can be cited later.
-> A **council** settled the one fork the build could not just decide (share-link expiry), ending in a committed
+> A **court** settled the one fork the build could not just decide (share-link expiry), ending in a committed
 > build action plus a logged dissent. Then **M1** shipped the lattice as a walking skeleton and was signed off
 > through all five close phases, passing with two small fixes and one honest deferral.
 

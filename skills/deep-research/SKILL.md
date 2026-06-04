@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: The research harness of Log-Driven Development. Fan out a question into 3-5 sub-questions, search multiple web sources, deep-read the best ones, adversarially verify the load-bearing claims against a second independent source, then synthesise a cited report with explicit confidence. Every claim carries a source; an uncited claim is dropped or flagged. Use when a build-vs-consume fork, a library or framework choice, a security advisory, or a council seat needs grounded external evidence instead of a guess, or when the user asks for a thorough, fact-checked research report on any topic.
+description: The research harness of Log-Driven Development. Fan out a question into 3-5 sub-questions, search multiple web sources, deep-read the best ones, adversarially verify the load-bearing claims against a second independent source, then synthesise a cited report with explicit confidence. Every claim carries a source; an uncited claim is dropped or flagged. Use when a build-vs-consume fork, a library or framework choice, a security advisory, or a court seat needs grounded external evidence instead of a guess, or when the user asks for a thorough, fact-checked research report on any topic.
 ---
 
 # Deep research (the grounded-evidence harness)
@@ -13,7 +13,7 @@ LDD runs on **ground-truth**: a claim you cannot cite is a vibe, and a vibe does
 codebase, ground-truth is a grep and a test run. For anything *outside* the codebase (does this library do what
 its README claims, is this CVE actually exploitable in our usage, what is the real state of this protocol, is the
 "obvious" build-vs-consume answer right), the equivalent is deep research: multi-source, adversarially verified,
-and cited. This harness is what a **council seat**, a **build-vs-consume fork**, or a **security triage** reaches
+and cited. This harness is what a **court seat**, a **build-vs-consume fork**, or a **security triage** reaches
 for when the honest answer is "I do not know yet, let me find out", rather than a confident guess.
 
 ## The operating law
@@ -34,12 +34,12 @@ for when the honest answer is "I do not know yet, let me find out", rather than 
 
 ## When to invoke
 
-- **A build-vs-consume or library/framework fork** (an LDD high-stakes decision): before a council settles it,
+- **A build-vs-consume or library/framework fork** (an LDD high-stakes decision): before a court settles it,
   research the candidates so the seats ground-truth against real evidence, not reputation. (Note: a *buildable*
   choice is still ultimately decided by a spike that exercises it, per the deliberation budget. Research informs
   the spike; it does not replace it.)
 - **A security advisory or dependency CVE:** is it real, does it affect our usage, is there a fix or a mitigation?
-- **A council seat's homework:** the advocate-of-a-named-alternative seat, or the cost or security lens, needs
+- **A court seat's homework:** the advocate-of-a-named-alternative seat, or the cost or security lens, needs
   external facts to make its case.
 - **Any standalone request** for a thorough, fact-checked report on a topic, with citations and confidence.
 
@@ -134,7 +134,7 @@ independent second source. Confidence is <High/Medium/Low> because <reason>. <An
 ## How this plugs into LDD
 
 - It is the **ground-truth discipline pointed outward**: the same "cite it or you do not know it" rule the method
-  applies to the tree, applied to the world. It produces the cited evidence a [council](../council/SKILL.md) seat
+  applies to the tree, applied to the world. It produces the cited evidence a [court](../court/SKILL.md) seat
   must ground-truth against, since a seat that cannot cite is ignored.
 - It feeds **build-vs-consume and library forks**, governed by the deliberation budget: research informs the
   decision, and where the choice is a buildable artefact, a spike that exercises it still makes the final call.

@@ -48,7 +48,7 @@ an unbuilt surface is visibly red, never silently absent. A green suite over a h
 | INV-COMPLETE (one ordered field, all views agree) | list/board/shared-view agreement over random tasks | green (M1) |
 | INV-REOPEN (cascade + cycle guard) | build chain A -> B -> C, reopen A, assert B and C drop to `in_progress`; build cycle A -> B -> A, assert reopen terminates | green (M1) |
 | INV-MIGRATION (no work un-completed) | re-run migration on a DB copy, assert the `done = true` / `status = 'open'` cohort all land on `done` | green (M1) |
-| Share-link resolve fails closed (council build action) | attack an expired token and a revoked token, assert both denied at the resolve path | green (M1) |
+| Share-link resolve fails closed (court build action) | attack an expired token and a revoked token, assert both denied at the resolve path | green (M1) |
 | Blocking-edge editing (M2 scope) | create/remove `blockedBy` edges with a spec'd cycle policy | **red until built** (M2) |
 
 ## Supply-chain (every commit, cheap)

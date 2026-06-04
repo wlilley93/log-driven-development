@@ -91,15 +91,15 @@ deliberation only where the table says to.
 |---|---|---|
 | **Reversible / swappable** | You could undo or swap it later cheaply (an ID format, a helper name, a local refactor) | Write **one decisive sentence** in the journal, then build it. Convene nothing. |
 | **Irreversible / load-bearing, and it picks a buildable thing** | Hard to undo *and* it selects a framework, store, protocol, or schema | Run a **spike or thin slice** that exercises it **before** you commit to it. Never record a decision selecting a buildable thing by argument alone. Then journal the result; graduate to an [ADR](#on-adrs) if load-bearing. |
-| **A genuine hard fork, or an honest "is this actually working?"** | A real architectural fork, build-vs-consume, sequencing a whole program, a retrospective, or a pre-mortem | Convene a **Council** (see [section 3](#3-choosing-an-orchestration-shape) and the [`council` skill](../skills/council/SKILL.md)). It **must end in a build action or a kill**, never another doc that defers. |
-| **A challenged Council verdict (with standing)** | The principal disagrees, a load-bearing dissent is unresolved, or new ground-truth contradicts a relied-upon point | Convene the **Appeals Council** (re-weighs the merits as a review). "I would have designed it differently" is *not* standing. |
-| **A question of how the invariants or the method were APPLIED** | Not "is this the best design?" but "was the invariant spec / the discipline correctly applied?" | Convene the **Supreme Council**. Its ruling is **spec law** (binding precedent). |
+| **A genuine hard fork, or an honest "is this actually working?"** | A real architectural fork, build-vs-consume, sequencing a whole program, a retrospective, or a pre-mortem | Convene a **Court** (see [section 3](#3-choosing-an-orchestration-shape) and the [`court` skill](../skills/court/SKILL.md)). It **must end in a build action or a kill**, never another doc that defers. |
+| **A challenged Court verdict (with standing)** | The principal disagrees, a load-bearing dissent is unresolved, or new ground-truth contradicts a relied-upon point | Convene the **Appeals Court** (re-weighs the merits as a review). "I would have designed it differently" is *not* standing. |
+| **A question of how the invariants or the method were APPLIED** | Not "is this the best design?" but "was the invariant spec / the discipline correctly applied?" | Convene the **Supreme Court**. Its ruling is **spec law** (binding precedent). |
 | **The principal's policy or domain call** | It is a business, product, legal, or domain judgement, not a technical one | **ASK the principal.** Do not guess on their behalf. |
 | **A security issue** | Any vulnerability, leaked secret, missing access check, weak crypto | **Fix it immediately.** This overrides every schedule, every milestone, and every other rule in this table. |
 
-Two rules sit above the table. First: **a panel, audit, or council always terminates in a committed change or an
+Two rules sit above the table. First: **a panel, audit, or court always terminates in a committed change or an
 explicit kill, the same beat.** A deliberation whose output is "we will look at it later" is the exact pathology
-the court exists to catch. Second: **surface the meta-to-build ratio honestly.** If you have held more councils than
+the court exists to catch. Second: **surface the meta-to-build ratio honestly.** If you have held more courts than
 you have shipped milestones, that is itself a finding to raise.
 
 ---
@@ -114,7 +114,7 @@ brief per [section 5](#5-how-to-brief-a-subagent).
 | **Build one thing and be sure it is correct** | **Builder + adversarial verifier** | One agent produces. At least one *independent* skeptic tries to **break** it: grounds in the real tree, re-runs the load-bearing checks, attacks the invariants. The verifier earns its keep by catching real defects (including security holes) the builder introduced. Its verdict is your **input**, not the final word. |
 | **Author a volume of independent files** | **Multi-author + coherence** | N authors run in parallel, each owning **distinct** files (never the same file). One coherence pass then merges, dedups, finds contradictions, and emits an integration checklist you apply serially. This is the harvest shape. |
 | **Unknown-size discovery (find all the gaps / all the bugs)** | **Loop-until-dry** | Keep spawning rounds until **K consecutive rounds find nothing new** (K is typically 2 or 3). A fixed count stops too early and misses the tail. This is how the spec-and-build loop knows it is finished. |
-| **A judgement call under stakes** | **Council** | A fan-out of independent, named seats, each a distinct lens (project health, process critic, devil's advocate, plus a domain lens: security, cost, UX, the advocate of a named alternative). Each ground-truths first; seats run independently (no groupthink); each leads with the blunt truth. Ends in a build action or a kill. See the [`council` skill](../skills/council/SKILL.md). |
+| **A judgement call under stakes** | **Court** | A fan-out of independent, named seats, each a distinct lens (project health, process critic, devil's advocate, plus a domain lens: security, cost, UX, the advocate of a named alternative). Each ground-truths first; seats run independently (no groupthink); each leads with the blunt truth. Ends in a build action or a kill. See the [`court` skill](../skills/court/SKILL.md). |
 
 Two hard rules for every shape:
 
@@ -179,7 +179,7 @@ and the actual result), not "looks fine".
    correctness-and-security net, every milestone.
 5. [ ] **PLAN (MANDATORY).** The milestone does **not** close, and the next build does **not** start, until the next
    steps are planned: the next milestone's scope, sequence, and risks, plus the single next move. A high-stakes next
-   fork escalates to a planning agent or a Council. **Never drift into an unplanned next milestone.**
+   fork escalates to a planning agent or a Court. **Never drift into an unplanned next milestone.**
 
 > Which tool owns each phase and at which trigger is not restated here: see the two-tier(+) ownership matrix in
 > [systems.md](./systems.md) (system 7), the single source of truth (LDD-INV-9).
@@ -411,9 +411,9 @@ EVERY BEAT (in order):
 DECIDE:
   reversible            -> one sentence, build it
   buildable+irreversible-> spike/thin slice BEFORE you commit to it
-  hard fork / "working?"-> COUNCIL (ends in a build action or a kill)
-  challenged verdict    -> Appeals Council (needs standing)
-  "was the method/invariant applied right?" -> Supreme Council (= spec law)
+  hard fork / "working?"-> COURT (ends in a build action or a kill)
+  challenged verdict    -> Appeals Court (needs standing)
+  "was the method/invariant applied right?" -> Supreme Court (= spec law)
   principal's policy call-> ASK the principal
   security              -> FIX NOW (overrides every schedule)
 
@@ -421,7 +421,7 @@ SHAPES:
   build one thing correctly      -> builder + adversarial verifier
   volume of independent files    -> multi-author + coherence (distinct file owners; never share a file)
   unknown-size discovery         -> loop-until-dry (K consecutive empty rounds)
-  judgement under stakes         -> council
+  judgement under stakes         -> court
 
 GATES (8 per commit; owner of each concern = the matrix in systems.md system 7):
   every commit -> formatter, linter (warnings=errors), type-check, max-fn-length,

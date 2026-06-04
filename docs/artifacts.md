@@ -33,14 +33,14 @@ metacognition/            the journal (one file per beat) + INDEX.md
 adr/                      ADRs (one file per load-bearing decision)
 spec.md  (or spec/)       the distilled minimal spec
 M<N>-signoff.md           milestone sign-offs (one per milestone)
-council/                  council verdicts, one per convening (slug-named) + SPEC-LAW.md
+court/                  court verdicts, one per convening (slug-named) + SPEC-LAW.md
 closure-gate.config.md    the continuous structural enforcement config
 ```
 
 (The worked example uses exactly this layout: see [`examples/`](../examples/). It has one milestone so far,
-[`examples/M1-signoff.md`](../examples/M1-signoff.md), and one council verdict,
-[`examples/council/share-link-expiry-verdict.md`](../examples/council/share-link-expiry-verdict.md); there is no
-SPEC-LAW.md yet, because no Supreme Council has ruled.)
+[`examples/M1-signoff.md`](../examples/M1-signoff.md), and one court verdict,
+[`examples/court/share-link-expiry-verdict.md`](../examples/court/share-link-expiry-verdict.md); there is no
+SPEC-LAW.md yet, because no Supreme Court has ruled.)
 
 ---
 
@@ -143,7 +143,7 @@ beat) and [`examples/metacognition/0002-collapse-completion-to-one-status.md`](.
 options, the decision, and the consequences. An ADR is a journal entry that earned a promotion, pulled out where
 the big calls are easy to find and cite by ID. For Tasky, `adr/ADR-0001-one-task-status-lattice.md` records the
 decision to collapse three completion mechanisms into one ordered `status` lattice. It graduated from journal beat
-`0002` directly, with no council: once the harvest was in, the call was clear.
+`0002` directly, with no court: once the harvest was in, the call was clear.
 
 **Why it exists / what failure it prevents.** It prevents **the big decisions getting lost in the journal**. The
 journal is chronological and dense; a reader looking for *the* completion-model decision should find one
@@ -158,13 +158,13 @@ controlling context.
    lattice), Decision (collapse to one ordered `status` lattice, `open -> in_progress -> done -> archived` plus a
    terminal `deleted`, promote the auto-reopen rule to the named invariant INV-REOPEN, write a migration map, drop
    `done` and `archivedAt` as fields with reasons), Consequences (a one-time migration cost; a permanently simpler
-   model; `archived` and `deleted` stop being overloaded). Link the journal beat it graduated from (and a council
+   model; `archived` and `deleted` stop being overloaded). Link the journal beat it graduated from (and a court
    verdict only if one decided it; this one had none).
 3. **The provenance rule:** an ADR about legacy behaviour cites the intent ledger (and through it the code); an
-   ADR resolving a council question cites the verdict. The lattice ADR cites the harvest and journal beat `0002`,
-   no council. It is grounded, like everything else.
+   ADR resolving a court question cites the verdict. The lattice ADR cites the harvest and journal beat `0002`,
+   no court. It is grounded, like everything else.
 4. **Who writes it:** the orchestrator, when a journal decision is load-bearing enough to graduate, or when a
-   council verdict needs a durable home.
+   court verdict needs a durable home.
 
 **When to write it.** When a choice is big and hard to reverse: an architecture fork, a data-model collapse, a
 build-vs-consume call, a sequencing decision for a whole program. Reversible choices stay as one-sentence journal
@@ -204,10 +204,10 @@ also what the closure sweep checks the build against; "done" is *the build cover
    its `blockedBy` relation), the **invariants** (the always-true rules, written as numbered checkable statements,
    like INV-REOPEN), the **behaviours** (what each operation does), and a **deliberately dropped** section (each
    dropped legacy thing + the reason). Note where a harvested defect is being handled elsewhere (Tasky's
-   share-link expiry is settled by council, not in this spec, so the spec records the pointer rather than the
+   share-link expiry is settled by court, not in this spec, so the spec records the pointer rather than the
    fix).
 3. **The provenance rule:** every kept behaviour traces to an intent ledger; every dropped thing names what it
-   dropped and why (cite the ledger and the ADR/council verdict that decided it). The spec is distilled *from*
+   dropped and why (cite the ledger and the ADR/court verdict that decided it). The spec is distilled *from*
    the harvest, so it is grounded in it.
 4. **Who writes it:** the orchestrator, during **distil**, and it keeps amending the spec during the **loop** as
    building reveals a spec line was wrong or incomplete. The spec is a living source of truth, not a frozen
@@ -234,7 +234,7 @@ pass that changes the truth updates the spec, with a journal entry recording why
 
 **What it is.** The record that a milestone ran all **five close phases** and the evidence for each. It is the
 artefact that turns "looks done" into "is done, and here is the proof." For Tasky's first milestone,
-`M1-signoff.md` records the BUILD (the status lattice, the migration map, INV-REOPEN, and the council's share-link
+`M1-signoff.md` records the BUILD (the status lattice, the migration map, INV-REOPEN, and the court's share-link
 expiry plus revocation, gates green), the STRUCTURE scan (it caught an inlined `isDone` and folded it), the
 SECURITY deep audit (the share-link surface; it caught a UTC expiry bug), the VERIFY result (the verifier built a
 blocking cycle and confirmed the reopen cascade terminates, and attacked an expired and a revoked token), and the
@@ -277,25 +277,25 @@ filled in.
 
 ---
 
-## The council verdict
+## The court verdict
 
 **What it is.** The single synthesised record of one convening of the deliberation court: the question, the seats
 and their distinct lenses, each seat's ground-truthed verdict, the synthesis, the decision (a build action or a
-kill), and the **surviving dissent**. For Tasky, `council/share-link-expiry-verdict.md` records the council on
+kill), and the **surviving dissent**. For Tasky, `court/share-link-expiry-verdict.md` records the court on
 *keep share links simple, or add expiry plus revocation now*, and its verdict ends in a committed build action
-plus one logged surviving dissent. (Note: the completion collapse did **not** go to council; it was clear enough
-to graduate straight from journal beat `0002` to ADR-0001. A council is reserved for the genuinely hard fork.)
+plus one logged surviving dissent. (Note: the completion collapse did **not** go to court; it was clear enough
+to graduate straight from journal beat `0002` to ADR-0001. A court is reserved for the genuinely hard fork.)
 
 **Why it exists / what failure it prevents.** It prevents two failures at once. First, **a single perspective
 rationalising a hard call**: independent, blunt, distinct-lens seats catch what one mind talks itself out of
 seeing. Second, **a deliberation that defers**: the verdict *is* the decision and triggers the build action the
-same beat, so the council cannot become a meeting that produces another meeting. The recorded dissent also
+same beat, so the court cannot become a meeting that produces another meeting. The recorded dissent also
 preserves the **standing** for any future appeal.
 
 **How to constitute it, step by step.**
-1. **Where it lives:** `council/<slug>-verdict.md`, one per convening (the example is
-   `council/share-link-expiry-verdict.md`; number the slug if you prefer ordering). Supreme Council rulings
-   additionally append to `council/SPEC-LAW.md` (see below).
+1. **Where it lives:** `court/<slug>-verdict.md`, one per convening (the example is
+   `court/share-link-expiry-verdict.md`; number the slug if you prefer ordering). Supreme Court rulings
+   additionally append to `court/SPEC-LAW.md` (see below).
 2. **What goes in:** the **question** (a genuine high-stakes, hard-to-reverse fork), the **seats** (3 to 5
    distinct lenses: project health, process critic, devil's advocate, plus a domain lens like security or cost or
    the advocate of a named alternative), each seat's **ground-truthed verdict** (citing real evidence from the
@@ -309,29 +309,29 @@ preserves the **standing** for any future appeal.
    ephemeral and dissolve; only the verdict and the dissent persist.
 
 **When to write it.** Only for a genuine high-stakes, hard-to-reverse fork, or an honest retrospective or
-pre-mortem. A reversible decision gets one sentence, not a council. A court is expensive currency; spend it
+pre-mortem. A reversible decision gets one sentence, not a court. A court is expensive currency; spend it
 rarely.
 
-**The appeals tiers (same artefact shape, scoped remit).** A verdict stands by default. An **Appeals Council**
+**The appeals tiers (same artefact shape, scoped remit).** A verdict stands by default. An **Appeals Court**
 (convened only with *standing*: the principal disagrees, a load-bearing dissent is unresolved, or new
 ground-truth contradicts a relied-upon point) re-weighs the merits *as a review*, handed the full lower-court
-record, and may uphold or overturn. A **Supreme Council** (the rare apex) reviews **only points of law**: was the
+record, and may uphold or overturn. A **Supreme Court** (the rare apex) reviews **only points of law**: was the
 invariant spec and the LDD discipline correctly *applied*? Its ruling becomes **spec law**, an immutable numbered
-precedent in `council/SPEC-LAW.md` that binds every future court; a decision that collides with it is refused at
+precedent in `court/SPEC-LAW.md` that binds every future court; a decision that collides with it is refused at
 the spec layer the same way a trust boundary refuses an unknown command. Each tier gets fresh independent seats
 and the full record of every court below.
 
 **Common mistakes.**
 - Convening for a reversible decision. That is the build-first budget violation; build it instead.
-- A verdict that defers ("let us revisit next sprint"). A council ends in a build action or a kill, full stop.
+- A verdict that defers ("let us revisit next sprint"). A court ends in a build action or a kill, full stop.
 - Burying the dissent because it lost. The dissent is the standing of any future appeal; record it.
 - Seats that did not ground-truth, or that saw each other mid-run. Either one collapses the independence the
-  council exists for.
+  court exists for.
 - Appealing for free. Escalation needs standing; "I would have designed it differently" is not standing.
 
-**See:** template [`templates/council-verdict.md`](../templates/council-verdict.md); worked example
-[`examples/council/share-link-expiry-verdict.md`](../examples/council/share-link-expiry-verdict.md);
-the full court treatment in the [`council` skill](../skills/council/SKILL.md).
+**See:** template [`templates/court-verdict.md`](../templates/court-verdict.md); worked example
+[`examples/court/share-link-expiry-verdict.md`](../examples/court/share-link-expiry-verdict.md);
+the full court treatment in the [`court` skill](../skills/court/SKILL.md).
 
 ---
 
@@ -383,17 +383,17 @@ of debt the gate should now catch.
 ## How the artefacts cross-reference (one picture)
 
 The artefacts are not independent; they form a chain of grounding. The Tasky example threads one tangle (task
-completion) through most of them, and routes the one genuinely hard fork (share-link security) through the council,
-so you can see both the no-council path and the council path end to end:
+completion) through most of them, and routes the one genuinely hard fork (share-link security) through the court,
+so you can see both the no-court path and the court path end to end:
 
-The completion chain (no council, because the call was clear once harvested):
+The completion chain (no court, because the call was clear once harvested):
 
 - `_harvest/task-model.md` records the **three** legacy completion paths and the buried auto-reopen rule, each
   with provenance.
 - The journal runs two beats: `metacognition/0001-harvest-task-model.md` (the action beat that ran the harvest)
   then `metacognition/0002-collapse-completion-to-one-status.md` (the decision beat that picks the ordered
   lattice, listing the rejected alternatives).
-- Beat `0002` graduates straight to `adr/ADR-0001-one-task-status-lattice.md` (no council), which records the
+- Beat `0002` graduates straight to `adr/ADR-0001-one-task-status-lattice.md` (no court), which records the
   lattice, the migration map, and promotes the auto-reopen rule to the named invariant INV-REOPEN.
 - `spec.md` defines the single ordered `status` lattice primitive and INV-REOPEN, and lists the `done` boolean
   and `archivedAt`-as-a-field as deliberately dropped, citing the ADR.
@@ -402,11 +402,11 @@ The completion chain (no council, because the call was clear once harvested):
 The share-link fork (the one decision that earned a court):
 
 - The same harvest flags share links as a security defect (no expiry, no revocation) in its DROP-list section.
-- `council/share-link-expiry-verdict.md` weighs keep-simple vs add-expiry-plus-revocation, three named seats each
+- `court/share-link-expiry-verdict.md` weighs keep-simple vs add-expiry-plus-revocation, three named seats each
   ground-truthing `src/api/share.ts`, ending in a committed build action plus one logged surviving dissent.
 
 Both lines land in one milestone close: `M1-signoff.md` records that the status lattice, INV-REOPEN, and the
-council's share-link build action all passed all five phases with evidence (PASS WITH FIXES), and plans M2
+court's share-link build action all passed all five phases with evidence (PASS WITH FIXES), and plans M2
 (blocking-graph editing).
 
 Follow that chain in [`examples/`](../examples/) and you have read LDD working on one real problem from legacy

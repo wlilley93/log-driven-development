@@ -61,6 +61,6 @@ A data migration over existing rows, and every read of `done`/`archivedAt` in th
 ## Next
 Write the spec invariant and the migration map into [`ADR-0001`](../adr/ADR-0001-one-task-status-lattice.md);
 build the lattice as the M1 walking skeleton. The separate share-link security question (harvest section 4) is a
-genuine hard fork and goes to a council, not a sentence.
+genuine hard fork and goes to a court, not a sentence.
 
 -> [`../adr/ADR-0001-one-task-status-lattice.md`](../adr/ADR-0001-one-task-status-lattice.md)

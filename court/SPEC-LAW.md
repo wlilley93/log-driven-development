@@ -1,7 +1,7 @@
-# Spec-law register (Supreme Council precedent)
+# Spec-law register (Supreme Court precedent)
 
 This is the precedent register: the law the courts *write*. It is distinct from
-[`docs/invariants.md`](../docs/invariants.md), the standing LDD-INV register the courts *apply*. A Supreme Council
+[`docs/invariants.md`](../docs/invariants.md), the standing LDD-INV register the courts *apply*. A Supreme Court
 rules only on points of law (how the invariant spec and the method's discipline were *applied*), and its ruling is
 recorded here as a numbered, immutable precedent that **binds every future court**.
 
@@ -10,17 +10,17 @@ precedent is refused at the spec layer, the same fail-closed shape a trust bound
 capability.
 
 **Case names.** Each precedent also carries a case name in the form *Reference re <point of law>*: the Supreme
-Council answers a *referred point of law*, named by the question, not by parties (these are references, not party
-disputes - the convention is defined in [`skills/council/SKILL.md`](../skills/council/SKILL.md), "Naming a case").
+Court answers a *referred point of law*, named by the question, not by parties (these are references, not party
+disputes - the convention is defined in [`skills/court/SKILL.md`](../skills/court/SKILL.md), "Naming a case").
 Cite by name or ID, e.g. *Reference re Consolidation (SPEC-LAW-3)*. The merits courts below caption their matters
 *In re <subject>*.
 
 **Immutability (LDD-INV-16).** Entries are append-only. A precedent is never edited or deleted in place; only a
-later Supreme Council, expressly narrowing it on a point of law, may refine it, by adding a new numbered entry
+later Supreme Court, expressly narrowing it on a point of law, may refine it, by adding a new numbered entry
 that cites the one it narrows.
 
 **Propagation.** This register ships with the methodology. A project running LDD receives the current spec law by
-installing or updating the plugin; the council skill reads this register when it convenes and enforces it. New,
+installing or updating the plugin; the court skill reads this register when it convenes and enforces it. New,
 generally-significant precedents reach every project as community pull requests against this file (see the README,
 "Self-improving by construction"). A project may keep a separate local precedent file for genuinely
 project-specific rulings; a local precedent shown to be general is promoted here by PR.
@@ -31,7 +31,7 @@ project-specific rulings; a local precedent shown to be general is promoted here
 
 **Case name:** *Reference re Evidence and Built Controls*.
 
-**Origin.** A Supreme Council ruling on points of law arising from an appellate decision that (i) admitted a
+**Origin.** A Supreme Court ruling on points of law arising from an appellate decision that (i) admitted a
 principal's stated preference as "ground truth" and used it to overturn a reasoned security holding, (ii) relaxed
 that security holding on the strength of a control that did not yet exist, and (iii) modified-in-place a lower
 holding whose relied-upon fact had been falsified.
@@ -60,8 +60,8 @@ method exists to keep honest.
 **What it prevents.** Power laundering a decision through the court's evidentiary authority; security gates turned
 green on promises rather than built controls; and falsified premises surviving under a fresh label.
 
-**Status:** immutable; binds every Council, Appeals Council, and the spec layer. Refined only by a later Supreme
-Council expressly narrowing it on a point of law.
+**Status:** immutable; binds every Court, Appeals Court, and the spec layer. Refined only by a later Supreme
+Court expressly narrowing it on a point of law.
 
 ---
 
@@ -69,7 +69,7 @@ Council expressly narrowing it on a point of law.
 
 **Case name:** *Reference re Genuine Function*.
 
-**Origin.** A Supreme Council ruling on points of law arising from a determination of whether a built system
+**Origin.** A Supreme Court ruling on points of law arising from a determination of whether a built system
 "genuinely supports" its target use cases. The lower courts had been pressed to (i) accept design-soundness ("the
 primitives exist and compose") as a discharge of the Determination of Genuine Function, (ii) re-narrow the
 function claim to a sub-scope smaller than the spec's own definition-of-done, and (iii) drop the
@@ -77,7 +77,7 @@ product-facing surfaces out of the claim by reclassifying them as a consumed com
 
 **The rule (four limbs):**
 
-**(a) Ground-truth, not assertion.** A court discharges the **Determination of Genuine Function** (the council
+**(a) Ground-truth, not assertion.** A court discharges the **Determination of Genuine Function** (the court
 skill's required determination phase) only by pointing to a spike, a test, or a demonstrated end-to-end path.
 "The pieces exist", "the design is sound", and "it composes by design" meet the *design-sufficiency* bar only,
 which is necessary and never sufficient. A seat that asserts function without exercising it is ignored on that
@@ -110,8 +110,8 @@ function claim quietly shrunk below the spec's own definition-of-done; and the p
 the claim by relabelling them commodity. Together with SPEC-LAW-1, it keeps both the *evidence* and the *scope* of
 a determination honest.
 
-**Status:** immutable; binds every Council, Appeals Council, and the spec layer. Refined only by a later Supreme
-Council expressly narrowing it on a point of law.
+**Status:** immutable; binds every Court, Appeals Court, and the spec layer. Refined only by a later Supreme
+Court expressly narrowing it on a point of law.
 
 ---
 
@@ -119,11 +119,11 @@ Council expressly narrowing it on a point of law.
 
 **Case name:** *Reference re Consolidation*.
 
-**Origin.** A Supreme Council ruling (unanimous panel, 5-0 on the construction) on points of law arising from a
+**Origin.** A Supreme Court ruling (unanimous panel, 5-0 on the construction) on points of law arising from a
 contested determination of whether a self-governing method's component module should be packaged as a *second
-installable/consumable unit* separate from the method whose registers it reads. A first-instance Council had
+installable/consumable unit* separate from the method whose registers it reads. A first-instance Court had
 refused the split by treating the *count of installable units* as a per-se prohibited object of the consolidation
-invariant; an Appeals Council deadlocked, one wing reading the invariant as a pure source-of-truth rule that the
+invariant; an Appeals Court deadlocked, one wing reading the invariant as a pure source-of-truth rule that the
 unit-count escapes entirely, the other locating the restraint in the invariant's anti-bloat clause. The lower
 holdings on both sides also rested on premises that ground-truth falsified (a cost/size figure, a
 dependency-direction claim, and a register mischaracterised as a swappable default when its own text makes it a
@@ -174,7 +174,7 @@ on that reading a co-versioned, reference-only second unit is lawful under the s
 proper ground for refusing an unneeded split is the ordinary build-or-kill / demonstrated-need discipline
 (LDD-INV-7/8), not the anti-bloat limb. The majority treats anti-bloat as an enacted, independently-operative
 clause of the invariant; the minority treats it as a gloss on the single-owner concern. The distinction is
-recorded so a later Supreme Council may narrow it.
+recorded so a later Supreme Court may narrow it.
 
-**Status:** immutable; binds every Council, Appeals Council, and the spec layer. Established by a unanimous (5-0)
-Supreme panel. Refined only by a later Supreme Council expressly narrowing it on a point of law.
+**Status:** immutable; binds every Court, Appeals Court, and the spec layer. Established by a unanimous (5-0)
+Supreme panel. Refined only by a later Supreme Court expressly narrowing it on a point of law.

@@ -1,15 +1,15 @@
-# Council verdict: share-link expiry and revocation
+# Court verdict: share-link expiry and revocation
 
-> **What this is.** A worked LDD council: a single fan-out of independent named seats, each with a distinct lens,
+> **What this is.** A worked LDD court: a single fan-out of independent named seats, each with a distinct lens,
 > each grounding its argument in the real code, then one synthesis that **ends in a build action**, plus the
 > surviving dissent. Read it as the template for deliberating a genuine fork. Most decisions never get here (they
 > get one decisive sentence); this one did, because it is high-stakes and hard to reverse.
 
 - **Question:** Tasky's share links have no expiry and no revocation (harvested security smell). Do we keep share
   simple, or add expiry + revocation now?
-- **Why a council (not a sentence):** it is a security boundary, it is hard to reverse once links are in the wild,
+- **Why a court (not a sentence):** it is a security boundary, it is hard to reverse once links are in the wild,
   and there is real cost on both sides (UX friction vs standing exposure). That combination is exactly what a
-  council is for.
+  court is for.
 - **Convened:** 2026-06-02. **Tier:** first instance. **Status:** decided; one surviving dissent recorded.
 - **Grounded in:** [`../_harvest/task-model.md`](../_harvest/task-model.md) section 4 and `src/api/share.ts`.
 
@@ -97,7 +97,7 @@ the pre-mortem's "half-built" failure mode by making the resolve-path checks the
    at the resolve path (not merely at creation). This is a required VERIFY check, recorded in
    [`../M1-signoff.md`](../M1-signoff.md).
 
-This is committed work, not a deferral. The council ends here.
+This is committed work, not a deferral. The court ends here.
 
 ### Surviving dissent (recorded, never buried)
 The UX seat maintains a narrower live objection: **a fixed 30-day default with no way for a user to extend it will

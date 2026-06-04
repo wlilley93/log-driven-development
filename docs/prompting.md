@@ -1,8 +1,8 @@
-# Prompting LDD: how to actually drive it (and the council), in plain English
+# Prompting LDD: how to actually drive it (and the court), in plain English
 
 You do not need to memorize commands, invariants, or brief formats to run LDD. You describe your
 situation and what you want in plain English; the method recognizes the shape of the work and supplies
-the discipline (the citations, the both-altitudes harvest, the two-leg close, the council seats) that
+the discipline (the citations, the both-altitudes harvest, the two-leg close, the court seats) that
 you did not have to spell out. This guide shows the plain-English prompts a newcomer actually types,
 what the method does with each, and the few habits that make an ask land well.
 
@@ -10,7 +10,7 @@ The running example is **Tasky**, the repo's worked example (a vibe-coded task t
 competing notions of "completion", an auto-reopen-on-blocker rule, and a share link with no expiry).
 The full Tasky run is under [`examples/`](../examples/).
 
-> If you have the plugin installed, `/ldd <goal>` and `/council <question>` are shorthands. You do not
+> If you have the plugin installed, `/ldd <goal>` and `/court <question>` are shorthands. You do not
 > need them: the skills also activate when you just describe the work, so everything below is written
 > as plain sentences you could type to any LDD-aware agent.
 
@@ -52,19 +52,19 @@ You never describe the panel; you ask, and the court forms itself.
 > **Decide it:** *"We keep arguing about whether Tasky's share links should expire. Get a few
 > independent, honest reads on the real code and just make the call, don't book another meeting."*
 
-The method convenes a Council: independent critics who each cite the actual code, ending in a decision
+The method convenes a Court: independent critics who each cite the actual code, ending in a decision
 (say, add expiry and revocation), with the losing argument recorded as dissent.
 
 > **You're not sure / you disagree:** *"I'm not convinced, the worry about breaking existing links got
 > brushed aside."*
 
-That is standing for an appeal. Fresh critics re-weigh it against the Council's record and uphold or
+That is standing for an appeal. Fresh critics re-weigh it against the Court's record and uphold or
 overturn.
 
 > **Settle it for good:** *"This same fight keeps coming up on other projects too, settle the rule
 > itself, not just this one case."*
 
-The Supreme Council rules on the principle and writes a numbered **spec law** that binds every future
+The Supreme Court rules on the principle and writes a numbered **spec law** that binds every future
 project. Three plain sentences from you; the whole three-tier court underneath.
 
 ### Pick the work up cold
@@ -84,7 +84,7 @@ You do not need the jargon, but three simple habits make any LDD ask sharper:
 2. **Say what you want out of it.** "write down what it does", "make the call", "tell me if it's
    really done". A goal turns a chat into a deliverable.
 3. **Say when you want a decision.** If you add "and just decide, don't give me options", you get a
-   council that ends in a build-or-kill instead of a discussion. If you say "be honest about what's
+   court that ends in a build-or-kill instead of a discussion. If you say "be honest about what's
    missing", you get the source-coverage check, not a reassurance.
 
 That is the whole skill of prompting LDD. Everything stricter than this is the method's job, not
@@ -106,7 +106,7 @@ these, but this is the shape they take and the rule each encodes.
   auth/money file completely." (Encodes LDD-INV-13.)
 - **Two-leg close.** "Leg A: walk the SOURCE for load-bearing detail that never reached the spec, loop
   until dry. Leg B: check the spec against itself. Done only if both are clean." (Encodes LDD-INV-5.)
-- **Council seat.** "Ground-truth the real tree first; a seat that cannot cite is ignored. Lead with
+- **Court seat.** "Ground-truth the real tree first; a seat that cannot cite is ignored. Lead with
   the uncomfortable truth. Return a blunt verdict." Then the orchestrator determines genuine function
   and ends in build-or-kill, recording dissent.
 
@@ -135,5 +135,5 @@ the behaviour, ask for a decision, ask what's missing) is enough.
 ## See also
 - [README.md](../README.md) : the pitch, with these prompts scattered by section.
 - [playbook.md](playbook.md) : the step-by-step operating manual, once you want the full discipline.
-- [skills/council/SKILL.md](../skills/council/SKILL.md) : the court and its appeal tiers in full.
-- [examples/](../examples/) : the full Tasky harvest, spec, council verdict, and ADRs.
+- [skills/court/SKILL.md](../skills/court/SKILL.md) : the court and its appeal tiers in full.
+- [examples/](../examples/) : the full Tasky harvest, spec, court verdict, and ADRs.

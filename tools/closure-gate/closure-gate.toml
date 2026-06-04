@@ -15,7 +15,7 @@
 # Each runs via the shell from --cwd. Empty string = skip. Examples for several stacks
 # are commented; uncomment and adapt ONE set to your project.
 #
-# security_scan and structure_scan are the CONTINUOUS-tier members the LDD process council
+# security_scan and structure_scan are the CONTINUOUS-tier members the LDD process court
 # added (verdict in the project ledger): the cheap edge of the security and refactoring
 # suites, run per-commit, so "fix security the moment found" (LDD-INV-7) finally has
 # something that FINDS. security_scan is the ONE security owner at this tier (LDD-INV-9): it

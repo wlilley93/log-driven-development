@@ -95,14 +95,14 @@ committee). But the rare decision that is **high-stakes, hard to reverse, and co
 court modelled on UK law: three tiers, each a temporary panel of independent AI critics that ground-truth the
 real code, each handed the full record of the tier below.
 
-- **The Council** (first instance) argues the *merits*: a fan-out of independent, named seats with distinct
+- **The Court** (first instance) argues the *merits*: a fan-out of independent, named seats with distinct
   lenses, run blind to each other, each leading with the blunt truth. It must **end in a build action or a kill**,
   never "we'll look at it later". Its verdict is the decision unless appealed (the surviving dissent is recorded,
   because it is the standing of any future appeal).
-- **The Appeals Council** re-weighs the merits *as a review*, but only when a verdict is challenged with real
+- **The Appeals Court** re-weighs the merits *as a review*, but only when a verdict is challenged with real
   **standing** (the principal disagrees, an unresolved load-bearing dissent, or new ground-truth). It can uphold
   or overturn.
-- **The Supreme Council** is the apex, and it does something different: it rules **only on points of law** (was
+- **The Supreme Court** is the apex, and it does something different: it rules **only on points of law** (was
   the method's own discipline correctly applied?), not on the design. Because it rules on law, its ruling becomes
   **spec law**: an immutable, numbered precedent that binds every future court on every project.
 
@@ -110,10 +110,10 @@ The driving agent is a first-class **petitioner** here, not a clerk waiting to b
 frames the question, and - when it holds genuine standing - brings the appeal or refers a point of law up *itself*,
 to reach certainty before it proceeds. That self-initiation is deliberately gated (real standing only, still
 ends in build-or-kill, and the principal can halt any case), so the court stays rare even when the agent runs
-autonomously. The mechanics are in [the council skill](skills/council/SKILL.md).
+autonomously. The mechanics are in [the court skill](skills/court/SKILL.md).
 
 That last tier is what makes LDD **self-improving, and it compounds with use.** Every time a genuinely hard,
-contested question is referred all the way up, the Supreme Council's answer becomes a permanent, numbered rule
+contested question is referred all the way up, the Supreme Court's answer becomes a permanent, numbered rule
 (spec law) that every future decision is checked against. So **the more hard cases you refer up, the more of your
 ruleset crystallises into precedent**: the grey areas get settled for good, the same rule binds every project
 (propagated the way a shared linter ruleset propagates), and a question argued once never has to be argued from
@@ -123,7 +123,7 @@ court produced SPEC-LAW-3, which now decides every future "should we split X?" a
 
 > The full court machinery, the worked example of a fork escalating to spec law, and the three precedents the
 > method has already produced (*Reference re Evidence and Built Controls*, *Reference re Genuine Function*, and
-> *Reference re Consolidation*) live in **[the council skill](skills/council/SKILL.md)** and
+> *Reference re Consolidation*) live in **[the court skill](skills/court/SKILL.md)** and
 > **[docs/systems.md](docs/systems.md)**. You drive it with one sentence: *"get a few honest, independent reads
 > on the real code and make the call, I don't want another meeting."*
 
@@ -157,8 +157,8 @@ instruction below**, and it will install everything and be ready to run LDD.
 > rebuild and the skill activates). Everything the method references lives in this one repo.
 
 > **Just want the deliberation court?** The court is the method's judiciary, not a separate product, but you can
-> adopt it alone: install (or copy) the `skills/council/` skill together with its two declared data files,
-> [`docs/invariants.md`](docs/invariants.md) (the law it applies) and [`council/SPEC-LAW.md`](council/SPEC-LAW.md)
+> adopt it alone: install (or copy) the `skills/court/` skill together with its two declared data files,
+> [`docs/invariants.md`](docs/invariants.md) (the law it applies) and [`court/SPEC-LAW.md`](court/SPEC-LAW.md)
 > (the precedent it writes). The court reasons *from* those registers, so it needs them present, but it does not
 > need the harvest/rebuild machinery or the `vibe*` tools.
 
@@ -168,8 +168,8 @@ instruction below**, and it will install everything and be ready to run LDD.
 
 ### As a Claude Code plugin
 
-This repo is a Claude Code plugin. It provides two **skills** (`log-driven-development`, `council`) and two
-**slash commands** (`/ldd`, `/council`).
+This repo is a Claude Code plugin. It provides two **skills** (`log-driven-development`, `court`) and two
+**slash commands** (`/ldd`, `/court`).
 
 ```bash
 # Add this repo as a plugin marketplace, then install the plugin:
@@ -180,8 +180,8 @@ This repo is a Claude Code plugin. It provides two **skills** (`log-driven-devel
 Then:
 - `/ldd <what to build or harvest>`: start or continue an LDD beat.
 - `/ldd status`: report where the loop is and the single next move.
-- `/council <the decision>`: convene a council on a hard fork.
-- `/council <the decision> | appeal` (or `| supreme`): escalate the court.
+- `/court <the decision>`: convene a court on a hard fork.
+- `/court <the decision> | appeal` (or `| supreme`): escalate the court.
 
 The skills also activate automatically when the model recognises the work fits (for example, rebuilding from a
 legacy codebase, or facing a high-stakes architectural fork).
@@ -189,9 +189,9 @@ legacy codebase, or facing a high-stakes architectural fork).
 ### As a plain methodology
 
 You don't need the plugin to use LDD. The two `skills/*/SKILL.md` files are self-contained write-ups of the
-method and the council. Adopt the spine (the twin ledgers), the arc (harvest, distil, skeleton, loop), the
+method and the court. Adopt the spine (the twin ledgers), the arc (harvest, distil, skeleton, loop), the
 disciplines (ground-truth everything, one writer of shared state, build-first, the continuous closure-gate), and
-the agent shapes (builder plus adversarial-verifier; the council). Any team, human or agent, can run it.
+the agent shapes (builder plus adversarial-verifier; the court). Any team, human or agent, can run it.
 
 ### Prompting it well
 
@@ -218,7 +218,7 @@ orchestration, roughly 18 hours and 5.4 million tokens of fan-out work across 10
 and the token cost in plain view.*
 
 LDD is built for **multi-agent orchestration**, not solo edits. Its core shapes are all fan-outs of agents:
-a *builder* paired with an adversarial *verifier*; *multi-author plus a coherence pass* for volume; the *council*
+a *builder* paired with an adversarial *verifier*; *multi-author plus a coherence pass* for volume; the *court*
 for judgement; *loop-until-dry* for unknown-size work like gap-closure. In Claude Code, those fan-outs run as
 **workflows** (deterministic scripts that spawn and coordinate many subagents).
 
@@ -236,7 +236,7 @@ a standing goal produces heavy, long-running, fan-out workflows.** A single goal
 sequence, each spawning many parallel agents, running for a long time with little human input. That is the source
 of its power and the source of its cost (it consumes a lot of tokens and compute, by design): thoroughness over
 speed. What keeps that throughput honest rather than runaway is the rest of LDD: the continuous closure-gate, the
-adversarial verifier on every milestone, the council on the hard forks, and the decision-log journal recording
+adversarial verifier on every milestone, the court on the hard forks, and the decision-log journal recording
 why each of those many agents did what it did.
 
 ---
@@ -308,12 +308,12 @@ The README is the pitch. When you want to actually run LDD:
   the one rule that prevents it, ending in a smell-test checklist.
 - **[docs/invariants.md](docs/invariants.md)** : the LDD-INV method invariant register. Each invariant, the
   failure it prevents, and where it is enforced (the single owner every other doc cites).
-- **[skills/council/SKILL.md](skills/council/SKILL.md)** : the deliberation court in full (Council, Appeals,
+- **[skills/court/SKILL.md](skills/court/SKILL.md)** : the deliberation court in full (Court, Appeals,
   Supreme) and how a contested fork becomes binding spec law.
-- **[council/SPEC-LAW.md](council/SPEC-LAW.md)** : the spec-law register: Supreme Council precedent, the law the
+- **[court/SPEC-LAW.md](court/SPEC-LAW.md)** : the spec-law register: Supreme Court precedent, the law the
   courts write.
 - **[templates/](templates/)** : copy-paste skeletons for every artefact (intent ledger, metacognition entry,
-  ADR, spec, milestone sign-off, council verdict, closure-gate config).
+  ADR, spec, milestone sign-off, court verdict, closure-gate config).
 - **[examples/](examples/)** : one continuous worked run of LDD on a single fictional project (Tasky), from
   harvest through the 5-phase milestone close.
 
@@ -325,21 +325,21 @@ The README is the pitch. When you want to actually run LDD:
 .claude-plugin/plugin.json                        the plugin manifest
 .claude-plugin/marketplace.json                   makes this repo installable in one step
 skills/log-driven-development/SKILL.md             the full method
-skills/council/SKILL.md                            the council and the appeals hierarchy
+skills/court/SKILL.md                            the court and the appeals hierarchy
 skills/refactoring/                                the STRUCTURE-phase suite (structural sweep, refactor rounds)
 skills/security/                                   the single authoritative security suite (deep methodology, adapters, playbooks)
 skills/code-review/                                human-grade correctness-and-security review skill
 skills/simplify/                                   human-grade quality-and-reuse cleanup skill
 skills/deep-research/                              the cited multi-source research harness
 commands/ldd.md                                    the /ldd slash command
-commands/council.md                                the /council slash command
+commands/court.md                                the /court slash command
 docs/playbook.md                                   the prescriptive operating manual: exactly what to do
 docs/methodology.md                                the long-form walkthrough of the method
 docs/systems.md                                    the systems reference: every part, and how they interlock
 docs/anti-patterns.md                              how the method breaks, and the rule that prevents each
 docs/artifacts.md                                  artefact-by-artefact how-to (what, why, how to constitute)
 docs/invariants.md                                 the LDD-INV register: each method invariant, its failure, where enforced
-council/SPEC-LAW.md                                the spec-law register: Supreme Council precedent (the law the courts write)
+court/SPEC-LAW.md                                the spec-law register: Supreme Court precedent (the law the courts write)
 tools/closure-gate/                                the continuous per-commit gate (closure_gate.py + config + pre-commit)
 tools/refactoring/                                 refactoring-suite helpers (surface extraction, suite verifier)
 tools/vibe/                                        the coded gates (vibescan, vibeaudit, vibetest, vibeclean, viberapid, vibedeploy)

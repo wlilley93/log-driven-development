@@ -1,9 +1,9 @@
 ---
-description: Convene an adversarial deliberation council on a high-stakes decision (or escalate to the Appeals / Supreme Council)
+description: Convene an adversarial deliberation court on a high-stakes decision (or escalate to the Appeals / Supreme Court)
 argument-hint: <the decision or question to deliberate> [| appeal | supreme]
 ---
 
-Convene **the council** (see the `council` skill) on this question:
+Convene **the court** (see the `court` skill) on this question:
 
 **$ARGUMENTS**
 

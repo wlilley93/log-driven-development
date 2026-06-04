@@ -47,7 +47,7 @@ next move. A reversed decision is never edited away: a new entry supersedes the 
 **Feeds / depends on.** Depends on **ground-truth** and **provenance-or-it-does-not-go-in** (system 8) for its
 integrity, and on the **one-writer rule** (system 8) so the ledgers stay coherent under parallel agents. Feeds
 **everything**: it is the context and provenance every agent reads before acting (system 3), the grounding the
-council ground-truths against (system 4), the source the spec is distilled from (system 9), and the record a cold
+court ground-truths against (system 4), the source the spec is distilled from (system 9), and the record a cold
 agent resumes from. A load-bearing journal decision graduates to an **ADR** (system 9).
 
 ---
@@ -115,26 +115,26 @@ solo inline edits, so for any substantive task you reach for a shape, not a hand
   applies serially.
 - **Loop-until-dry.** For unknown-size work (gap-closure, bug-finding), keep spawning rounds until K consecutive
   rounds find nothing new.
-- **The council.** For high-stakes judgement calls, a fan-out of independent, named, distinct-lens critics
+- **The court.** For high-stakes judgement calls, a fan-out of independent, named, distinct-lens critics
   (system 4).
 
 **The failure it prevents.** A single pass rationalising away its own gaps (the verifier catches what the builder
 talked itself out of seeing); collisions and lost writes when many agents author at once (file-partition plus
 serial integration gives parallel throughput without races); stopping a search too early or wasting passes (the
 consecutive-empty-rounds rule sizes itself to the real work); and one perspective rationalising a hard fork (the
-council's independent lenses).
+court's independent lenses).
 
-**How it operates in practice.** The builder + verifier pairing is the workhorse and the model for the council:
+**How it operates in practice.** The builder + verifier pairing is the workhorse and the model for the court:
 one produces, one independent adversary attacks, and the verifier's verdict is an *input* to the orchestrator, not
 the final word (on Tasky, the verifier is the one that builds a blocking cycle and checks the auto-reopen cascade
 terminates, a case the builder did not write). Harvest runs as multi-author + coherence (a dozen ledger areas
-harvested at once). The spec-and-build loop runs as loop-until-dry. The hard forks run as the council.
+harvested at once). The spec-and-build loop runs as loop-until-dry. The hard forks run as the court.
 
 **Feeds / depends on.** Depends on the **disciplines** (system 8): ground-truth (every shape cites evidence),
 one-writer (agents return, the orchestrator integrates), file-partition (parallel authors own distinct files).
 Reads the **twin-ledger spine** (system 1) for context and provenance. Feeds the **gates**: the builder produces
 what the closure-gate (system 6) checks; the verifier is the VERIFY phase of the **milestone close** (system 7).
-The council shape escalates into the **deliberation court** (system 4). At scale, these shapes are exactly what the
+The court shape escalates into the **deliberation court** (system 4). At scale, these shapes are exactly what the
 **ultracode posture** (system 10) fans out.
 
 ---
@@ -142,7 +142,7 @@ The council shape escalates into the **deliberation court** (system 4). At scale
 ## 4. The deliberation court
 
 **What it is.** A three-tier adversarial court modelled on UK law that decides the rare genuinely high-stakes,
-hard-to-reverse fork: **the Council** (first instance), **the Appeals Council**, **the Supreme Council**. Each
+hard-to-reverse fork: **the Court** (first instance), **the Appeals Court**, **the Supreme Court**. Each
 tier is an ephemeral fan-out of fresh independent seats; each higher court is handed the full record of every
 court below.
 
@@ -150,28 +150,28 @@ court below.
 defers into another meeting. It also prevents the same hard question being re-fought from scratch forever: the
 apex sets binding precedent.
 
-**How it operates in practice.** The Council is a single parallel fan-out of a handful of named seats, each given a
+**How it operates in practice.** The Court is a single parallel fan-out of a handful of named seats, each given a
 distinct lens (project health, process critic, devil's advocate, plus a domain lens: security, cost, UX, the
 advocate of a named alternative). Each seat ground-truths against the real tree first (a seat that cannot cite is
 ignored); seats run independently and do not see each other mid-run, so they cannot converge into groupthink; each
-leads with the blunt truth. The orchestrator synthesises, and the Council **ends in a build action or a kill, never
+leads with the blunt truth. The orchestrator synthesises, and the Court **ends in a build action or a kill, never
 "we will look at it later"**. Nothing persists but the verdict and the **surviving dissent** (recorded, never
 buried, because it is the standing of any future appeal).
 
-The split that makes the hierarchy work is **merits versus law**. The Council and the Appeals Council argue
+The split that makes the hierarchy work is **merits versus law**. The Court and the Appeals Court argue
 **points of spec (the merits)**: *what is the right design?* Escalation needs **standing** ("I would have designed
 it differently" is not standing; the principal disagrees, a load-bearing dissent is unresolved, or new ground-truth
-contradicts a relied-upon point, is). The Appeals Council re-weighs the merits as a review, engaging the Council's
-actual reasoning, and may uphold or overturn. The **Supreme Council** does something different: it hears **only
+contradicts a relied-upon point, is). The Appeals Court re-weighs the merits as a review, engaging the Court's
+actual reasoning, and may uphold or overturn. The **Supreme Court** does something different: it hears **only
 points of law**: *was the invariant spec and the LDD discipline correctly applied?* Because it rules on law not
 taste, its ruling becomes **spec law**: an immutable, numbered precedent that binds every future court. A decision
 that collides with spec law is refused at the spec layer the same way a trust boundary refuses an unknown command;
-only a later Supreme Council, narrowing the precedent on a point of law, can refine it.
+only a later Supreme Court, narrowing the precedent on a point of law, can refine it.
 
-**Feeds / depends on.** Is the escalation of the **council shape** (system 3). Spends from the **deliberation
+**Feeds / depends on.** Is the escalation of the **court shape** (system 3). Spends from the **deliberation
 budget** (system 5): it is convened only when build-first does not apply. Ground-truths against the **twin-ledger
 spine** (system 1) and the spec (system 9). Feeds the spine back: a verdict graduates to an **ADR** (system 9) and
-a Supreme ruling becomes spec law that constrains the spec itself. At scale, the council is the judgement valve
+a Supreme ruling becomes spec law that constrains the spec itself. At scale, the court is the judgement valve
 that keeps autonomous fan-out (system 10) from committing an irreversible mistake unexamined.
 
 ---
@@ -180,21 +180,21 @@ that keeps autonomous fan-out (system 10) from committing an irreversible mistak
 
 **What it is.** The standing rule that governs *how much deliberation a decision earns*. In the build phase the
 default is **build-first**: a reversible, swappable choice gets one decisive sentence, not a panel. A panel or
-council is reserved for irreversible, load-bearing forks, and **it ends in a commit or a kill**, never another
+court is reserved for irreversible, load-bearing forks, and **it ends in a commit or a kill**, never another
 document that defers. No decision-of-record gets made by argument alone: a buildable artefact (a framework, a
 store, a protocol) is chosen by a spike that exercises it, not by an ADR written from the armchair. And the
 **meta-to-build ratio** is surfaced, so the project can see when it is deliberating more than it is building.
 
-**The failure it prevents.** Analysis paralysis and decision-theatre: spending a council on whether Tasky's IDs are
+**The failure it prevents.** Analysis paralysis and decision-theatre: spending a court on whether Tasky's IDs are
 UUIDs or ULIDs while a sentence would do, and the inverse, waving through a genuinely irreversible fork (collapsing
-the three completion paths) with a sentence when it earns a real ADR. It also prevents the council from degrading
+the three completion paths) with a sentence when it earns a real ADR. It also prevents the court from degrading
 into a standing committee that produces meetings instead of commits.
 
 **How it operates in practice.** Once you are building, the risk lives in the *unbuilt* surfaces, so the cheap
-default is to build and journal one sentence. Escalation is deliberate and rare. Every panel, audit, or council is
+default is to build and journal one sentence. Escalation is deliberate and rare. Every panel, audit, or court is
 required to terminate in a committed change or an explicit kill the same beat. Buildable choices are settled by a
-thin slice, not by prose. Periodically (and at the retrospective council) the meta-to-build ratio is named
-honestly: if the project has held more councils than it has shipped milestones, that is a finding.
+thin slice, not by prose. Periodically (and at the retrospective court) the meta-to-build ratio is named
+honestly: if the project has held more courts than it has shipped milestones, that is a finding.
 
 **Feeds / depends on.** Governs when the **deliberation court** (system 4) is convened at all, and is itself one of
 the **disciplines** (system 8, "build-first in the build phase"). Feeds the **milestone close** (system 7): the
@@ -265,7 +265,7 @@ under-checking (skipping the deep audit on a high-risk one).
   tries to break the new surface. This is the primary correctness-and-security net, every milestone.
 - **PLAN.** **Mandatory.** The milestone does not close until the next steps are planned: the next milestone's
   scope, sequence, and risks, plus the single next move. A high-stakes next fork escalates to a planning agent or
-  a council. No drifting into an unplanned next milestone.
+  a court. No drifting into an unplanned next milestone.
 
 The two-tier gate is the through-line: **Tier 1** (the closure-gate, system 6) runs on every commit so quality is
 enforced continuously; **Tier 2** (the deep security audit, the full refactor pass, the adversarial verifier) is
@@ -276,8 +276,8 @@ single owner of each.
 
 This table is the single source of truth for which tool owns which concern and at which cadence. Every other doc
 and every gate config CITES this matrix; none restates it. "Tier" here is the GATE-CADENCE axis (continuous
-per-commit vs risk-triggered heavy pass), distinct from the court's judgement Tiers (Council / Appeals / Supreme,
-owned by the council skill). The continuous tier holds only the cheap edge of each suite; every heavy pass stays
+per-commit vs risk-triggered heavy pass), distinct from the court's judgement Tiers (Court / Appeals / Supreme,
+owned by the court skill). The continuous tier holds only the cheap edge of each suite; every heavy pass stays
 risk-triggered under one owner (the anti-bloat veto).
 
 | Concern | Single owner | Tier / trigger |
@@ -366,7 +366,7 @@ un-folded and unseen, because the internal leg cannot see an omission and only t
 at the source.
 
 **How it operates in practice.** A journal decision that is load-bearing graduates to an ADR (collapsing Tasky's
-three completion paths is the canonical one); a council verdict that needs a durable home becomes an ADR too. ADRs
+three completion paths is the canonical one); a court verdict that needs a durable home becomes an ADR too. ADRs
 are append-only as a set: you supersede an ADR with a new ADR, you never edit the old one to flip it. The spec is
 first drafted at distil and then amended continuously through the loop: when building proves a spec line wrong, you
 fix the spec (it is the source of truth) and the journal records why. The harmonize step is run when surfaces have
@@ -376,7 +376,7 @@ re-walks every harvest source (loop-until-dry, against the source ranges and the
 any load-bearing detail that never reached the spec. A FREEZE or done verdict with no source-coverage leg on
 record is not done.
 
-**Feeds / depends on.** ADRs are graduated from the **journal** (system 1) and from **council** verdicts (system
+**Feeds / depends on.** ADRs are graduated from the **journal** (system 1) and from **court** verdicts (system
 4), and a Supreme ruling can constrain the spec as spec law. The spec is distilled from the **intent ledgers**
 (system 1) during the **arc** (system 2) and is what the **closure-gate** (system 6) checks declared-but-unbuilt
 surfaces against. The closure sweep is the gap detector the **loop** (system 2) and the **milestone close** (system
@@ -395,15 +395,15 @@ parallel agents, mostly autonomously.
 
 **The failure it prevents.** Hand-cranking a multi-agent process one fan-out at a time, which throttles
 throughput. The posture lets a single goal drive dozens of workflows in sequence (harvesters, builders, verifiers,
-whole councils) with little human input.
+whole courts) with little human input.
 
 **How it operates in practice.** The methodology supplies the *shapes* (the harvest fan-out, builder plus verifier,
-the council, loop-until-dry) and the mode makes orchestration the default *how*, so the two compose: LDD says what
+the court, loop-until-dry) and the mode makes orchestration the default *how*, so the two compose: LDD says what
 to orchestrate, ultracode makes orchestration the default. Stated plainly, this is a deliberate trade. **The
 power:** it can build and adversarially verify a large system largely on its own. **The honest cost:** it consumes
 a lot of tokens and compute, by design; the trade is thoroughness over speed. What keeps that throughput honest
 rather than runaway is the rest of LDD working as a governor: the **closure-gate** refusing drift on every commit,
-the **adversarial verifier** attacking every milestone, the **council** gating the hard forks, and the
+the **adversarial verifier** attacking every milestone, the **court** gating the hard forks, and the
 **metacognition journal** recording why each of those many agents did what it did. Turn the engine on once the
 disciplines are in place, not before.
 
@@ -429,7 +429,7 @@ The ten systems are not a checklist. They are one machine with a single loop, an
    ┌───────────────────┐   context+provenance   ┌────────────────────────┐
    │  TWIN-LEDGER SPINE │ ─────────────────────> │  AGENT SHAPES (3)       │
    │  (1)               │                        │  builder | multi-author │
-   │  intent + journal  │ <───── what/why ────── │  loop-until-dry | council│
+   │  intent + journal  │ <───── what/why ────── │  loop-until-dry | court│
    │  + INDEX + RESUME  │   (one writer: orch.)  └───────────┬────────────┘
    └─────────┬─────────┘                                     │ build then verify
              │ distilled into                                v
@@ -461,7 +461,7 @@ Read as one machine, the loop runs like this:
 4. **The gates feed the milestone close (7), which ends in PLAN.** Tier 1 (the closure-gate) ran continuously, so
    STRUCTURE is a scan and SECURITY is risk-targeted; VERIFY is the independent net; and the close cannot finish
    until PLAN names the next move. PLAN feeds the next turn of the arc.
-5. **The hard forks feed the council (4), gated by the deliberation budget (5).** Most decisions are one sentence
+5. **The hard forks feed the court (4), gated by the deliberation budget (5).** Most decisions are one sentence
    and a commit. Only an irreversible fork is convened, it ends in a build action or a kill, and a Supreme ruling
    sets **spec law** that constrains the spec **(9)** itself.
 6. **The journal (1) records all of it.** Every beat, decision, verdict, and milestone is written down as it
@@ -469,7 +469,7 @@ Read as one machine, the loop runs like this:
    where it was left, because the reasoning was recorded, not reverse-engineered.
 7. **At scale (10),** the standing goal drives this loop as many parallel workflows, mostly on its own. The power
    is autonomous build-and-verify of a large system; the cost is real tokens and compute, by design. The
-   closure-gate, the verifier, the council, and the journal are precisely what keep that throughput honest rather
+   closure-gate, the verifier, the court, and the journal are precisely what keep that throughput honest rather
    than runaway.
 
 That is the whole of it. The ledgers ground the agents, the agents drive the gates, the gates close the milestone,

@@ -110,7 +110,7 @@ An agent (or a person) that cannot cite is **ignored**. If you cannot point at `
 do not know it yet, you are guessing.
 
 **How to catch it.** Scan any ledger claim or agent finding for its citation. A sentence about the legacy with no
-`file:line` attached is a vibe, not a fact: strike it or ground it. The same test applies to council seats, a seat
+`file:line` attached is a vibe, not a fact: strike it or ground it. The same test applies to court seats, a seat
 that cannot cite the real code is disregarded by construction.
 
 ---
@@ -137,7 +137,7 @@ with the artifact excluded.
 
 ## 6. Deliberation as procrastination (the panel that only defers)
 
-**The failure.** A council, audit, or review is convened and produces... another document. "We should investigate
+**The failure.** A court, audit, or review is convened and produces... another document. "We should investigate
 this further." "Let us revisit next milestone." The deliberation felt productive, but nothing was built and
 nothing was killed. The fork is exactly as open as before, now with a paper trail.
 
@@ -145,14 +145,14 @@ nothing was killed. The fork is exactly as open as before, now with a paper trai
 when a decision is hard. A panel with no termination rule will reliably produce a deferral, because deferral is the
 lowest-friction output that still looks like a conclusion.
 
-**The rule that prevents it.** A council **ends in a build action or a kill**, the same beat, never "we will look
-at it later." And the **deliberation budget** governs whether a council is convened at all: in the build phase the
+**The rule that prevents it.** A court **ends in a build action or a kill**, the same beat, never "we will look
+at it later." And the **deliberation budget** governs whether a court is convened at all: in the build phase the
 risk lives in the *unbuilt* surface, so a reversible, swappable choice gets **one decisive sentence and then you
-build it**, not a panel. Reserve the council for genuinely irreversible, load-bearing forks.
+build it**, not a panel. Reserve the court for genuinely irreversible, load-bearing forks.
 
-**How to catch it.** Read the verdict's last line. If it is not a concrete commit or an explicit kill, the council
+**How to catch it.** Read the verdict's last line. If it is not a concrete commit or an explicit kill, the court
 failed and must reconvene to a decision. The slower tell is the **meta-to-build ratio**: if the project has held
-more councils than it has shipped milestones, deliberation has become the work, and that is itself a finding to
+more courts than it has shipped milestones, deliberation has become the work, and that is itself a finding to
 surface at the retrospective.
 
 ---
@@ -236,7 +236,7 @@ thread.
 **The rule that prevents it.** **PLAN is the mandatory fifth phase of the milestone close, and the next build does
 not start until it runs.** PLAN names the next milestone's scope, sequence, and risks, plus the single next move,
 and it updates the RESUME pointer so a cold agent can lift it. A high-stakes next fork escalates from PLAN to a
-planning agent or a council. No drifting into an unplanned next milestone.
+planning agent or a court. No drifting into an unplanned next milestone.
 
 **How to catch it.** Read the RESUME pointer: if it does not name one concrete next move, PLAN did not happen.
 A milestone sign-off missing its PLAN section is the same gap on the artefact. The cold-start test is the sharpest:
@@ -301,7 +301,7 @@ and keep moving. But a filed security issue competes with everything else in the
 **The rule that prevents it.** **Fix security the moment it is found.** This overrides every schedule and every
 beat plan. A security issue is never committed knowingly and never deferred: it is fixed when found, the moment it
 is found, before the beat continues. (A genuine *design* fork around the fix, the kind that has real cost on both
-sides, can go to a council, but the council still ends in a build action that closes the hole.)
+sides, can go to a court, but the court still ends in a build action that closes the hole.)
 
 **How to catch it.** Any backlog entry of the form "TODO: fix security X" is the anti-pattern by definition: a
 security item in a backlog is one that was deferred instead of fixed. Scan the task list and the DROP-lists for
@@ -329,7 +329,7 @@ the sentence needs an "and," split it.
 
 ---
 
-## 15. Council without standing, or the wrong tier (the appeal that re-argues blind)
+## 15. Court without standing, or the wrong tier (the appeal that re-argues blind)
 
 **The failure.** A settled verdict gets re-opened on a whim ("I would have designed it differently"), or an appeal
 re-argues the question from scratch without engaging the original reasoning, or a point of *law* (was the method
@@ -341,13 +341,13 @@ the merits-versus-law split, every tier re-fights the same fight. Taste masquera
 
 **The rule that prevents it.** Escalation needs **standing**: the principal disagrees, a load-bearing dissent was
 left unresolved, or new ground-truth contradicts a relied-upon point. "I would have designed it differently" is
-not standing. The **Appeals Council** re-weighs the **merits** but as a *review* that must engage the original
-reasoning, not re-argue blind. The **Supreme Council** hears **only points of law** (was the invariant spec and the
+not standing. The **Appeals Court** re-weighs the **merits** but as a *review* that must engage the original
+reasoning, not re-argue blind. The **Supreme Court** hears **only points of law** (was the invariant spec and the
 LDD discipline correctly applied), and its ruling becomes **spec law**, immutable precedent that binds every future
 court. A decision colliding with spec law is refused at the spec layer.
 
 **How to catch it.** Check the appeal's basis against the standing list before convening anything: no standing, no
-appeal. Check that an Appeals seat cites the Council's actual reasoning rather than starting fresh. Check that a
+appeal. Check that an Appeals seat cites the Court's actual reasoning rather than starting fresh. Check that a
 Supreme question is genuinely about *law* (method and invariants) and not smuggled-in *taste*: if it is taste, it
 does not belong at the apex.
 
@@ -356,7 +356,7 @@ does not belong at the apex.
 ## 16. The principal's call decided by an agent (guessing on policy)
 
 **The failure.** A question that is really the principal owner's **policy or domain call** (a product direction, a
-compliance posture, a pricing or trust decision) gets settled by an agent or a council as if it were a technical
+compliance posture, a pricing or trust decision) gets settled by an agent or a court as if it were a technical
 choice. The agent guesses on the owner's behalf, and the guess becomes a built-in assumption nobody actually
 authorised.
 
@@ -368,7 +368,7 @@ decision we own" and "owner's call we must ask about" is easy to blur under mome
 one, is **asked**, not guessed. The court decides technical merits and points of law; it does not decide what the
 owner wants the product to be. When a fork turns on policy, surface it and ask.
 
-**How to catch it.** Before a council or a build commits to a fork, ask: is this a technical question, or is it
+**How to catch it.** Before a court or a build commits to a fork, ask: is this a technical question, or is it
 really "what does the owner want here?" If reasonable owners could differ on values (not facts), it is a policy
 call: stop and ask the principal rather than recording a guess as a decision.
 
@@ -448,7 +448,7 @@ perfectly self-consistent can be uniformly *wrong*. And the security scan sample
 file holding a live secret was the file it skipped.
 
 **Why it happens.** Distillation is the one major harvest step that, by default, carries no built-in skeptic. The
-build has a builder and an adversarial verifier; the council has dissent; but "what to drop" is usually a single
+build has a builder and an adversarial verifier; the court has dissent; but "what to drop" is usually a single
 agent's judgement, written down and never re-litigated. Dropping feels safe once it has a reason attached, and a
 reason that reads plausibly is rarely re-opened.
 
@@ -477,7 +477,7 @@ stop and apply the rule above.
 - **"Done" that only a worker said**, not one the orchestrator re-ran from clean. (Re-prove it yourself.)
 - A commit staged with **`add -A` / `add .`**. (Name explicit paths.)
 - The duplication ratchet **raised** to make a commit pass. (Hold or fold, never raise.)
-- A council or audit whose last line is **not a commit or a kill**. (Reconvene to a decision.)
+- A court or audit whose last line is **not a commit or a kill**. (Reconvene to a decision.)
 - A decision-of-record for a framework/store/protocol with **no spike** behind it. (Exercise it first.)
 - A subagent that **wrote shared state** (journal, spec, index, task list). (Only the orchestrator writes.)
 - Two parallel agents whose briefs **name the same file**. (Re-partition, or return-and-integrate serially.)

@@ -1,4 +1,4 @@
-# SPEC-LAW-3 (*Reference re Consolidation*): the full Supreme Council panel (the record behind the precedent)
+# SPEC-LAW-3 (*Reference re Consolidation*): the full Supreme Court panel (the record behind the precedent)
 
 This is the verbatim panel record for [`SPEC-LAW-3`](SPEC-LAW.md). The synthesised controlling rule is the
 precedent; this file preserves every justice's opinion, ruling, grounding, and self-dissent in full, per the
@@ -7,8 +7,8 @@ deliver-and-record-in-full discipline (LDD-INV-16). The panel held **5-0** on th
 installable unit is **barred** (it clears the source limb but fails the anti-bloat limb on demonstrated need, and
 fails severability on a bidirectional coupling), with the lower court's outcome upheld but its reasoning corrected.
 
-The court arc that produced it: a first-instance Council (unanimous to keep one unit) → an Appeals Council
-(deadlocked 2-2) → this Supreme Council (5-0 on the point of law).
+The court arc that produced it: a first-instance Court (unanimous to keep one unit) → an Appeals Court
+(deadlocked 2-2) → this Supreme Court (5-0 on the point of law).
 
 ---
 
@@ -27,7 +27,7 @@ TWO operative clauses in one breath: the source-of-truth clause and the express 
 not amputate the second to reach a result the first allows. So the seat is RIGHT that the count of manifests is
 not itself a named prohibited object (the first limb does not bind unit-count) but WRONG that INV-9 therefore says
 nothing about a second installable surface: the second limb independently restrains added machinery absent
-demonstrated need. Conversely the first-instance Council erred in importing a freestanding "one installable unit
+demonstrated need. Conversely the first-instance Court erred in importing a freestanding "one installable unit
 per repo" prong into the first limb. The Appeals "Wisdom" seat applied the law most faithfully (restraint located
 in the anti-bloat half; SKILL.md:114-115 read as additive-over-a-mandatory-floor). Per SPEC-LAW-1(c) the pro-split
 disposition rested on a collapsed fact (the "4.5M" cost), so the anti-bloat limb's demonstrated-need gate is
@@ -50,7 +50,7 @@ first limb and let the disposition follow. INV-9's only ENUMERATED prohibited ob
 store, service, or enforcer'; a packaging manifest is none of these, and the second sentence's 'do not add tools'
 is, on its face, about TOOLS and HEAVY PASSES (the closure-gate/scanner economy), not about installation manifests
 at all. By stretching 'anti-bloat' from its enumerated targets (tools, heavy passes) to cover 'manifests and
-parallel amendment surfaces', I have done the very thing I condemn in the first-instance Council: imported an
+parallel amendment surfaces', I have done the very thing I condemn in the first-instance Court: imported an
 object the text does not name into INV-9's reach, merely relocating the unwritten prong from Limb One to Limb Two.
 A disciplined textualist would hold that INV-9 simply does not reach unit-count on EITHER limb, that a co-versioned
 reference-only second manifest is lawful full stop under Limb One, and that the correct ground for refusing the
@@ -78,7 +78,7 @@ says "the floor every LDD run is bound by" (mandatory, layered-on-top). Vacated.
 first-instance dissents leaned on the one-directional-dependency premise as the separable-module signal; that is
 FALSE on the tree (the method self-convenes the court, SKILL.md:63-69 → bidirectional). Vacated. (3) The
 first-instance majority and the pro-split cost case leaned on a "4.5M dead weight" figure ground-truth falsifies
-(skills ~580K; council ~20K; the 3.6M is tools/vibe, pip-installed, never copied). Re-grounded. The
+(skills ~580K; court ~20K; the 3.6M is tools/vibe, pip-installed, never copied). Re-grounded. The
 correctly-reasoned seats were Appeals "Wisdom" (bidirectional coupling, mandatory floor, anti-bloat) and "Reuse
 reality" (falsified cost).
 
@@ -119,10 +119,10 @@ construction of the law and the soundness of its application, never on whether A
 **Construction held.** SOURCE-WITH-ANTIBLOAT-LIMB.
 
 **Application review.** Two distinct errors below; both constructions advanced in isolation misapply INV-9. ERROR 1:
-the first-instance Council held "a split would itself violate LDD-INV-9" by treating the COUNT of units as a per-se
+the first-instance Court held "a split would itself violate LDD-INV-9" by treating the COUNT of units as a per-se
 prohibited object - reading an unwritten "one installable unit per repo" prong into the rule. INV-9's enumerated
 prohibited objects are exhaustively "a parallel system, store, service, or enforcer," and a referencing,
-non-vendoring second manifest is on its face a regenerable VIEW. To that extent the Council MISAPPLIED INV-9. ERROR
+non-vendoring second manifest is on its face a regenerable VIEW. To that extent the Court MISAPPLIED INV-9. ERROR
 2: the Appeals "INV-9 construction" and "Mechanics & cost" overturns rested on TWO collapsed facts - the "separable
 one-directional module" signal (false: SKILL.md:63-69 self-convenes; SKILL.md:136 reads registers at convene time →
 bidirectional and live) and the "swappable default floor" reading (false: SKILL.md:114-115 = additive over a
@@ -149,8 +149,8 @@ re-decision dressed as law. By erecting a three-part conjunctive test whose limb
 stated how INV-9 binds a CLASS of decisions; it has supplied the dispositive analysis for THIS one and thereby
 resolved A-vs-B under the banner of law, trespassing the merits/law split that SKILL.md:102-109 reserves to the
 courts below. A purer application-review ruling would have stopped at the construction point (INV-9's SOURCE limb
-does not reach unit-count; the Council read in an unwritten prong; the Appeals overturn rested on collapsed facts)
-and REMANDED to a re-grounded Council to apply the anti-bloat limb to the corrected facts, rather than the apex
+does not reach unit-count; the Court read in an unwritten prong; the Appeals overturn rested on collapsed facts)
+and REMANDED to a re-grounded Court to apply the anti-bloat limb to the corrected facts, rather than the apex
 itself finding 'need is unproven' - a finding of fact the apex is constitutionally barred from making. The risk is
 that future courts cite SPEC-LAW-3's test (2)/(3) as license for the Supreme tier to decide design questions
 whenever it can characterise the fork as turning on an invariant, eroding the very trial-court primacy this method
@@ -171,14 +171,14 @@ hypothesis; a second installable unit justified by a speculative audience is the
 
 **Application review.** BOTH appellate OVERTURN seats erred the same way: they read only the first limb and treated
 the anti-bloat veto as absent. The "INV-9 construction" seat is CORRECT that the enumerated objects don't literally
-name "manifest/bundle" and that the first-instance Council over-read an unwritten "one installable unit per repo"
+name "manifest/bundle" and that the first-instance Court over-read an unwritten "one installable unit per repo"
 prong into the source limb - but it then committed the mirror error, concluding that because B clears the source
 limb it is lawful, skipping the anti-bloat limb. A second manifest IS added machinery / a standing enforcer-class
 surface within the plain reach of the veto. The "Mechanics & cost" seat compounded this by resolving a MERITS
 question (near-zero build cost, the plugins[] array) - cost-of-implementation is design taste reserved below, and
 near-zero BUILD cost does not answer the anti-bloat limb's concern, which is standing MAINTENANCE/amendment surface,
 not bytes. The "Wisdom" and "Reuse reality" seats applied the law correctly (bidirectional coupling; falsified cost).
-The first-instance Council reached the right disposition on a partly wrong premise (the unit-count prong); under
+The first-instance Court reached the right disposition on a partly wrong premise (the unit-count prong); under
 SPEC-LAW-1(c) that premise collapses and the holding is re-grounded on the anti-bloat limb + demonstrated-consumer
 test rather than patched.
 
@@ -195,7 +195,7 @@ evidence against separability and weighs the presumption toward denial. Build-co
 
 **Self-dissent (verbatim).** "The strongest argument against my holding: by elevating the anti-bloat clause into a
 second, independently-dispositive LIMB with its own demonstrated-consumer burden, I may be manufacturing the very
-'unwritten prong' I fault the first-instance Council for inventing. INV-9's text presents anti-bloat as a GLOSS on
+'unwritten prong' I fault the first-instance Court for inventing. INV-9's text presents anti-bloat as a GLOSS on
 the single-source rule ('This is the load-bearing invariant of this register AND the anti-bloat veto') describing
 the same concern (proliferating OWNERS of a fact), not as a free-standing veto over packaging that holds no fact. On
 that reading the 'INV-9 construction' appellate seat is simply right: the enumerated prohibited objects are 'parallel
@@ -221,7 +221,7 @@ surfaces, not file counts. The test for a lawful split is a standing test, not a
 **Application review.** Both lower courts erred in opposite directions. The Appeals "INV-9 construction" seat read
 INV-9 as binding SOURCES ONLY, ignoring the second limb that sits in the same sentence; a second unit is not a new
 source of truth (the source limb does not reach it) but IS added governing machinery (the anti-bloat limb does).
-The first-instance Council and "Wisdom" seat reached the right disposition-zone on a partly collapsed premise (the
+The first-instance Court and "Wisdom" seat reached the right disposition-zone on a partly collapsed premise (the
 unwritten unit-count prong); under SPEC-LAW-1(c) the source-limb reasoning is vacated and the conclusion survives
 only if re-seated on the anti-bloat limb. The appeal's ENGINE - the one-directional-dependency separable-module
 signal - is FALSIFIED on the tree (SKILL.md:63-69 self-convenes; SKILL.md:136 reads registers at convene time →
