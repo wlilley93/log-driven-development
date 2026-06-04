@@ -64,7 +64,7 @@ a real fork - earns a court.
 
 **Stage 1+ - the neutral bench.** Convene a panel of **impartial justices, with no advocate among them**. Hand them
 *both* briefs. Each justice **independently ground-truths the briefs** (an advocate's brief is an argument, not
-evidence - verify every load-bearing figure, cf. SPEC-LAW-1(c); this is where an overclaimed number dies), runs
+evidence - verify every load-bearing figure by re-running the command behind it, cf. SPEC-LAW-1(c); this is where an overclaimed number *should* die, though the bench is one more fallible agent, so the re-run is the safeguard, not its word), runs
 **blind** to the others, weighs the two cases, and rules. Justices may differ in *judicial philosophy* (textualist,
 purposive, risk-first) but never in *allegiance*. One synthesis step after. This holds at every tier: on appeal the
 appellant (claimant) and respondent (defendant) re-argue and a neutral Appeals bench rules; at the apex both sides

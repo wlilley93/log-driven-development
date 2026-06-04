@@ -104,8 +104,10 @@ guard against over-litigation (DPR 11).
 
 **DPR 5.3 - Form of a pleading.** A pleading states the party, the plea (the disposition sought), and **numbered
 grounds**, each backed by either an **authority** (a cited rule or precedent - DPR Part 9) or **evidence** (a
-ground-truthed fact, with `file:line`/command-output). Each party states its strongest point and concedes fairly
-what the other side gets right.
+ground-truthed fact). **Every load-bearing figure carries the inline, re-runnable command that produced it and
+its output** (the `grep`/`wc`/`du`/test that yields the number), so the bench and any later reader can re-run it;
+a figure with no re-runnable command behind it is struck. Each party states its strongest point and concedes
+fairly what the other side gets right.
 
 ---
 
@@ -113,9 +115,11 @@ what the other side gets right.
 
 **DPR 6.1 - The bench.** A panel of 3-5 impartial justices, no advocate among them, each handed *both* briefs.
 
-**DPR 6.2 - A brief is argument, not evidence.** Each justice **independently ground-truths** every load-bearing
-claim in both briefs against the tree (verify, never trust). A figure an advocate asserts is re-counted by the
-bench (cf. *In re the Court-Split*, where a pleaded "4.5M" cost was really ~20K).
+**DPR 6.2 - A brief is argument, not evidence; the bench is fallible.** Each justice **independently
+ground-truths** every load-bearing claim, **re-running the inline command** behind any figure (DPR 5.3) rather
+than re-asserting it (cf. *In re the Court-Split*, where a pleaded "4.5M" cost was really ~20K). This catch is
+**required of the bench but never guaranteed**: the bench is one more fallible agent of the same kind that wrote
+the brief, so the re-runnable command is the safeguard, not the bench's word.
 
 **DPR 6.3 - Determination of genuine function.** Before a verdict may resolve to build/ratify/uphold, the bench
 must determine, *by ground-truth not assertion*, that the decided thing will genuinely function as intended
@@ -192,6 +196,13 @@ spec law can be refined only by a later Supreme Court.
 **DPR 10.4 - Citing case law.** Cite a reported case by its name and court (e.g. *In re the Court-Split* (first
 instance)); cite spec law by ID (`SPEC-LAW-n`). A decision colliding with binding precedent is refused at the spec
 layer, the fail-closed shape a trust boundary uses to deny an unmapped capability.
+
+**DPR 10.5 - Provisional precedent; the court is not yet validated.** A precedent born from the method litigating
+its **own** construction (a self-referential case) is **provisional**: it binds the originating project but does
+**not** propagate to other projects until it has been applied and held in at least one real, external case.
+Applying SPEC-LAW-2 to the court itself: the court has **not yet been exercised on a real external fork**, so its
+reliability is **asserted, not demonstrated**. Treat its outputs as a fallible agent's reasoning, not a
+verification guarantee; do not mark the court "works" or propagate a precedent on self-referential cases alone.
 
 ---
 
