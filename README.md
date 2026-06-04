@@ -106,6 +106,12 @@ real code, each handed the full record of the tier below.
   the method's own discipline correctly applied?), not on the design. Because it rules on law, its ruling becomes
   **spec law**: an immutable, numbered precedent that binds every future court on every project.
 
+The driving agent is a first-class **petitioner** here, not a clerk waiting to be asked: it spots the hard fork,
+frames the question, and - when it holds genuine standing - brings the appeal or refers a point of law up *itself*,
+to reach certainty before it proceeds. That self-initiation is deliberately gated (real standing only, still
+ends in build-or-kill, and the principal can halt any case), so the court stays rare even when the agent runs
+autonomously. The mechanics are in [the council skill](skills/council/SKILL.md).
+
 That last tier is what makes LDD **self-improving, and it compounds with use.** Every time a genuinely hard,
 contested question is referred all the way up, the Supreme Council's answer becomes a permanent, numbered rule
 (spec law) that every future decision is checked against. So **the more hard cases you refer up, the more of your

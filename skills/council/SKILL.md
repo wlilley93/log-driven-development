@@ -1,14 +1,15 @@
 ---
 name: council
-description: The adversarial deliberation court - convene N independent, named seats, each ground-truthing the real tree, each returning a blunt verdict; synthesise; act the same beat; dissolve. For high-stakes, hard-to-reverse forks, honest retrospectives, and pre-mortems. A challenged verdict escalates a three-tier court (Council → Appeals Council → Supreme Council, modelled on UK law) whose apex sets binding "spec law". Use when one perspective would rationalise, or when a decision turns on how the project's invariants were applied.
+description: The adversarial deliberation court - a claimant and a defendant steelman the two sides first (which doubles as the ripeness filter against over-litigation); only a surviving contest reaches a neutral bench of independent justices that ground-truths both briefs and rules; synthesise; act the same beat; dissolve. For high-stakes, hard-to-reverse forks, honest retrospectives, and pre-mortems. A challenged verdict escalates a three-tier court (Council → Appeals Council → Supreme Council, modelled on UK law) whose apex sets binding "spec law". Use when one perspective would rationalise, or when a decision turns on how the project's invariants were applied.
 ---
 
 # The council - the adversarial deliberation court
 
-> Convene N independent, named critical seats, each ground-truthing against the real tree, each returning a
-> blunt written verdict; synthesise; **act the same beat**; dissolve the panel (the ledger keeps the verdict).
-> The decision-making analogue of the builder + adversarial-verifier loop. A decision under challenge escalates
-> a **three-tier court hierarchy modelled on UK law**.
+> A **claimant** and a **defendant** steelman the two sides first - if only one survives, decide there and convene
+> nothing. A surviving contest goes to a **neutral bench** of independent justices, each ground-truthing both
+> briefs against the real tree and returning a blunt written verdict; synthesise; **act the same beat**; dissolve
+> the panel (the ledger keeps the verdict). The decision-making analogue of the builder + adversarial-verifier
+> loop. A decision under challenge escalates a **three-tier court hierarchy modelled on UK law**.
 
 ## When to use
 - A **high-stakes, hard-to-reverse fork** where a single perspective would rationalise (architecture,
@@ -38,42 +39,75 @@ Do NOT convene one when:
 A challenged Council verdict does not get a re-run Council: it escalates the appeals hierarchy below, and only
 with standing.
 
+## The shape: advocates steelman, a neutral bench rules
+The court **strictly separates advocacy from adjudication**, exactly as a real adversarial court does. Partisanship
+lives entirely in a pre-court steelman; the bench that rules is **wholly neutral**.
+
+**Stage 0 - the steelman (the ripeness filter, and the ONLY partisan role).** Before any bench is convened,
+commission two opposed advocates: a **claimant** who builds the strongest possible case FOR the proposition, and a
+**defendant** who builds the strongest case AGAINST. Each grounds-truth and steelmans its side, marshalling *every*
+relevant lens in its brief (security, cost, simplicity, the rejected alternative) - so multi-dimensional rigor lives
+in the briefs, not in the deciders. This stage **is the filter against over-litigation**: if one side cannot be
+steelmanned - it concedes, collapses, or is demolished on ground-truth - there is no genuine contest, the decision
+is made here (build-or-kill), and **no bench is convened**. Only a question where *both* steelmanned cases survive -
+a real fork - earns a court.
+
+**Stage 1+ - the neutral bench.** Convene a panel of **impartial justices, with no advocate among them**. Hand them
+*both* briefs. Each justice **independently ground-truths the briefs** (an advocate's brief is an argument, not
+evidence - verify every load-bearing figure, cf. SPEC-LAW-1(c); this is where an overclaimed number dies), runs
+**blind** to the others, weighs the two cases, and rules. Justices may differ in *judicial philosophy* (textualist,
+purposive, risk-first) but never in *allegiance*. One synthesis step after. This holds at every tier: on appeal the
+appellant (claimant) and respondent (defendant) re-argue and a neutral Appeals bench rules; at the apex both sides
+brief the point of law and neutral Supreme justices rule on it.
+
+This is what makes the agent's petitioner standing safe: the agent does not "decide to litigate" - it commissions
+the steelman, and the steelman decides whether a court is warranted. An agent cannot over-litigate a question that
+has no surviving second side.
+
 ## How to run one, step by step
-1. **Pick the seats: distinct lenses, not redundancy.** Choose seats whose viewpoints do not overlap (for a
-   retrospective: project health, process critic, collaboration, devil's advocate / pre-mortem; swap in
-   security, cost, UX, or a named alternative's advocate to fit the question). One agent per seat.
-2. **Each seat grounds-truth FIRST.** Tell each seat to grep, read files, run counts and tests, and to cite real
-   evidence from the tree. A seat that cannot cite is ignored.
-3. **Run them independently.** Seats run concurrently and do not see each other mid-run. Brief each to lead with
-   the uncomfortable truth, not a hedge.
-4. **Synthesise honestly.** The orchestrator reconciles the seats (they will disagree), states the through-line,
-   and converts it into committed changes plus tasks.
-5. **Determine genuine function (REQUIRED, before resolving).** Invoke a *period of determination*: find, by
+*(Operationalises the two-stage shape above. Where this list says "the seats", read **the neutral bench**; the
+devil's-advocate / alternative-advocate work now lives in the Stage-0 steelman, never on the bench.)*
+1. **Stage 0 first - steelman both sides.** Commission a claimant and a defendant; each grounds-truth and builds the
+   strongest case. If only one side survives, build-or-kill now and stop - no bench. If both survive, proceed.
+2. **Pick the bench: neutral justices, diverse in philosophy not allegiance.** Choose 3-5 impartial deciders who
+   weigh *both* briefs from genuinely different reasoning stances (textualist vs purposive vs risk-first; or
+   project-health vs process vs pre-mortem framings, applied impartially) - never as partisans, never assigned a
+   side. One agent per justice. The lenses that used to be partisan seats (devil's advocate, a named alternative's
+   advocate) are now the Stage-0 claimant and defendant, not bench members.
+3. **Each justice grounds-truth the briefs FIRST.** Tell each justice to grep, read files, run counts and tests,
+   and to cite real evidence from the tree - a brief's load-bearing claims are verified, never trusted. A justice
+   that cannot cite is ignored.
+4. **Run them independently.** Justices run concurrently and do not see each other mid-run. Brief each to lead
+   with the uncomfortable truth, not a hedge.
+5. **Synthesise honestly.** The orchestrator reconciles the bench (justices will disagree), states the
+   through-line, and converts it into committed changes plus tasks.
+6. **Determine genuine function (REQUIRED, before resolving).** Invoke a *period of determination*: find, by
    ground-truth (a spike, a test, a demonstrated end-to-end path, a concrete mechanism), whether the decided
    thing **will genuinely function as intended** - not merely whether it is the right design on the merits. The
    merits ask "is this right?"; this asks "will it actually work?". "It looks right" / "it should work" is not a
    determination (it is the over-claim this phase exists to catch). If genuine function cannot be affirmatively
    determined, the verdict may NOT resolve to build/ratify - only to KILL or SPIKE-FIRST (exercise it, then
    re-determine). At system scale the determination is a real end-to-end run, not design-soundness alone.
-6. **End in build-or-kill, the same beat.** The verdict resolves to a committed change or an explicit kill,
+7. **End in build-or-kill, the same beat.** The verdict resolves to a committed change or an explicit kill,
    never another deferring artifact. Act on it now.
-7. **Record dissent + the determination.** Write the verdict to the ledger with the genuine-function
+8. **Record dissent + the determination.** Write the verdict to the ledger with the genuine-function
    determination and the surviving dissent verbatim (the standing of any future appeal). Then dissolve the
    panel; nothing persists but the verdict, the determination, and the dissent.
 
 ## Tier 1 - The Council (court of first instance)
 
-### The shape (one parallel fan-out)
-1. **Pick the seats - distinct lenses, not redundancy.** A typical retrospective panel:
-   - **project health**: is the *artifact* on track? % to a shippable product; where the real risk is.
-   - **process critic**: is the *method* working? where it's silently failing.
-   - **collaboration**: is the *human↔agent* loop healthy? the deliberation-to-delivery ratio.
-   - **devil's advocate / pre-mortem**: assume failure; rank causes by likelihood × lateness-of-discovery.
-   Swap lenses to fit the question (security · cost · UX · a named alternative's advocate).
-2. **Each seat MUST ground-truth first.** Greps, file reads, counts, test runs - the verdict cites real
-   evidence from the tree, never vibes. (A seat that can't cite is ignored.)
-3. **Independence.** Seats run concurrently and do not see each other mid-run; one synthesis step after.
-4. **Bluntness is the deliverable.** Each seat leads with the uncomfortable truth, not a hedge.
+### The shape (steelman, then a neutral bench)
+1. **Stage 0 - steelman the two sides.** A fork is argued by a **claimant** (for) and a **defendant** (against). A
+   retrospective is argued the same way: claimant - "the artifact and the method are on track"; defendant (the
+   pre-mortem) - "here is how and why this is failing." Each advocate marshals *every* relevant angle in its brief
+   (project-health, process, collaboration, security, cost, the rejected alternative), grounds-truth, and
+   steelmans. If a side cannot be steelmanned, decide on the survivor and convene **no bench**.
+2. **Stage 1 - a neutral bench.** Impartial justices, **no advocate among them**, each handed *both* briefs.
+3. **Each justice MUST ground-truth the briefs.** Greps, file reads, counts, test runs - a brief's load-bearing
+   claims are verified against the tree, never taken on trust (a brief is an argument, not evidence). A justice
+   that can't cite is ignored.
+4. **Independence + bluntness.** Justices run concurrently, blind to each other; each leads with the uncomfortable
+   truth, not a hedge; one synthesis step after.
 
 ### The discipline (non-negotiable)
 - **Determine genuine function before resolving (required, every tier).** A verdict may not resolve to
@@ -140,6 +174,50 @@ Entries must be **fact-free, universal points of law** (no project, host, or ven
 the central register, reviewed for exactly that fact-free universality. A project MAY keep a separate local
 precedent file for genuinely project-specific rulings, and promote any that prove general to the central register
 by PR.
+
+## The agent as petitioner (self-initiated cases and agent standing)
+The driving agent is not a passive clerk that only convenes a court when the principal asks. It is a first-class
+**petitioner**: it may *bring* a matter, an appeal, or a reference on its own initiative (there is still no
+opposing *party* - the adversarialism is supplied by the seats). This standing is **delegated by the principal**
+and bounded by a real-basis test at every tier, so the court stays expensive currency.
+
+1. **Commission the steelman, then file (first instance).** The agent must spot a genuine hard fork itself and
+   *commission the Stage-0 steelman* - a claimant and a defendant - rather than deciding the case alone or framing
+   it to favour an answer. The steelman is the gate: if a side collapses, the agent builds-or-kills on the
+   survivor and convenes no bench; only a surviving two-sided contest is filed, captioned *In re <subject>*,
+   before a neutral bench. The partisanship is the advocates'; the bench's is none.
+2. **Appeal as appellant, with standing.** After a verdict the agent may bring an appeal *itself*, without waiting
+   for the principal to object - but only on the unchanged standing bar: it holds a load-bearing surviving
+   dissent, or it has discovered new ground-truth that falsifies a premise the verdict relied on. "I would have
+   decided differently" is never standing. The agent may never appeal to defer a call it should simply make, to
+   "be safe", or to launder its own preference into a re-run (SPEC-LAW-1(a)). It grounds-truth its own claim
+   before filing: an appeal resting on an un-ground-truthed premise is the collapsed-fact error the court exists
+   to catch (SPEC-LAW-1(c)).
+3. **Petition the Supreme Council for certainty-to-proceed.** When the agent justifiably cannot proceed *with
+   absolute certainty* because a point of invariant law is genuinely unsettled, it may petition the apex - but
+   only when ALL THREE hold: (a) it is a true point of invariant law (how the invariants and the method's
+   discipline bind a *class* of decisions), not a one-off merits call; (b) settling it is *necessary to proceed* -
+   the uncertainty actually blocks safe progress, it is not curiosity or a wish to be thorough; and (c) the ruling
+   would bind a class of future decisions, earning its place as spec law. Absent all three, the agent decides on
+   the merits and does not spend the apex. A point of law referred this way is captioned *Reference re <point of
+   law>*.
+
+**Bounds (non-negotiable).** The court is expensive currency, spent rarely; a self-initiated case still ends in
+**build-or-kill**, never in deferral - the petition is never an excuse not to decide. The principal may halt,
+redirect, or override any agent-initiated case at any tier: the agent's standing is **delegated, not sovereign**,
+and the hierarchy itself remains constitutional, established by the principal. Used well, this is what lets the
+method run autonomously and still bind itself - the agent refers the genuinely hard, genuinely load-bearing
+questions up of its own accord, and each ruling crystallises into spec law the whole method then inherits.
+
+**The Supreme Council may dismiss, and that is the safety valve.** The apex is not obliged to rule: it
+**dismisses** a petition that presents no genuine, universal point of law - a merits question dressed as law, a
+one-off with no class to bind, or a point an existing precedent already settles (cite it and deny). A dismissed
+petition produces **no spec law**. This filter is what keeps the register sharp as self-petitioning scales: spec
+law is clarified by **coverage of the points of law that actually matter, not by volume**. Because each ruling
+binds a whole class and an existing precedent denies the next collision at the spec layer with no new case, the
+rate of *new* references **tapers as the register matures** - the goal is a heavily-clarified register reached by
+a modest number of high-leverage rulings, never an ever-growing caseload (an agent that refers *everything* up is
+the litigating-instead-of-building pathology, not the method working).
 
 ## Naming a case (the caption)
 A council case has no claimant and no defendant; it is a **matter**, and the adversarial part is the seats, not
