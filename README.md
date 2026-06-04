@@ -158,6 +158,30 @@ final answer, without a standing committee that accretes politics.
 
 ---
 
+## Self-improving by construction
+
+LDD does not only govern a project; it refines its own discipline through use. Most decisions are made and built.
+But when a decision turns on *how the method's own invariants apply*, and is contested to the apex, the Supreme
+Council rules on that point of law and the ruling becomes **spec law**: a numbered, immutable precedent in
+[`council/SPEC-LAW.md`](council/SPEC-LAW.md) that binds every future court. So a genuinely hard case does not just
+resolve locally, it crystallises into a permanent sharpening of the method that every later run inherits. Two
+registers, two roles: [`docs/invariants.md`](docs/invariants.md) is the law the courts *apply*; `council/SPEC-LAW.md`
+is the law they *write*.
+
+Because this repo is public and MIT-licensed, that sharpening is **a community process**. A team that reaches a
+Supreme ruling of general significance opens a **pull request** adding the precedent; review is the meta-check that
+it is a genuine, fact-free point of law consistent with the invariant register, not a project-specific preference.
+Merged precedents ship to everyone on the next version.
+
+**How spec law reaches every project.** The register travels with the methodology: install the plugin and you have
+all spec law to date; update it and you receive new precedents, the same way a shared linter ruleset propagates.
+The council skill reads `council/SPEC-LAW.md` when it convenes and refuses a decision that collides with a
+precedent. Precedents are append-only and numbered, so the central register distributes without conflict; a later
+Supreme Council can only *narrow* a precedent with a new entry, never rewrite one. A project may keep its own local
+precedent file for project-specific rulings, and promote any that prove general back to the central register by PR.
+
+---
+
 ## Running it at scale: workflows, "ultracode", and a standing goal
 
 ![A single autonomous LDD run: 18 hours, 10 turns, 5.4 million tokens](assets/autonomous-run.png)
@@ -337,6 +361,7 @@ docs/systems.md                                    the systems reference: every 
 docs/anti-patterns.md                              how the method breaks, and the rule that prevents each
 docs/artifacts.md                                  artefact-by-artefact how-to (what, why, how to constitute)
 docs/invariants.md                                 the LDD-INV register: each method invariant, its failure, where enforced
+council/SPEC-LAW.md                                the spec-law register: Supreme Council precedent (the law the courts write)
 tools/closure-gate/                                the continuous per-commit gate (closure_gate.py + config + pre-commit)
 tools/refactoring/                                 refactoring-suite helpers (surface extraction, suite verifier)
 tools/vibe/                                        the coded gates (vibescan, vibeaudit, vibetest, vibeclean, viberapid, vibedeploy)

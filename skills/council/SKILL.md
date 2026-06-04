@@ -120,15 +120,26 @@ load-bearing dissent; new ground-truth that falsifies a relied-upon point. The S
 misapplied the trust-boundary invariant / violated the one-writer rule" is.
 
 ## Spec law (Supreme Council precedent)
-A Supreme Council ruling is recorded as an immutable, numbered precedent in a **`SPEC-LAW.md` register the
-project creates on its first ruling** (distinct from [`docs/invariants.md`](../../docs/invariants.md): that is
-the standing LDD-INV register the court *applies*; `SPEC-LAW.md` is the precedent it *writes*). A ruling **binds
-every future court**: a first-instance Council **cannot** overturn it, and a decision that collides with a
-spec-law precedent is denied at the spec layer (the same fail-closed shape a trust boundary uses to deny an
-unmapped capability). Spec law is cited by ID in later decisions as *controlling*. Only a later Supreme Council,
-expressly distinguishing or narrowing the precedent on a point of invariant law, may refine it - never a lower
-court, never the build phase. (The hierarchy itself is *constitutional* - established by the principal, the
-framework within which spec law is made; it is not itself a Supreme ruling.)
+A Supreme Council ruling is recorded as an immutable, numbered precedent in the **central
+[`council/SPEC-LAW.md`](../../council/SPEC-LAW.md) register that ships with the methodology** (distinct from
+[`docs/invariants.md`](../../docs/invariants.md): that is the standing LDD-INV register the court *applies*;
+`council/SPEC-LAW.md` is the precedent it *writes*). A ruling **binds every future court**: a first-instance
+Council **cannot** overturn it, and a decision that collides with a spec-law precedent is denied at the spec layer
+(the same fail-closed shape a trust boundary uses to deny an unmapped capability). Spec law is cited by ID in later
+decisions as *controlling*. Only a later Supreme Council, expressly distinguishing or narrowing the precedent on a
+point of invariant law, may refine it - never a lower court, never the build phase. (The hierarchy itself is
+*constitutional* - established by the principal, the framework within which spec law is made; it is not itself a
+Supreme ruling.)
+
+**Spec law is project-agnostic and propagates to every project running LDD.** The register is central and travels
+with the methodology: a project gets all spec law to date by installing the plugin, and new precedents by updating
+it (the same way a shared linter ruleset propagates). The council skill reads `council/SPEC-LAW.md` when it
+convenes and enforces it. Because the register is append-only and numbered, it distributes without conflict.
+Entries must be **fact-free, universal points of law** (no project, host, or vendor specifics) so they bind a
+*class* of decisions; a generally-significant ruling is contributed back as a **community pull request** against
+the central register, reviewed for exactly that fact-free universality. A project MAY keep a separate local
+precedent file for genuinely project-specific rulings, and promote any that prove general to the central register
+by PR.
 
 ## How to run it
 - **Tier 1:** a single parallel fan-out - one agent per seat (told to ground-truth + be blunt), then the
@@ -142,4 +153,8 @@ framework within which spec law is made; it is not itself a Supreme ruling.)
 - **Council / Appeals Council:** a synthesised verdict (one ledger entry) + the **build actions / kills it
   triggered** (commits + tasks) + the surviving dissent - never a verdict that only defers.
 - **Supreme Council:** a ruling appended to the spec-law register as a numbered, immutable precedent,
-  cross-linked from the ledger entry and any decision it governs.
+  cross-linked from the ledger entry and any decision it governs. **Deliver and record the Supreme judgment in
+  full:** every justice's opinion, ruling, grounding (the invariants cited), and self-dissent is preserved
+  verbatim, never collapsed to only a synthesis. This applies the append-only, dissent-is-never-buried discipline
+  (LDD-INV-16) to the whole panel: the synthesised controlling rule is the precedent; the full panel is the record
+  behind it, and both are reported to the principal, not just the verdict.
