@@ -254,15 +254,16 @@ precedent already settles). A dismissed petition produces no spec law.
 step** and does not add structure. Spec law is clarified by *coverage of the points of law that matter, not by
 volume*; the rate of new references tapers as the registers mature.
 
-**DPR 11.4 - The test for a second standing unit (SPEC-LAW-3).** A proposed split, second installable/consumption
-unit, or added standing surface is lawful only if its proposer demonstrates **all three** gates (the burden is on
-the proposer): (1) **single-source integrity** - one copy and one version of each shared register at the root,
-referenced never vendored, with a fail-closed check on register-revision skew; (2) **demonstrated need on
-ground-truth** - a real, in-tree consumer measured against verified figures, never asserted, speculative, future,
-or rested on a later-falsified premise (*cheapness is not need*); and (3) **severability** - no live bidirectional
-dependency (mutual referral, self-invocation, a convene-time read). Fail any one and the unit is barred; the
-default (DPR 11.3) is consolidation. A drift-foreclosing check is *necessary* for any permitted view but never by
-itself *authorises* a second governing surface - that authorisation is a question of law, not of engineering.
+**DPR 11.4 - The test for a second standing unit (SPEC-LAW-3).** Whether a proposed split, second
+installable/consumption unit, or added standing surface is lawful is governed by the conjunctive three-gate test
+of **SPEC-LAW-3(c)** (*Reference re Consolidation*: single-source integrity; demonstrated need on ground-truth;
+severability), which the court **applies as authority under DPR 9.2** - the bench does not restate it here.
+Procedurally: the **burden is on the proposer** to demonstrate every gate on ground-truth (DPR 9.1); a passing
+mechanical or drift-foreclosing check is *necessary* but never by itself *authorises* a second governing surface,
+so authorisation is decided as a **question of law** (DPR 9.2), not of engineering - a green check does not stand
+in for a judicial holding. Fail any gate and the default disposition is the narrowest lawful step: consolidation
+(DPR 11.3). *(Amended per* In re DPR 11.4*: the restated substantive test was struck as a duplication of its
+owner, SPEC-LAW-3, leaving the procedural residue and a citation.)*
 
 ---
 

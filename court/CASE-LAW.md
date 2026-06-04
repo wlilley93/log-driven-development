@@ -90,3 +90,36 @@ fact (d)); SPEC-LAW-1(c); the plugin root-discovery constraint.
 it across `court/` and a new folder. The cure adopted on execution: the new artifacts live in `court/` alongside
 `SPEC-LAW.md` (no new folder), keeping the corpus co-located while moving nothing. Leave is reserved to gather
 into a dedicated `justice/` folder once a real consumer is demonstrated.
+
+---
+
+## CASE-4: *In re DPR 11.4* (first instance)
+
+**Court.** First instance (unanimous, 3-0). **Date.** 2026-06-04. **Status.** Stands.
+
+**Question.** Should DPR 11.4 (which had *restated* SPEC-LAW-3's conjunctive second-unit test) be removed from the
+DPR as substantive law, not procedure?
+
+**Holding.** **Keep-as-citation-only.** Strike the restated three-gate test from DPR 11.4; cite SPEC-LAW-3(c) for
+it (the court applies it via DPR 9.2); retain only the procedural residue: the burden on the proposer, and the
+routing that a mechanical/drift check never authorises a second governing surface (authorisation is a question of
+law).
+
+**Ratio.** DPR 12.3 (the procedure/substance boundary the DPR enacted on itself) commands that a substantive point
+of law stays in `SPEC-LAW.md`, where the court *applies* it. On a gate-for-gate diff, the three gates and the
+necessary-not-sufficient clause in DPR 11.4 were the SPEC-LAW-3(c) merits standard restated near-verbatim: a
+second amendable surface for one owned fact, barred by LDD-INV-9 and by SPEC-LAW-3's own source limb. DPR 9.2
+already fetches the test by citation, so the restatement filled no gap. But the burden-allocation and the
+law-not-engineering routing are genuine procedure the DPR is entitled to hold. The amendment also makes DPR 12.3's
+own description ("DPR 11.4 cites SPEC-LAW-3") accurate: 11.4 now cites where it had copied.
+
+**Authorities.** DPR 12.3 (the boundary); DPR 9.2 (argue from authority); DPR 7.1 (merits/law split); LDD-INV-9
+(one owner per concern); SPEC-LAW-3.
+
+**Recorded dissent (standing for appeal).** A textualist minority would keep: DPR 12.3 names "DPR 11.4 cites
+SPEC-LAW-3" by number as an already-performed, correct fold-in, so the boundary question was arguably adjudicated
+in 11.4's favour when it was distilled; a first-instance bench editing a rule the enacted boundary rule blesses by
+number is itself questionable.
+
+**Note.** The first reported case about the court's own rulebook (not the repo's packaging), and the first
+exercise of DPR 12.3 in anger: the self-amendment boundary catching a mis-categorised rule and correcting it.
