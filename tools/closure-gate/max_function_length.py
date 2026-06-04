@@ -32,15 +32,12 @@ No third-party dependencies. Python 3.8+.
 from __future__ import annotations
 
 import argparse
-import os
 import re
 import sys
 from pathlib import Path
 
-DEFAULT_EXCLUDE_DIRS = (
-    ".git", "node_modules", "dist", "build", "target", "vendor", "venv", ".venv",
-    "__pycache__", ".next", ".cache", "coverage", "out", ".mypy_cache", ".pytest_cache",
-)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _common import gather_files, is_significant, read_config_section, read_exclude_globs
 
 BRACE_SUFFIXES = (
     ".js", ".jsx", ".ts", ".tsx", ".rs", ".go", ".java", ".kt", ".c", ".h", ".cc",
@@ -59,30 +56,6 @@ BRACE_DEF_PATTERNS = [
     re.compile(r"^\s*\w[\w<>,\s\*&:]*\s+\w+\s*\([^;{]*\)\s*\{"),  # C-style "type name(args) {"
 ]
 PY_DEF_PATTERN = re.compile(r"^(\s*)(async\s+def|def)\s+\w+\s*\(")
-
-
-def is_significant(line: str) -> bool:
-    s = line.strip()
-    if not s:
-        return False
-    return not s.startswith(("//", "#", "--", ";", "*", "/*", "*/"))
-
-
-def gather_files(roots, suffixes, exclude_dirs):
-    files = []
-    for root in roots:
-        rp = Path(root)
-        if rp.is_file():
-            if rp.suffix in suffixes:
-                files.append(rp)
-            continue
-        for dirpath, dirnames, filenames in os.walk(rp):
-            dirnames[:] = [d for d in dirnames if d not in exclude_dirs]
-            for name in filenames:
-                p = Path(dirpath) / name
-                if p.suffix in suffixes:
-                    files.append(p)
-    return sorted(set(files))
 
 
 def scan_brace_file(path, limit):
@@ -156,23 +129,13 @@ def scan_indent_file(path, limit):
 
 def read_limit(config_path):
     """Read [function] max_lines from the config (no third-party deps)."""
-    if not config_path.exists():
+    val = read_config_section(config_path, "function").get("max_lines")
+    if val is None:
         return None
-    in_fn = False
-    for line in config_path.read_text(encoding="utf-8").splitlines():
-        s = line.strip()
-        if s.startswith("#") or not s:
-            continue
-        if s.startswith("[") and s.endswith("]"):
-            in_fn = s == "[function]"
-            continue
-        if in_fn and s.startswith("max_lines") and "=" in s:
-            val = s.partition("=")[2].split("#", 1)[0].strip().strip('"').strip("'")
-            try:
-                return int(val)
-            except ValueError:
-                return None
-    return None
+    try:
+        return int(val)
+    except ValueError:
+        return None
 
 
 def main(argv=None):
@@ -184,7 +147,8 @@ def main(argv=None):
 
     limit = args.limit if args.limit is not None else (read_limit(Path(args.config)) or 40)
     suffixes = BRACE_SUFFIXES + INDENT_SUFFIXES
-    files = gather_files(args.paths, suffixes, DEFAULT_EXCLUDE_DIRS)
+    exclude_globs = read_exclude_globs(Path(args.config))
+    files = gather_files(args.paths, suffixes, exclude_globs=exclude_globs)
     if not files:
         print("max-function-length: no source files found under", args.paths, file=sys.stderr)
         return 2

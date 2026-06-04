@@ -39,32 +39,19 @@ No third-party dependencies. Python 3.8+.
 from __future__ import annotations
 
 import argparse
-import os
 import shlex
 import subprocess
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+from _common import read_config_section
 
 
 def read_commands(config_path):
     """Read the [commands] table from the config (no third-party deps). Returns dict."""
-    cmds = {}
-    if not config_path.exists():
-        return cmds
-    in_cmds = False
-    for line in config_path.read_text(encoding="utf-8").splitlines():
-        s = line.strip()
-        if s.startswith("#") or not s:
-            continue
-        if s.startswith("[") and s.endswith("]"):
-            in_cmds = s == "[commands]"
-            continue
-        if in_cmds and "=" in s:
-            key, _, val = s.partition("=")
-            cmds[key.strip()] = val.split("#", 1)[0].strip().strip('"').strip("'")
-    return cmds
+    return read_config_section(config_path, "commands")
 
 
 def run_step(name, command, cwd, tolerate_missing=False):
@@ -161,6 +148,11 @@ def main(argv=None):
         ok, skipped = run_step(name, cmds.get(key, ""), cwd, tolerate_missing=True)
         results.append((name, ok, skipped))
 
+    return _report(results)
+
+
+def _report(results):
+    """Print the gate summary and return the process exit code (1 if any gate denied)."""
     print("\n=== closure-gate summary ===")
     denied = []
     for (name, ok, skipped) in results:

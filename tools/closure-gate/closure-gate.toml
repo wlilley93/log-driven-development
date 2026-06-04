@@ -65,9 +65,20 @@
 format_check = ""
 lint = ""
 typecheck = ""
-test = ""
+# This repo's own first-party code is the closure-gate tools; its tests are the gate's tests.
+test = "python3 -m unittest discover -s tools/closure-gate/tests"
 security_scan = "vibescan --fast ."
 structure_scan = "vibeclean --changed ."
+
+[scope]
+# Consumed-commodity trees the gate must NOT police (the consume-the-commodity boundary,
+# made checkable). You own and gate your differentiating code; you do not gate code you
+# merely vendored or generated. Comma-separated path globs / dir prefixes, matched against
+# each file's posix path; a bare "a/b" prunes that whole subtree. The build/cache trees
+# (node_modules, dist, .venv, ...) are always excluded and need not be listed here.
+# This repo vendors the vibe* tools under tools/vibe so the gate works out of the box;
+# they are consumed, not owned, so they are excluded from the portable checks.
+exclude = "tools/vibe"
 
 [function]
 # Max function body length (significant lines: blanks and whole-line comments excluded).

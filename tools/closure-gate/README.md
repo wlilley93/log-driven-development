@@ -51,6 +51,21 @@ install hint, never a silent absence and never a hard deny).
 > (so an unbuilt surface is visibly red), so the "tests" gate above covers them. See the
 > config template for how to track them.
 
+### Scope: gate what you own, not what you consume
+The portable checks (4-5) never police consumed-commodity trees. Build/cache dirs
+(`node_modules`, `dist`, `.venv`, ...) are always excluded; for vendored or generated code
+you own-but-did-not-author, list it under `[scope] exclude` in the config (comma-separated
+path globs; a bare `a/b` prunes that subtree). This is the consume-the-commodity boundary
+made checkable: you gate your differentiating code, not code you merely vendored. (This repo
+vendors the vibe* tools under `tools/vibe`, so its own config excludes them.)
+
+### Files
+- `closure_gate.py` - the orchestrator (runs every gate, prints the summary, exit 1 on any deny).
+- `max_function_length.py`, `duplication_ratchet.py` - the two portable, zero-dep checks.
+- `_common.py` - the single home for the shared file-walk, significance test, and config reader.
+- `tests/` - the gate's own stdlib-unittest suite (`python3 -m unittest discover -s tools/closure-gate/tests`);
+  the code that enforces "tests pass" is itself tested.
+
 ## Quick start
 
 From your repo root, with this directory vendored at `tools/closure-gate/`:
