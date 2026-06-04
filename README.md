@@ -200,15 +200,39 @@ shapes (builder plus adversarial-verifier; the council). Any team, human or agen
 
 ---
 
+## Going deeper
+
+The README is the pitch. When you want to actually run LDD, read these in order:
+
+- **[docs/methodology.md](docs/methodology.md)** : the long-form walkthrough of the arc (harvest, distil, walking
+  skeleton, loop), the disciplines, and the milestone close, against one running example.
+- **[docs/systems.md](docs/systems.md)** : the comprehensive systems reference. Every distinct system that makes
+  LDD work as one operating model (the twin-ledger spine, the agent shapes, the deliberation court, the
+  closure-gate, the milestone close, the disciplines, the ultracode posture) and a map of how they interlock into
+  one machine.
+- **[docs/artifacts.md](docs/artifacts.md)** : the deepest how-to. For each artefact: what it is, the failure it
+  prevents, how to constitute it step by step, and the mistakes people actually make.
+- **[templates/](templates/)** : copy-paste skeletons for every artefact (intent ledger, metacognition entry,
+  ADR, spec, milestone sign-off, council verdict, closure-gate config).
+- **[examples/](examples/)** : one continuous worked run of LDD on a single fictional project (Tasky), from
+  harvest through the 5-phase milestone close, so every artefact cross-references into one real picture.
+
+---
+
 ## Layout
 
 ```
-.claude-plugin/plugin.json                       the plugin manifest
-.claude-plugin/marketplace.json                  makes this repo installable in one step
-skills/ledger-driven-development/SKILL.md         the full method
-skills/council/SKILL.md                           the council and the appeals hierarchy
-commands/ldd.md                                   the /ldd slash command
-commands/council.md                               the /council slash command
+.claude-plugin/plugin.json                        the plugin manifest
+.claude-plugin/marketplace.json                   makes this repo installable in one step
+skills/ledger-driven-development/SKILL.md          the full method
+skills/council/SKILL.md                            the council and the appeals hierarchy
+commands/ldd.md                                    the /ldd slash command
+commands/council.md                                the /council slash command
+docs/methodology.md                                the long-form walkthrough of the method
+docs/systems.md                                    the systems reference: every part, and how they interlock
+docs/artifacts.md                                  artefact-by-artefact how-to (what, why, how to constitute)
+templates/                                         blank skeletons for every artefact
+examples/                                          one continuous worked run on a fictional project (Tasky)
 ```
 
 ---
