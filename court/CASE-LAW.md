@@ -93,10 +93,12 @@ into a dedicated `justice/` folder once a real consumer is demonstrated.
 
 ---
 
-## CASE-4: *In re DPR 11.4* (first instance, then on appeal)
+## CASE-4: *In re DPR 11.4* (first instance, on appeal, and on Supreme reference)
 
-**Court.** First instance (unanimous, 3-0), then Court of Appeal (unanimous, 3-0). **Date.** 2026-06-04.
-**Status.** Varied on appeal: the Court of Appeal's OVERTURN-CROSSREF controls (DPR 10.3).
+**Court.** First instance (3-0), Court of Appeal (3-0), then Supreme Court (5-0 to rule). **Date.** 2026-06-04
+(first instance, appeal); 2026-06-05 (Supreme reference). **Status.** The controlling point of law is
+**SPEC-LAW-4** (*Reference re Per-Precedent Procedural Rules*); on its application the residual DPR 11.4 is pruned
+to its two non-generic procedural clauses.
 
 **Question.** Should DPR 11.4 (which had *restated* SPEC-LAW-3's conjunctive second-unit test) be removed from the
 DPR as substantive law, not procedure?
@@ -143,3 +145,21 @@ standard-sentence*, which has one owner (SPEC-LAW-3) and is cited, never copied.
 OVERTURN-REMOVE: once the standard-sentence is struck, the residue is thin and DPR 9.1/9.2 nearly subsume it, so a
 per-precedent rule may be surplus. Whether a per-precedent procedural signpost is ever lawful, or is always
 subsumed by the generic DPR 9.1/9.2, is the point of invariant law a Supreme reference would settle.
+
+### On Supreme reference (Supreme Court, 5-0 to rule; SPEC-LAW-4)
+
+That open point of law was referred to the apex. An **objector** (the first exercise of DPR 3.3) urged the
+reference was the court litigating its own rulebook and should be dismissed; the panel **rejected dismissal 5-0**,
+because per-precedent procedural rules are a populated, growing class (DPR 6.6, 6.7, 9.4, 11.4 under DPR 12.3), so
+one ruling ends the recurrence for the whole class.
+
+**Held (the controlling point of law, SPEC-LAW-4, unanimous).** A ruling has two essences: its *substantive*
+essence (the standard a court applies) is owned by SPEC-LAW and cited, never copied; its *procedural* essence (how
+a case is run) is the only thing that may fold into the DPR. The boundary is applied **clause by clause**, and a
+procedural clause is lawful **only insofar as it adds procedure the generic floor (DPR 9.1/9.2/11.3) does not
+already carry** - provenance is not warrant. Full panel at [`SPEC-LAW-4-panel.md`](SPEC-LAW-4-panel.md).
+
+**Disposition (4-1).** Applying the test clause by clause, the residual DPR 11.4 is **pruned**: only the two
+non-generic procedural clauses survive (the proposer pleads first and carries the burden; a passing automated
+check is not the bench's holding); the restatements of DPR 9.1/9.2/11.3 are struck to citations. The textualist
+justice would have removed even those two as subsumed (the recorded dissent in SPEC-LAW-4).

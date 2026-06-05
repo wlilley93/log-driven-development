@@ -178,3 +178,54 @@ recorded so a later Supreme Court may narrow it.
 
 **Status:** immutable; binds every Court, Appeals Court, and the spec layer. Established by a unanimous (5-0)
 Supreme panel. Refined only by a later Supreme Court expressly narrowing it on a point of law.
+
+---
+
+## SPEC-LAW-4: A per-precedent procedural rule is lawful only at clause granularity, for clauses that add procedure the generic floor does not already carry
+
+**Case name:** *Reference re Per-Precedent Procedural Rules*.
+
+**Origin.** A Supreme Court ruling (unanimous, 5-0; an objector's challenge that the reference should be dismissed
+as the court litigating its own rulebook was rejected, because per-precedent procedural rules are a populated,
+growing class and one ruling ends the recurrence) on a point of law arising from a contested attempt to remove a
+procedural rule that had been distilled from a substantive precedent into the procedural code. The courts below
+divided on whether such a rule is always subsumed by the generic procedural rules, or lawful where it adds
+non-generic procedure.
+
+**The rule (three limbs).**
+
+**(a) Two essences, one constitutional boundary.** Every ruling has two essences. Its SUBSTANTIVE essence - the
+standard a future court *applies* to decide a case - is owned solely by the substantive register and stays there;
+the procedural code **cites** it, never re-hosts it (LDD-INV-9: one owner per concern). Its PROCEDURAL essence -
+how a case is *run*: who pleads, in what order, on what evidentiary standard, in which register the question is
+decided, what default fires on failure - is the only thing that may fold into the procedural code. The boundary
+between the two is constitutional: it does not move case by case.
+
+**(b) Clause granularity, not rule granularity.** The boundary is applied to each CLAUSE, never to a rule as a
+whole. A single clause cannot be half-procedure and half-substance: a clause that states or restates the deciding
+standard is struck from the procedural code and owned by the substantive register, even where it sits beside
+genuinely procedural clauses.
+
+**(c) The non-redundancy gate (the operative test).** A procedural clause is lawful only insofar as it encodes
+procedural content the GENERIC procedural rules do not already carry (the evidence/ground-truth-and-burden floor,
+the argue-from-authority floor, and the default/anti-bloat floor). A clause that merely restates a generic rule
+adds nothing a citation could not and is struck (LDD-INV-9; the anti-bloat veto). **Provenance is not warrant:**
+that a clause *came from* a ruling is never itself the reason to enact it - demonstrated, non-generic procedural
+function is. The burden is on the proposer to demonstrate the residual content; absent it, the default is
+consolidation (strike to a citation).
+
+**What it prevents.** Two opposite failures: a substantive standard duplicated into the procedural code as if it
+were procedure (a second amendable owner of one fact); and a genuine, case-class-specific procedural rule wrongly
+deleted as if all such rules were always subsumed. It installs the missing admissibility gate on the
+self-amendment engine (the procedural code's fold-in-from-rulings rule) that manufactures this class of rule, so
+the boundary need never be re-litigated case by case.
+
+**Surviving dissent (preserved per LDD-INV-16; full panel at [`SPEC-LAW-4-panel.md`](SPEC-LAW-4-panel.md)).** A
+textualist minority would hold the category effectively empty in practice: once the substantive standard-sentence
+is struck under limb (b), the remaining clauses are so thin that the generic floor subsumes all of them, so a
+per-precedent procedural rule should default to deletion-and-citation rather than survive. The majority preserves
+the category (DPR self-amendment contemplates it) and prunes to the genuinely non-generic clauses; the minority
+treats the non-generic residue as an illusion. Recorded so a later Supreme Court may narrow it.
+
+**Status:** immutable; binds every Court, Appeals Court, and the spec layer. Established by a unanimous (5-0)
+Supreme panel. Refined only by a later Supreme Court expressly narrowing it on a point of law.

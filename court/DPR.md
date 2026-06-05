@@ -254,17 +254,16 @@ precedent already settles). A dismissed petition produces no spec law.
 step** and does not add structure. Spec law is clarified by *coverage of the points of law that matter, not by
 volume*; the rate of new references tapers as the registers mature.
 
-**DPR 11.4 - The test for a second standing unit (SPEC-LAW-3).** Whether a proposed split, second
-installable/consumption unit, or added standing surface is lawful is governed by the conjunctive three-gate test
-of **SPEC-LAW-3(c)** (*Reference re Consolidation*: single-source integrity; demonstrated need on ground-truth;
-severability), which the court **applies as authority under DPR 9.2**; the bench does not restate the standard
-here. **Procedure only:** the proposer bears the burden and pleads first, on the DPR 9.1 ground-truth standard
-(assertion is not evidence); the question is decided as a **point of law** (DPR 9.2), so a passing mechanical or
-drift-foreclosing check does not stand in for a judicial holding; where a gate fails, the default disposition is
-the narrowest lawful step, consolidation (DPR 11.3). *(Amended per* In re DPR 11.4 *- first instance, then on
-appeal: the substantive standard, including the necessary-not-sufficient / authorisation-is-a-question-of-law
-clause of SPEC-LAW-3(c), is struck and owned only by SPEC-LAW-3; the DPR keeps only the procedure for running the
-question.)*
+**DPR 11.4 - The test for a second standing unit (SPEC-LAW-3).** A proposed split, second installable/consumption
+unit, or added standing surface is adjudicated under **SPEC-LAW-3** (*Reference re Consolidation*), applied as
+authority (DPR 9.2); the bench does not restate the standard. **Procedure only** (the residue this rule lawfully
+holds under SPEC-LAW-4, *Reference re Per-Precedent Procedural Rules*): on a question of this class the **proposer
+pleads first and carries the burden**, and a passing **mechanical or automated check does not stand in for the
+bench's holding**. Everything else - the three-gate standard, the evidence floor (DPR 9.1), argue-from-authority
+(DPR 9.2), and the default of consolidation (DPR 11.3) - is owned elsewhere and merely cited. *(Pruned per* In re
+DPR 11.4 *on Supreme reference (SPEC-LAW-4): every clause that merely restated a generic rule or the substantive
+SPEC-LAW-3 standard was struck to a citation; only the two non-generic procedural clauses survive. A textualist
+minority would have removed even these.)*
 
 ---
 
